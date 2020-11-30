@@ -6,7 +6,7 @@ import * as Yup from 'yup';
 
 import Logo from '../assets/img/logo-purple.png';
 
-export default function LoginRecruiter() {
+export default function LoginRecruiter({navigation}) {
   const schema = Yup.object().shape({
     email: Yup.string()
       .email('Email is invalid')
@@ -75,7 +75,8 @@ export default function LoginRecruiter() {
             </Button>
             <View style={styles.register}>
               <Text style={styles.registerText}>Anda belum punya akun? </Text>
-              <TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => navigation.navigate('SignupRecruiter')}>
                 <Text style={[styles.registerText, styles.registerLink]}>
                   Daftar disini
                 </Text>
