@@ -6,12 +6,16 @@ import * as Yup from 'yup';
 
 import Logo from '../assets/img/logo-purple.png';
 
-export default function ForgotPassword() {
+export default function ForgotPassword({navigation}) {
   const schema = Yup.object().shape({
     email: Yup.string()
       .email('Email is invalid')
       .required('Email field is required'),
   });
+
+  function isEmailValid(values) {
+    navigation.navigate('Reset');
+  }
 
   return (
     <Container style={styles.parent}>
@@ -20,7 +24,7 @@ export default function ForgotPassword() {
           email: '',
         }}
         validationSchema={schema}
-        onSubmit={(values) => console.log(values)}>
+        onSubmit={(values) => isEmailValid(values)}>
         {({
           handleChange,
           handleBlur,

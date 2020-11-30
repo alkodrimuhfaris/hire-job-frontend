@@ -8,6 +8,7 @@ import LoginWorker from './LoginWorker';
 import LoginRecruiter from './LoginRecruiter';
 import SignupRecruiter from './SignupRecruiter';
 import Forgot from './ForgotPassword';
+import Reset from './ResetPassword';
 
 // import navigator
 const Stack = createStackNavigator();
@@ -37,6 +38,11 @@ export default function Main() {
           <Stack.Screen
             name="Forgot"
             component={Forgot}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="Reset"
+            component={Reset}
             options={{headerShown: false}}
           />
           <Stack.Screen
