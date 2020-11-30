@@ -5,7 +5,7 @@ import {Button, Text, Container, Content} from 'native-base';
 import Logo from '../assets/img/logo-white.png';
 import Background from '../assets/img/welcome.png';
 
-export default function Welcome() {
+export default function Welcome({navigation}) {
   return (
     <ImageBackground source={Background} style={styles.backgroundImg}>
       <Container style={styles.background}>
@@ -16,7 +16,10 @@ export default function Welcome() {
           </Text>
         </Content>
         <View style={[styles.padding, styles.btnFooter]}>
-          <Button block style={styles.btnPrimary}>
+          <Button
+            block
+            style={styles.btnPrimary}
+            onPress={() => navigation.navigate('LoginWorker')}>
             <Text style={styles.textBtnPrimary}>Masuk sebagai pekerja</Text>
           </Button>
           <Text style={styles.center}>atau</Text>
