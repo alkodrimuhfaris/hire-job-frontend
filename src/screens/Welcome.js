@@ -1,28 +1,31 @@
 import React from 'react';
-import {Image, StyleSheet, View} from 'react-native';
+import {Image, ImageBackground, StyleSheet, View} from 'react-native';
 import {Button, Text, Container, Content} from 'native-base';
 
 import Logo from '../assets/img/logo-white.png';
+import Background from '../assets/img/welcome.png';
 
 export default function Welcome() {
   return (
-    <Container style={styles.background}>
-      <Content style={styles.padding}>
-        <Image source={Logo} style={styles.logo} />
-        <Text style={styles.header}>
-          Temukan developer berbakat & terbaik di berbagai bidang keahlian
-        </Text>
-      </Content>
-      <View style={[styles.padding, styles.btnFooter]}>
-        <Button block style={styles.btnPrimary}>
-          <Text style={styles.textBtnPrimary}>Masuk sebagai pekerja</Text>
-        </Button>
-        <Text style={styles.center}>atau</Text>
-        <Button block style={styles.btnSecondary}>
-          <Text style={styles.textBtnSecondary}>Masuk sebagai perekrut</Text>
-        </Button>
-      </View>
-    </Container>
+    <ImageBackground source={Background} style={styles.backgroundImg}>
+      <Container style={styles.background}>
+        <Content style={styles.padding}>
+          <Image source={Logo} style={styles.logo} />
+          <Text style={styles.header}>
+            Temukan developer berbakat & terbaik di berbagai bidang keahlian
+          </Text>
+        </Content>
+        <View style={[styles.padding, styles.btnFooter]}>
+          <Button block style={styles.btnPrimary}>
+            <Text style={styles.textBtnPrimary}>Masuk sebagai pekerja</Text>
+          </Button>
+          <Text style={styles.center}>atau</Text>
+          <Button block style={styles.btnSecondary}>
+            <Text style={styles.textBtnSecondary}>Masuk sebagai perekrut</Text>
+          </Button>
+        </View>
+      </Container>
+    </ImageBackground>
   );
 }
 
@@ -31,7 +34,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
   },
   background: {
-    backgroundColor: '#5E50A1',
+    backgroundColor: '#5E50A1a0',
+  },
+  backgroundImg: {
+    flex: 1,
+    resizeMode: 'cover',
   },
   header: {
     fontSize: 34,
@@ -53,7 +60,7 @@ const styles = StyleSheet.create({
     textTransform: 'capitalize',
   },
   btnSecondary: {
-    backgroundColor: '#5E50A1',
+    backgroundColor: '#5E50A1a0',
     borderColor: '#ffffff',
     borderWidth: 1,
   },
