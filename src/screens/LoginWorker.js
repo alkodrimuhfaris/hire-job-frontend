@@ -75,7 +75,7 @@ export default function LoginWorker({navigation}) {
             </Button>
             <View style={styles.register}>
               <Text style={styles.registerText}>Anda belum punya akun? </Text>
-              <TouchableOpacity>
+              <TouchableOpacity onPress={() => navigation.navigate('SignupWorker')}>
                 <Text style={[styles.registerText, styles.registerLink]}>
                   Daftar disini
                 </Text>

@@ -17,7 +17,9 @@ const registerValidationSchema = yup.object().shape({
         .required('Alamat email dibutuhkan'),
     phone: yup
         .number()
-        .required('nomor telephone dibutuhkan'),
+        .min(10, 'Phone number required minimal 10 chars')
+        .max(12, 'Phone number required maximal 12 chars')
+        .required('Phone number field is required'),
     password: yup
         .string()
         .min(8, ({ min }) => `Password must be at least ${min} characters`)
@@ -138,7 +140,7 @@ export default SignupWorker
 const styles = StyleSheet.create({
     padding: {
         paddingHorizontal: 16,
-        backgroundColor: '#e5e5e5',
+        backgroundColor: '#F6F7F8',
         flex: 1
     },
     logo: {
@@ -166,7 +168,8 @@ const styles = StyleSheet.create({
     },
     label: {
         marginTop: 20,
-        color: '#9ea0a5'
+        color: '#9ea0a5',
+        fontSize: 12,
     },
     btnSignup: {
         marginTop: 50,
@@ -176,8 +179,8 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         textTransform: 'capitalize',
         justifyContent: 'center',
-        marginTop: 20,
-        marginBottom: 20
+        marginTop: 28,
+        marginBottom: 110,
     },
     link: {
         color: '#fbb017'
