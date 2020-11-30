@@ -23,7 +23,10 @@ export default function Welcome({navigation}) {
             <Text style={styles.textBtnPrimary}>Masuk sebagai pekerja</Text>
           </Button>
           <Text style={styles.center}>atau</Text>
-          <Button block style={styles.btnSecondary}>
+          <Button
+            block
+            style={styles.btnSecondary}
+            onPress={() => navigation.navigate('LoginRecruiter')}>
             <Text style={styles.textBtnSecondary}>Masuk sebagai perekrut</Text>
           </Button>
         </View>

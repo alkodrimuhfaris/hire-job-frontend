@@ -5,6 +5,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 // import screens
 import Welcome from './Welcome';
 import LoginWorker from './LoginWorker';
+import LoginRecruiter from './LoginRecruiter';
 
 // import navigator
 const Stack = createStackNavigator();
@@ -24,6 +25,11 @@ export default function Main() {
           <Stack.Screen
             name="LoginWorker"
             component={LoginWorker}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="LoginRecruiter"
+            component={LoginRecruiter}
             options={{headerShown: false}}
           />
         </Stack.Navigator>
