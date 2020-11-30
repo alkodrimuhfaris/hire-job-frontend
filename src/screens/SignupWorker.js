@@ -24,7 +24,7 @@ const registerValidationSchema = yup.object().shape({
         .required('Password dibutuhkan'),
 })
 
-const SignUpUser = () => {
+const SignupWorker = () => {
     return (
         <Container>
             <ScrollView>
@@ -133,7 +133,7 @@ const SignUpUser = () => {
     )
 }
 
-export default SignUpUser
+export default SignupWorker
 
 const styles = StyleSheet.create({
     padding: {

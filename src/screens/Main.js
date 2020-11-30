@@ -4,7 +4,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 
 // import screens
 import Welcome from './Welcome';
-import SignUpUser from './SignUpUser'
+import SignupWorker from './SignupWorker'
 
 // import navigator
 const Stack = createStackNavigator();
@@ -22,8 +22,8 @@ export default function Main() {
             options={{ headerShown: false }}
           />
           <Stack.Screen
-            name="signUp"
-            component={SignUpUser}
+            name="SignupWorker"
+            component={SignupWorker}
             options={{ headerShown: false }}
           />
         </Stack.Navigator>
