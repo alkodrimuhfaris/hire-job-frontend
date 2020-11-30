@@ -67,7 +67,7 @@ export default function LoginRecruiter({navigation}) {
                 <Text style={styles.error}>{errors.password}</Text>
               )}
             </View>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => navigation.navigate('Forgot')}>
               <Text style={styles.forgot}>Lupa kata sandi?</Text>
             </TouchableOpacity>
             <Button block style={styles.btnPrimary} onPress={handleSubmit}>

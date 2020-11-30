@@ -6,7 +6,7 @@ import * as Yup from 'yup';
 
 import Logo from '../assets/img/logo-purple.png';
 
-export default function LoginWorker() {
+export default function LoginWorker({navigation}) {
   const schema = Yup.object().shape({
     email: Yup.string()
       .email('Email is invalid')
@@ -67,7 +67,7 @@ export default function LoginWorker() {
                 <Text style={styles.error}>{errors.password}</Text>
               )}
             </View>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => navigation.navigate('Forgot')}>
               <Text style={styles.forgot}>Lupa kata sandi?</Text>
             </TouchableOpacity>
             <Button block style={styles.btnPrimary} onPress={handleSubmit}>

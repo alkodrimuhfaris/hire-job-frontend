@@ -7,6 +7,7 @@ import Welcome from './Welcome';
 import LoginWorker from './LoginWorker';
 import LoginRecruiter from './LoginRecruiter';
 import SignupRecruiter from './SignupRecruiter';
+import Forgot from './ForgotPassword';
 
 // import navigator
 const Stack = createStackNavigator();
@@ -31,6 +32,11 @@ export default function Main() {
           <Stack.Screen
             name="LoginRecruiter"
             component={LoginRecruiter}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="Forgot"
+            component={Forgot}
             options={{headerShown: false}}
           />
           <Stack.Screen
