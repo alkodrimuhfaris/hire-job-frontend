@@ -1,29 +1,64 @@
 import React from 'react';
 import {Image, StyleSheet, View} from 'react-native';
 import {Button, Text, Container, Content, Item, Input} from 'native-base';
+import {Formik} from 'formik';
+import * as Yup from 'yup';
 
 import Logo from '../assets/img/logo-purple.png';
 
 export default function ForgotPassword() {
+  const schema = Yup.object().shape({
+    email: Yup.string()
+      .email('Email is invalid')
+      .required('Email field is required'),
+  });
+
   return (
     <Container style={styles.parent}>
-      <Content style={styles.padding}>
-        <Image source={Logo} style={styles.logo} />
-        <Text style={styles.header}>Reset password</Text>
-        <Text style={styles.subHeader}>
-          Enter your password user account’s verified email and we will send you
-          a password reset link.
-        </Text>
-        <View>
-          <Text style={styles.label}>Email</Text>
-          <Item regular style={styles.fieldColor}>
-            <Input placeholder="Masukkan alamat email" style={styles.input} />
-          </Item>
-        </View>
-        <Button block style={styles.btnPrimary}>
-          <Text style={styles.textBtnPrimary}>Send password reset email</Text>
-        </Button>
-      </Content>
+      <Formik
+        initialValues={{
+          email: '',
+        }}
+        validationSchema={schema}
+        onSubmit={(values) => console.log(values)}>
+        {({
+          handleChange,
+          handleBlur,
+          handleSubmit,
+          values,
+          touched,
+          errors,
+        }) => (
+          <Content style={styles.padding}>
+            <Image source={Logo} style={styles.logo} />
+            <Text style={styles.header}>Reset password</Text>
+            <Text style={styles.subHeader}>
+              Enter your password user account’s verified email and we will send
+              you a password reset link.
+            </Text>
+            <View>
+              <Text style={styles.label}>Email</Text>
+              <Item regular style={styles.fieldColor}>
+                <Input
+                  placeholder="Masukkan alamat email"
+                  style={styles.input}
+                  onChangeText={handleChange('email')}
+                  onBlur={handleBlur('email')}
+                  value={values.email}
+                />
+              </Item>
+              {touched.email && errors.email && (
+                <Text style={styles.error}>{errors.email}</Text>
+              )}
+            </View>
+            <Button block style={styles.btnPrimary} onPress={handleSubmit}>
+              <Text style={styles.textBtnPrimary}>
+                Send password reset email
+              </Text>
+            </Button>
+          </Content>
+        )}
+      </Formik>
     </Container>
   );
 }
