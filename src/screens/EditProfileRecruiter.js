@@ -8,10 +8,28 @@ import {
 } from 'react-native';
 import {Text, Button, Card, Item, Input} from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import {Formik} from 'formik';
+import * as Yup from 'yup';
 
 import Avatar from '../assets/img/profile.png';
 
 export default function EditProfileRecruiter({navigation}) {
+  const schema = Yup.object().shape({
+    companyName: Yup.string().required('Company name field is required'),
+    companyField: Yup.string().required('Company field is required'),
+    city: Yup.string().required('City field is required'),
+    description: Yup.string().required('Description field is required'),
+    email: Yup.string()
+      .email('Email is invalid')
+      .required('Email field is required'),
+    instagram: Yup.string(),
+    phoneNumber: Yup.string()
+      .min(10, 'Phone number required minimal 10 chars')
+      .max(12, 'Phone number required maximal 12 chars')
+      .required('Phone number field is required'),
+    linkedin: Yup.string(),
+  });
+
   return (
     <>
       <ScrollView>
@@ -28,85 +46,170 @@ export default function EditProfileRecruiter({navigation}) {
             </View>
           </View>
         </Card>
-        <View style={styles.padding}>
-          <Button block style={styles.btnPrimary}>
-            <Text style={styles.textBtnPrimary}>Simpan</Text>
-          </Button>
-          <Button
-            block
-            style={styles.btnSecondary}
-            onPress={() => navigation.goBack()}>
-            <Text style={styles.textBtnSecondary}>Batal</Text>
-          </Button>
-        </View>
-        <Card
-          style={[styles.cardUp, styles.padding, styles.paddingVertical]}
-          transparent>
-          <Text style={styles.header}>Data Diri</Text>
-          <View style={styles.fieldMargin}>
-            <Text style={styles.label}>Nama Perusahaan</Text>
-            <Item regular>
-              <Input
-                placeholder="Masukkan nama perusahaan"
-                style={styles.input}
-              />
-            </Item>
-          </View>
-          <View style={styles.fieldMargin}>
-            <Text style={styles.label}>Bidang</Text>
-            <Item regular>
-              <Input
-                placeholder="Masukkan bidang perusahaan ex: IT"
-                style={styles.input}
-              />
-            </Item>
-          </View>
-          <View style={styles.fieldMargin}>
-            <Text style={styles.label}>Kota</Text>
-            <Item regular>
-              <Input placeholder="Masukkan kota" style={styles.input} />
-            </Item>
-          </View>
-          <View style={styles.fieldMargin}>
-            <Text style={styles.label}>Deskrpsi</Text>
-            <Item regular>
-              <Input
-                placeholder="Tuliskan deskripsi singkat"
-                style={styles.input}
-                numberOfLines={5}
-                multiline
-              />
-            </Item>
-          </View>
-          <View style={styles.fieldMargin}>
-            <Text style={styles.label}>Email</Text>
-            <Item regular>
-              <Input placeholder="Masukkan email" style={styles.input} />
-            </Item>
-          </View>
-          <View style={styles.fieldMargin}>
-            <Text style={styles.label}>Instagram</Text>
-            <Item regular>
-              <Input placeholder="Masukkan Instagram" style={styles.input} />
-            </Item>
-          </View>
-          <View style={styles.fieldMargin}>
-            <Text style={styles.label}>Nomor telepon</Text>
-            <Item regular>
-              <Input
-                placeholder="Masukkan nomor telepon"
-                style={styles.input}
-                keyboardType="phone-pad"
-              />
-            </Item>
-          </View>
-          <View style={styles.fieldMargin}>
-            <Text style={styles.label}>Linkedin</Text>
-            <Item regular>
-              <Input placeholder="Masukkan Linkedin" style={styles.input} />
-            </Item>
-          </View>
-        </Card>
+        <Formik
+          initialValues={{
+            companyName: '',
+            companyField: '',
+            city: '',
+            description: '',
+            email: '',
+            instagram: '',
+            phoneNumber: '',
+            linkedin: '',
+          }}
+          validationSchema={schema}
+          onSubmit={(values) => console.log(values)}>
+          {({
+            handleChange,
+            handleBlur,
+            handleSubmit,
+            values,
+            touched,
+            errors,
+          }) => (
+            <View>
+              <View style={styles.padding}>
+                <Button block style={styles.btnPrimary} onPress={handleSubmit}>
+                  <Text style={styles.textBtnPrimary}>Simpan</Text>
+                </Button>
+                <Button
+                  block
+                  style={styles.btnSecondary}
+                  onPress={() => navigation.goBack()}>
+                  <Text style={styles.textBtnSecondary}>Batal</Text>
+                </Button>
+              </View>
+              <Card
+                style={[styles.cardUp, styles.padding, styles.paddingVertical]}
+                transparent>
+                <Text style={styles.header}>Data Diri</Text>
+                <View style={styles.fieldMargin}>
+                  <Text style={styles.label}>Nama Perusahaan</Text>
+                  <Item regular>
+                    <Input
+                      placeholder="Masukkan nama perusahaan"
+                      style={styles.input}
+                      onChangeText={handleChange('companyName')}
+                      onBlur={handleBlur('companyName')}
+                      value={values.companyName}
+                    />
+                  </Item>
+                  {touched.companyName && errors.companyName && (
+                    <Text style={styles.error}>{errors.companyName}</Text>
+                  )}
+                </View>
+                <View style={styles.fieldMargin}>
+                  <Text style={styles.label}>Bidang</Text>
+                  <Item regular>
+                    <Input
+                      placeholder="Masukkan bidang perusahaan ex: IT"
+                      style={styles.input}
+                      onChangeText={handleChange('companyField')}
+                      onBlur={handleBlur('companyField')}
+                      value={values.companyField}
+                    />
+                  </Item>
+                  {touched.companyField && errors.companyField && (
+                    <Text style={styles.error}>{errors.companyField}</Text>
+                  )}
+                </View>
+                <View style={styles.fieldMargin}>
+                  <Text style={styles.label}>Kota</Text>
+                  <Item regular>
+                    <Input
+                      placeholder="Masukkan kota"
+                      style={styles.input}
+                      onChangeText={handleChange('city')}
+                      onBlur={handleBlur('city')}
+                      value={values.city}
+                    />
+                  </Item>
+                  {touched.city && errors.city && (
+                    <Text style={styles.error}>{errors.city}</Text>
+                  )}
+                </View>
+                <View style={styles.fieldMargin}>
+                  <Text style={styles.label}>Deskrpsi</Text>
+                  <Item regular>
+                    <Input
+                      placeholder="Tuliskan deskripsi singkat"
+                      style={styles.input}
+                      numberOfLines={5}
+                      multiline
+                      onChangeText={handleChange('description')}
+                      onBlur={handleBlur('description')}
+                      value={values.description}
+                    />
+                  </Item>
+                  {touched.description && errors.description && (
+                    <Text style={styles.error}>{errors.description}</Text>
+                  )}
+                </View>
+                <View style={styles.fieldMargin}>
+                  <Text style={styles.label}>Email</Text>
+                  <Item regular>
+                    <Input
+                      placeholder="Masukkan email"
+                      style={styles.input}
+                      onChangeText={handleChange('email')}
+                      onBlur={handleBlur('email')}
+                      value={values.email}
+                    />
+                  </Item>
+                  {touched.email && errors.email && (
+                    <Text style={styles.error}>{errors.email}</Text>
+                  )}
+                </View>
+                <View style={styles.fieldMargin}>
+                  <Text style={styles.label}>Instagram</Text>
+                  <Item regular>
+                    <Input
+                      placeholder="Masukkan Instagram"
+                      style={styles.input}
+                      onChangeText={handleChange('instagram')}
+                      onBlur={handleBlur('instagram')}
+                      value={values.instagram}
+                    />
+                  </Item>
+                  {touched.instagram && errors.instagram && (
+                    <Text style={styles.error}>{errors.instagram}</Text>
+                  )}
+                </View>
+                <View style={styles.fieldMargin}>
+                  <Text style={styles.label}>Nomor telepon</Text>
+                  <Item regular>
+                    <Input
+                      placeholder="Masukkan nomor telepon"
+                      style={styles.input}
+                      keyboardType="phone-pad"
+                      onChangeText={handleChange('phoneNumber')}
+                      onBlur={handleBlur('phoneNumber')}
+                      value={values.phoneNumber}
+                    />
+                  </Item>
+                  {touched.phoneNumber && errors.phoneNumber && (
+                    <Text style={styles.error}>{errors.phoneNumber}</Text>
+                  )}
+                </View>
+                <View style={styles.fieldMargin}>
+                  <Text style={styles.label}>Linkedin</Text>
+                  <Item regular>
+                    <Input
+                      placeholder="Masukkan Linkedin"
+                      style={styles.input}
+                      onChangeText={handleChange('linkedin')}
+                      onBlur={handleBlur('linkedin')}
+                      value={values.linkedin}
+                    />
+                  </Item>
+                  {touched.linkedin && errors.linkedin && (
+                    <Text style={styles.error}>{errors.linkedin}</Text>
+                  )}
+                </View>
+              </Card>
+            </View>
+          )}
+        </Formik>
       </ScrollView>
     </>
   );
@@ -204,5 +307,9 @@ const styles = StyleSheet.create({
   },
   fieldMargin: {
     marginTop: 30,
+  },
+  error: {
+    fontSize: 12,
+    color: 'red',
   },
 });
