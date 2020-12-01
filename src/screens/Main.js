@@ -16,6 +16,7 @@ import Search from './Search';
 import Chat from './Chat';
 import Profile from './Profile';
 import Home from './Home';
+import EditProfile from './EditProfile';
 
 // import navigator
 const Stack = createStackNavigator();
@@ -87,6 +88,11 @@ export default function Main() {
           <Stack.Screen
             name="Notif"
             component={Notif}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="EditProfile"
+            component={EditProfile}
             options={{headerShown: false}}
           />
         </Stack.Navigator>
