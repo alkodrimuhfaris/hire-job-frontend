@@ -9,7 +9,7 @@ import profile from '../assets/img/profile.png';
 import FirstRoute from '../components/Portofolio';
 import SecondRoute from '../components/Experience';
 
-const Profile = () => {
+const ProfileWorker = () => {
   const [index, setIndex] = React.useState(0);
   const [routes] = React.useState([
     {key: 'first', title: 'Portofolio'},
@@ -41,7 +41,7 @@ const Profile = () => {
               or want to use on the desktop? Check the cheatsheet.
             </Text>
             <Button block style={styles.btnHire}>
-              <Text>Hire</Text>
+              <Text>Edit</Text>
             </Button>
           </View>
           <View style={styles.div}>
@@ -92,7 +92,7 @@ const Profile = () => {
   );
 };
 
-export default Profile;
+export default ProfileWorker;
 
 const styles = StyleSheet.create({
   cardUp: {

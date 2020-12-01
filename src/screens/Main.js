@@ -11,11 +11,16 @@ import SignupRecruiter from './SignupRecruiter';
 import SignupWorker from './SignupWorker';
 import Forgot from './ForgotPassword';
 import Reset from './ResetPassword';
-import Notif from './Notification';
 import Search from './Search';
 import Chat from './Chat';
-import Profile from './Profile';
+
+// import recruiter screen
 import Home from './Home';
+
+// import worker screen
+import HomeWorker from './HomeWorker';
+import NotificationWorker from './NotificationWorker';
+import ProfileWorker from './ProfileWorker';
 
 // import navigator
 const Stack = createStackNavigator();
@@ -23,19 +28,21 @@ const Tab = createBottomTabNavigator();
 
 //Tab Button Navigation
 import BottomNavigation from '../components/BottomTab';
-const MainApp = () => {
+const MainAppWorker = () => {
   return (
     <Tab.Navigator tabBar={(props) => <BottomNavigation {...props} />}>
-      <Tab.Screen name="Home" component={Home} />
+      <Tab.Screen name="HomeWorker" component={HomeWorker} />
       <Tab.Screen name="Search" component={Search} />
       <Tab.Screen name="Chat" component={Chat} />
-      <Tab.Screen name="Profile" component={Profile} />
+      <Tab.Screen name="ProfileWorker" component={ProfileWorker} />
     </Tab.Navigator>
   );
 };
 
 export default function Main() {
   const isLogin = true;
+  const isWorker = true;
+  const isRecruiter = false;
 
   return (
     <NavigationContainer>
@@ -78,18 +85,20 @@ export default function Main() {
           />
         </Stack.Navigator>
       ) : (
-        <Stack.Navigator>
-          <Stack.Screen
-            name="MainApp"
-            component={MainApp}
-            options={{headerShown: false}}
-          />
-          <Stack.Screen
-            name="Notif"
-            component={Notif}
-            options={{headerShown: false}}
-          />
-        </Stack.Navigator>
+        isWorker && (
+          <Stack.Navigator>
+            <Stack.Screen
+              name="MainAppWorker"
+              component={MainAppWorker}
+              options={{headerShown: false}}
+            />
+            <Stack.Screen
+              name="NotificationWorker"
+              component={NotificationWorker}
+              options={{headerShown: false}}
+            />
+          </Stack.Navigator>
+        )
       )}
     </NavigationContainer>
   );
