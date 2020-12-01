@@ -51,7 +51,7 @@ const BottomNavigation = ({state, descriptors, navigation}) => {
         };
 
         const Icon = () => {
-          if (label === 'Home') {
+          if (label === 'HomeWorker' || label === 'HomeRecruiter') {
             return isFocused ? <HomeActive /> : <Home />;
           }
           if (label === 'Search') {
@@ -60,7 +60,7 @@ const BottomNavigation = ({state, descriptors, navigation}) => {
           if (label === 'Chat') {
             return isFocused ? <ChatActive /> : <Chat />;
           }
-          if (label === 'Profile') {
+          if (label === 'ProfileWorker' || label === 'ProfileRecruiter') {
             return isFocused ? <ProfileActive /> : <Profile />;
           }
           return <Home />;
