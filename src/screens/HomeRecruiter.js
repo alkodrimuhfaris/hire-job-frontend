@@ -3,9 +3,9 @@ import {FlatList, StyleSheet, View, TouchableOpacity} from 'react-native';
 import {Text, Container, Content} from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 
-import Card from '../components/HomeCard';
+import Card from '../components/HomeCardRecruiter';
 
-export default function Home({navigation}) {
+export default function HomeRecruiter({navigation}) {
   //dummy data
   const DATA = [
     {
@@ -29,7 +29,8 @@ export default function Home({navigation}) {
           <Text style={styles.date}>Sen, 21 April 2020</Text>
           <Text style={styles.user}>Hai, Mohammad!</Text>
         </View>
-        <TouchableOpacity onPress={() => navigation.navigate('Notif')}>
+        <TouchableOpacity
+          onPress={() => navigation.navigate('NotificationRecruiter')}>
           <Icon name="bell" size={24} color="#ffff" />
         </TouchableOpacity>
       </View>

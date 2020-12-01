@@ -15,7 +15,8 @@ import Search from './Search';
 import Chat from './Chat';
 
 // import recruiter screen
-import Home from './Home';
+import HomeRecruiter from './HomeRecruiter';
+import NotificationRecruiter from './NotificationRecruiter';
 
 // import worker screen
 import HomeWorker from './HomeWorker';
@@ -39,10 +40,20 @@ const MainAppWorker = () => {
   );
 };
 
+const MainAppRecruiter = () => {
+  return (
+    <Tab.Navigator tabBar={(props) => <BottomNavigation {...props} />}>
+      <Tab.Screen name="HomeRecruiter" component={HomeRecruiter} />
+      <Tab.Screen name="Search" component={Search} />
+      <Tab.Screen name="Chat" component={Chat} />
+      <Tab.Screen name="ProfileRecruiter" component={ProfileWorker} />
+    </Tab.Navigator>
+  );
+};
+
 export default function Main() {
   const isLogin = true;
-  const isWorker = true;
-  const isRecruiter = false;
+  const isWorker = false;
 
   return (
     <NavigationContainer>
@@ -84,21 +95,32 @@ export default function Main() {
             options={{headerShown: false}}
           />
         </Stack.Navigator>
+      ) : isWorker ? (
+        <Stack.Navigator>
+          <Stack.Screen
+            name="MainAppWorker"
+            component={MainAppWorker}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="NotificationWorker"
+            component={NotificationWorker}
+            options={{headerShown: false}}
+          />
+        </Stack.Navigator>
       ) : (
-        isWorker && (
-          <Stack.Navigator>
-            <Stack.Screen
-              name="MainAppWorker"
-              component={MainAppWorker}
-              options={{headerShown: false}}
-            />
-            <Stack.Screen
-              name="NotificationWorker"
-              component={NotificationWorker}
-              options={{headerShown: false}}
-            />
-          </Stack.Navigator>
-        )
+        <Stack.Navigator>
+          <Stack.Screen
+            name="MainAppRecruiter"
+            component={MainAppRecruiter}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="NotificationRecruiter"
+            component={NotificationRecruiter}
+            options={{headerShown: false}}
+          />
+        </Stack.Navigator>
       )}
     </NavigationContainer>
   );
