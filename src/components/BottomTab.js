@@ -1,7 +1,6 @@
 import React from 'react';
 import {StyleSheet, View, TouchableOpacity} from 'react-native';
 
-//import assets icons
 import Home from '../assets/img/menu.svg';
 import HomeActive from '../assets/img/menuActive.svg';
 import Search from '../assets/img/search.svg';
