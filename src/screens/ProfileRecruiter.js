@@ -5,7 +5,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 
 import profile from '../assets/img/profile.png';
 
-const ProfileRecruiter = () => {
+const ProfileRecruiter = ({navigation}) => {
   return (
     <>
       <ScrollView>
@@ -23,7 +23,10 @@ const ProfileRecruiter = () => {
               Vestibulum erat orci, mollis nec gravida sed, ornare quis urna.
               Curabitur eu lacus fringilla, vestibulum risus at.
             </Text>
-            <Button block style={styles.btn}>
+            <Button
+              block
+              style={styles.btn}
+              onPress={() => navigation.navigate('EditProfileRecruiter')}>
               <Text style={styles.textBtn}>Edit Profile</Text>
             </Button>
           </View>

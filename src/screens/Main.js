@@ -18,6 +18,7 @@ import Chat from './Chat';
 import HomeRecruiter from './HomeRecruiter';
 import NotificationRecruiter from './NotificationRecruiter';
 import ProfileRecruiter from './ProfileRecruiter';
+import EditProfileRecruiter from './EditProfileRecruiter';
 
 // import worker screen
 import HomeWorker from './HomeWorker';
@@ -119,6 +120,11 @@ export default function Main() {
           <Stack.Screen
             name="NotificationRecruiter"
             component={NotificationRecruiter}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="EditProfileRecruiter"
+            component={EditProfileRecruiter}
             options={{headerShown: false}}
           />
         </Stack.Navigator>
