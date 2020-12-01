@@ -26,10 +26,10 @@ import BottomNavigation from '../components/BottomTab'
 const MainApp = () => {
   return (
     <Tab.Navigator tabBar={props => <BottomNavigation {...props} />}>
+      <Tab.Screen name="Profile" component={Profile} />
       <Tab.Screen name="Home" component={Home} />
       <Tab.Screen name="Search" component={Search} />
       <Tab.Screen name="Chat" component={Chat} />
-      <Tab.Screen name="Profile" component={Profile} />
     </Tab.Navigator>
   )
 }
@@ -41,6 +41,11 @@ export default function Main() {
     <NavigationContainer>
       {!isLogin && (
         <Stack.Navigator>
+          <Stack.Screen
+            name="MainApp"
+            component={MainApp}
+            options={{ headerShown: false }}
+          />
           <Stack.Screen
             name="Welcome"
             component={Welcome}
@@ -79,11 +84,6 @@ export default function Main() {
           <Stack.Screen
             name="Notif"
             component={Notif}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="MainApp"
-            component={MainApp}
             options={{ headerShown: false }}
           />
         </Stack.Navigator>
