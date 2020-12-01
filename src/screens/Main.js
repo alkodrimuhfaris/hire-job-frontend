@@ -8,7 +8,7 @@ import Welcome from './Welcome';
 import LoginWorker from './LoginWorker';
 import LoginRecruiter from './LoginRecruiter';
 import SignupRecruiter from './SignupRecruiter';
-import SignupWorker from './SignupWorker'
+import SignupWorker from './SignupWorker';
 import Forgot from './ForgotPassword';
 import Reset from './ResetPassword';
 import Notif from './Notification';
