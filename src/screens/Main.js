@@ -10,6 +10,7 @@ import SignupRecruiter from './SignupRecruiter';
 import SignupWorker from './SignupWorker'
 import Forgot from './ForgotPassword';
 import Reset from './ResetPassword';
+import Notif from './Notification'; 
 
 // import navigator
 const Stack = createStackNavigator();
@@ -54,6 +55,11 @@ export default function Main() {
           <Stack.Screen
             name="SignupWorker"
             component={SignupWorker}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="Notif"
+            component={Notif}
             options={{ headerShown: false }}
           />
         </Stack.Navigator>
