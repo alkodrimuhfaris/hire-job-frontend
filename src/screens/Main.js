@@ -17,6 +17,7 @@ import Chat from './Chat';
 // import recruiter screen
 import HomeRecruiter from './HomeRecruiter';
 import NotificationRecruiter from './NotificationRecruiter';
+import ProfileRecruiter from './ProfileRecruiter';
 
 // import worker screen
 import HomeWorker from './HomeWorker';
@@ -46,7 +47,7 @@ const MainAppRecruiter = () => {
       <Tab.Screen name="HomeRecruiter" component={HomeRecruiter} />
       <Tab.Screen name="Search" component={Search} />
       <Tab.Screen name="Chat" component={Chat} />
-      <Tab.Screen name="ProfileRecruiter" component={ProfileWorker} />
+      <Tab.Screen name="ProfileRecruiter" component={ProfileRecruiter} />
     </Tab.Navigator>
   );
 };
