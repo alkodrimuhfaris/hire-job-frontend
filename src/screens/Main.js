@@ -16,6 +16,7 @@ import Chat from './Chat';
 
 // import recruiter screen
 import HomeRecruiter from './HomeRecruiter';
+import DetailWorker from './DetailWorker';
 import NotificationRecruiter from './NotificationRecruiter';
 import ProfileRecruiter from './ProfileRecruiter';
 import EditProfileRecruiter from './EditProfileRecruiter';
@@ -115,6 +116,11 @@ export default function Main() {
           <Stack.Screen
             name="MainAppRecruiter"
             component={MainAppRecruiter}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="DetailWorker"
+            component={DetailWorker}
             options={{headerShown: false}}
           />
           <Stack.Screen
