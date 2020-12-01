@@ -1,16 +1,15 @@
 import React from 'react';
-
 import {StyleSheet, Text, View} from 'react-native';
 
-const Search = () => {
+const Chat = () => {
   return (
     <View style={styles.parent}>
-      <Text>Search Screen wew</Text>
+      <Text>Chat Screen</Text>
     </View>
   );
 };
 
-export default Search;
+export default Chat;
 
 const styles = StyleSheet.create({
   parent: {
@@ -19,4 +18,3 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
 });
-
