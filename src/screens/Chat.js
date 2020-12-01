@@ -1,20 +1,20 @@
-import React from 'react'
-import { StyleSheet, Text, View } from 'react-native'
+import React from 'react';
+import {StyleSheet, Text, View} from 'react-native';
 
 const Chat = () => {
-    return (
-        <View style={styles.parent}>
-            <Text>Chat Screen</Text>
-        </View>
-    )
-}
+  return (
+    <View style={styles.parent}>
+      <Text>Chat Screen</Text>
+    </View>
+  );
+};
 
-export default Chat
+export default Chat;
 
 const styles = StyleSheet.create({
-    parent:{
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center'
-    }
-})
+  parent: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+});
