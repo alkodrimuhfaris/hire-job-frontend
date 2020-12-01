@@ -16,7 +16,8 @@ import Search from './Search';
 import Chat from './Chat';
 import Profile from './Profile';
 import Home from './Home';
-
+import ResultSearch from './ResultSearch';
+import ListChat from './ListChat'
 // import navigator
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -28,7 +29,7 @@ const MainApp = () => {
     <Tab.Navigator tabBar={(props) => <BottomNavigation {...props} />}>
       <Tab.Screen name="Home" component={Home} />
       <Tab.Screen name="Search" component={Search} />
-      <Tab.Screen name="Chat" component={Chat} />
+      <Tab.Screen name="Chat" component={ListChat} />
       <Tab.Screen name="Profile" component={Profile} />
     </Tab.Navigator>
   );
@@ -87,6 +88,11 @@ export default function Main() {
           <Stack.Screen
             name="Notif"
             component={Notif}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="ResultSearch"
+            component={ResultSearch}
             options={{headerShown: false}}
           />
         </Stack.Navigator>

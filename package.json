@@ -25,11 +25,8 @@
     "react-native-safe-area-context": "^3.1.9",
     "react-native-screens": "^2.15.0",
     "react-native-svg": "^12.1.0",
-<<<<<<< HEAD
     "react-native-vector-icons": "^7.1.0",
-=======
     "react-native-tab-view": "^2.15.2",
->>>>>>> a2a70e07895fe60301686648c84a20ef55d249af
     "react-redux": "^7.2.2",
     "redux": "^4.0.5",
     "redux-logger": "^3.0.6",
