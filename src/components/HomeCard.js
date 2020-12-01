@@ -2,7 +2,7 @@ import React from 'react';
 import {Image, StyleSheet, View} from 'react-native';
 import {Text} from 'native-base';
 
-import Avatar from '../assets/img/avatar.png';
+import Avatar from '../assets/img/profile.png';
 
 export default function HomeCard({item}) {
   return (
