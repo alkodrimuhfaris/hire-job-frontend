@@ -26,7 +26,7 @@ import HomeWorker from './HomeWorker';
 import DetailRecruiter from './DetailRecruiter';
 import NotificationWorker from './NotificationWorker';
 import ProfileWorker from './ProfileWorker';
-import EditProfile from './EditProfile';
+import EditProfileWorker from './EditProfileWorker';
 
 // import navigator
 const Stack = createStackNavigator();
@@ -118,8 +118,8 @@ export default function Main() {
             options={{headerShown: false}}
           />
           <Stack.Screen
-            name="EditProfile"
-            component={EditProfile}
+            name="EditProfileWorker"
+            component={EditProfileWorker}
             options={{headerShown: false}}
           />
         </Stack.Navigator>

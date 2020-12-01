@@ -9,7 +9,7 @@ import profile from '../assets/img/profile.png';
 import FirstRoute from '../components/Portofolio';
 import SecondRoute from '../components/Experience';
 
-const ProfileWorker = () => {
+const ProfileWorker = ({navigation}) => {
   const [index, setIndex] = React.useState(0);
   const [routes] = React.useState([
     {key: 'first', title: 'Portofolio'},
@@ -40,7 +40,10 @@ const ProfileWorker = () => {
               version 4.7. Want to request new icons? Here's how. Need vectors
               or want to use on the desktop? Check the cheatsheet.
             </Text>
-            <Button block style={styles.btnHire}>
+            <Button
+              block
+              style={styles.btnHire}
+              onPress={() => navigation.navigate('EditProfileWorker')}>
               <Text style={styles.textBtn}>Edit Profile</Text>
             </Button>
           </View>
