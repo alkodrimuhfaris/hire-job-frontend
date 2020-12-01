@@ -22,6 +22,10 @@ export default function HomeWorker({navigation}) {
     },
   ];
 
+  function getRecruiterDetail() {
+    navigation.navigate('DetailRecruiter');
+  }
+
   return (
     <Container style={styles.parent}>
       <View style={[styles.header, styles.padding]}>
@@ -41,7 +45,7 @@ export default function HomeWorker({navigation}) {
             horizontal
             data={DATA}
             renderItem={({item}) => (
-              <TouchableOpacity>
+              <TouchableOpacity onPress={getRecruiterDetail}>
                 <Card item={item} />
               </TouchableOpacity>
             )}
@@ -53,7 +57,7 @@ export default function HomeWorker({navigation}) {
             horizontal
             data={DATA}
             renderItem={({item}) => (
-              <TouchableOpacity>
+              <TouchableOpacity onPress={getRecruiterDetail}>
                 <Card item={item} />
               </TouchableOpacity>
             )}

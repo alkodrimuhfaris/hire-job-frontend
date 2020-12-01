@@ -23,6 +23,7 @@ import EditProfileRecruiter from './EditProfileRecruiter';
 
 // import worker screen
 import HomeWorker from './HomeWorker';
+import DetailRecruiter from './DetailRecruiter';
 import NotificationWorker from './NotificationWorker';
 import ProfileWorker from './ProfileWorker';
 
@@ -56,7 +57,7 @@ const MainAppRecruiter = () => {
 
 export default function Main() {
   const isLogin = true;
-  const isWorker = false;
+  const isWorker = true;
 
   return (
     <NavigationContainer>
@@ -103,6 +104,11 @@ export default function Main() {
           <Stack.Screen
             name="MainAppWorker"
             component={MainAppWorker}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="DetailRecruiter"
+            component={DetailRecruiter}
             options={{headerShown: false}}
           />
           <Stack.Screen
