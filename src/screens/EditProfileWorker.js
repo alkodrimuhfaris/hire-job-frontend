@@ -50,8 +50,8 @@ const registerValidationSchema = yup.object().shape({
 
 const EditProfile = ({navigation}) => {
   const [data, setData] = React.useState(0);
-  const [AvatarSource, setAvatarSource] = React.useState(profile);
-  const [portofolio, setPortofolio] = React.useState();
+  const [AvatarSource, setAvatarSource] = React.useState('');
+  const [portofolio, setPortofolio] = React.useState('');
 
   const takePictures = () => {
     ImagePicker.showImagePicker(options, (response) => {
@@ -60,7 +60,7 @@ const EditProfile = ({navigation}) => {
       } else if (response.error) {
         console.log('ImagePicker Error: ', response.error);
       } else {
-        setAvatarSource({AvatarSource: response.uri});
+        setAvatarSource(response.uri);
         const form = new FormData();
         form.append('pictures', {
           uri: response.uri,
@@ -78,7 +78,7 @@ const EditProfile = ({navigation}) => {
       } else if (response.error) {
         console.log('ImagePicker Error: ', response.error);
       } else {
-        setPortofolio({portofolio: response.uri});
+        setPortofolio(response.uri);
         const form = new FormData();
         form.append('pictures', {
           uri: response.uri,
@@ -95,7 +95,10 @@ const EditProfile = ({navigation}) => {
         {/*Card for Profile*/}
         <Card style={styles.cardUp} transparent>
           <View style={styles.parent}>
-            <Image source={AvatarSource} style={styles.avatar} />
+            <Image
+              source={AvatarSource ? {uri: AvatarSource} : profile}
+              style={styles.avatar}
+            />
             <TouchableOpacity onPress={takePictures} style={styles.edit}>
               <Icon name="pencil" size={20} color="#8e8e8e" />
               <Text style={styles.textEdit}>Edit</Text>
@@ -438,12 +441,19 @@ const EditProfile = ({navigation}) => {
                       }}
                     />
                     <Label style={styles.label}>Upload Gambar</Label>
-                    <TouchableOpacity onPress={pickPortofolio}>
-                      <View style={styles.InputImage}>
-                        <Icon name="cloud-upload" size={50} color="#8e8e8e" />
-                        <Text note>upload file dari penyimpanan</Text>
-                      </View>
-                    </TouchableOpacity>
+                    {portofolio === '' ? (
+                      <TouchableOpacity onPress={pickPortofolio}>
+                        <View style={styles.InputImage}>
+                          <Icon name="cloud-upload" size={50} color="#8e8e8e" />
+                          <Text note>upload file dari penyimpanan</Text>
+                        </View>
+                      </TouchableOpacity>
+                    ) : (
+                      <Image
+                        style={styles.portofolioImg}
+                        source={{uri: portofolio}}
+                      />
+                    )}
                     <Button block style={styles.addExperience} transparent>
                       <Text style={styles.experience}>Tambah Portofolio</Text>
                     </Button>
@@ -610,5 +620,11 @@ const styles = StyleSheet.create({
     borderRadius: 1,
     position: 'relative',
     height: 175,
+  },
+  portofolioImg: {
+    width: 287,
+    height: 175,
+    marginTop: 10,
+    borderRadius: 10,
   },
 });
