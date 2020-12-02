@@ -11,12 +11,22 @@ import SignupRecruiter from './SignupRecruiter';
 import SignupWorker from './SignupWorker';
 import Forgot from './ForgotPassword';
 import Reset from './ResetPassword';
-import Notif from './Notification';
 import Search from './Search';
 import Chat from './Chat';
-import Profile from './Profile';
-import Home from './Home';
-import EditProfile from './EditProfile';
+
+// import recruiter screen
+import HomeRecruiter from './HomeRecruiter';
+import DetailWorker from './DetailWorker';
+import NotificationRecruiter from './NotificationRecruiter';
+import ProfileRecruiter from './ProfileRecruiter';
+import EditProfileRecruiter from './EditProfileRecruiter';
+
+// import worker screen
+import HomeWorker from './HomeWorker';
+import DetailRecruiter from './DetailRecruiter';
+import NotificationWorker from './NotificationWorker';
+import ProfileWorker from './ProfileWorker';
+import EditProfileWorker from './EditProfileWorker';
 
 // import navigator
 const Stack = createStackNavigator();
@@ -24,19 +34,31 @@ const Tab = createBottomTabNavigator();
 
 //Tab Button Navigation
 import BottomNavigation from '../components/BottomTab';
-const MainApp = () => {
+const MainAppWorker = () => {
   return (
     <Tab.Navigator tabBar={(props) => <BottomNavigation {...props} />}>
-      <Tab.Screen name="Home" component={Home} />
+      <Tab.Screen name="HomeWorker" component={HomeWorker} />
       <Tab.Screen name="Search" component={Search} />
       <Tab.Screen name="Chat" component={Chat} />
-      <Tab.Screen name="Profile" component={Profile} />
+      <Tab.Screen name="ProfileWorker" component={ProfileWorker} />
+    </Tab.Navigator>
+  );
+};
+
+const MainAppRecruiter = () => {
+  return (
+    <Tab.Navigator tabBar={(props) => <BottomNavigation {...props} />}>
+      <Tab.Screen name="HomeRecruiter" component={HomeRecruiter} />
+      <Tab.Screen name="Search" component={Search} />
+      <Tab.Screen name="Chat" component={Chat} />
+      <Tab.Screen name="ProfileRecruiter" component={ProfileRecruiter} />
     </Tab.Navigator>
   );
 };
 
 export default function Main() {
   const isLogin = true;
+  const isWorker = true;
 
   return (
     <NavigationContainer>
@@ -78,21 +100,49 @@ export default function Main() {
             options={{headerShown: false}}
           />
         </Stack.Navigator>
+      ) : isWorker ? (
+        <Stack.Navigator>
+          <Stack.Screen
+            name="MainAppWorker"
+            component={MainAppWorker}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="DetailRecruiter"
+            component={DetailRecruiter}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="NotificationWorker"
+            component={NotificationWorker}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="EditProfileWorker"
+            component={EditProfileWorker}
+            options={{headerShown: false}}
+          />
+        </Stack.Navigator>
       ) : (
         <Stack.Navigator>
           <Stack.Screen
-            name="MainApp"
-            component={MainApp}
+            name="MainAppRecruiter"
+            component={MainAppRecruiter}
             options={{headerShown: false}}
           />
           <Stack.Screen
-            name="Notif"
-            component={Notif}
+            name="DetailWorker"
+            component={DetailWorker}
             options={{headerShown: false}}
           />
           <Stack.Screen
-            name="EditProfile"
-            component={EditProfile}
+            name="NotificationRecruiter"
+            component={NotificationRecruiter}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="EditProfileRecruiter"
+            component={EditProfileRecruiter}
             options={{headerShown: false}}
           />
         </Stack.Navigator>

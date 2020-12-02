@@ -41,7 +41,7 @@ const registerValidationSchema = yup.object().shape({
   dueTime: yup.date(),
 });
 
-const EditProfile = () => {
+const EditProfile = ({navigation}) => {
   const [data, setData] = React.useState(0);
   return (
     <>
@@ -87,7 +87,11 @@ const EditProfile = () => {
                 transparent>
                 <Text style={styles.save}>Simpan</Text>
               </Button>
-              <Button block style={styles.btnCencel} transparent>
+              <Button
+                block
+                style={styles.btnCencel}
+                transparent
+                onPress={() => navigation.goBack()}>
                 <Text style={styles.cencel}>Batal</Text>
               </Button>
               <Card style={styles.cardUp} transparent>

@@ -10,10 +10,10 @@ const SecondRoute = () => (
       <Image source={company} style={styles.profile} />
       <View style={styles.desc}>
         <Text style={styles.position}>Engginer</Text>
-        <Text>TokoPedia</Text>
+        <Text style={styles.company}>TokoPedia</Text>
         <Text style={styles.dueTime}>July 19 - January 20</Text>
         <Text style={styles.totalTime}>6 Mounth</Text>
-        <Text>
+        <Text style={styles.jobdesk}>
           Material design themed tab bar. To customize the tab bar, you'd need
           to use the renderTabBar prop of TabView to render the TabBar and pass
           additional props. For example, to customize the{' '}
@@ -43,13 +43,29 @@ const styles = StyleSheet.create({
   },
   position: {
     fontSize: 20,
-    fontWeight: 'bold',
+    fontWeight: '600',
+    color: '#1F2A36',
   },
   dueTime: {
-    color: '#8e8e8e',
+    color: '#9EA0A5',
+    fontSize: 16,
+    fontWeight: '400',
   },
   totalTime: {
-    color: '#8e8e8e',
+    color: '#9EA0A5',
+    fontSize: 16,
+    fontWeight: '400',
     marginBottom: 15,
+  },
+  company: {
+    color: '#46505C',
+    fontSize: 18,
+    fontWeight: '400',
+  },
+  jobdesk: {
+    color: '#1F2A36',
+    fontSize: 14,
+    fontWeight: '400',
+    lineHeight: 24,
   },
 });
