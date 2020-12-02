@@ -1,6 +1,7 @@
 import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 
 // import screens
 import Welcome from './Welcome';
@@ -11,16 +12,35 @@ import SignupWorker from './SignupWorker';
 import Forgot from './ForgotPassword';
 import Reset from './ResetPassword';
 import Notif from './Notification';
+import Search from './Search';
+import Chat from './Chat';
+import Profile from './Profile';
+import Home from './Home';
+import EditProfile from './EditProfile';
 
 // import navigator
 const Stack = createStackNavigator();
+const Tab = createBottomTabNavigator();
+
+//Tab Button Navigation
+import BottomNavigation from '../components/BottomTab';
+const MainApp = () => {
+  return (
+    <Tab.Navigator tabBar={(props) => <BottomNavigation {...props} />}>
+      <Tab.Screen name="Home" component={Home} />
+      <Tab.Screen name="Search" component={Search} />
+      <Tab.Screen name="Chat" component={Chat} />
+      <Tab.Screen name="Profile" component={Profile} />
+    </Tab.Navigator>
+  );
+};
 
 export default function Main() {
-  const isLogin = false;
+  const isLogin = true;
 
   return (
     <NavigationContainer>
-      {!isLogin && (
+      {!isLogin ? (
         <Stack.Navigator>
           <Stack.Screen
             name="Welcome"
@@ -57,9 +77,22 @@ export default function Main() {
             component={SignupWorker}
             options={{headerShown: false}}
           />
+        </Stack.Navigator>
+      ) : (
+        <Stack.Navigator>
+          <Stack.Screen
+            name="MainApp"
+            component={MainApp}
+            options={{headerShown: false}}
+          />
           <Stack.Screen
             name="Notif"
             component={Notif}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="EditProfile"
+            component={EditProfile}
             options={{headerShown: false}}
           />
         </Stack.Navigator>
