@@ -1,11 +1,5 @@
 import * as React from 'react';
-import {
-  StyleSheet,
-  View,
-  ScrollView,
-  Image,
-  TouchableOpacity,
-} from 'react-native';
+import {StyleSheet, View, ScrollView, Image} from 'react-native';
 import {Text, Button, Card} from 'native-base';
 import {useNavigation} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -19,7 +13,6 @@ import SecondRoute from '../components/Experience';
 const DetailWorker = () => {
   const navigation = useNavigation();
   const [index, setIndex] = React.useState(0);
-  const [avatar, setAvatar] = React.useState();
   const [routes] = React.useState([
     {key: 'first', title: 'Portofolio'},
     {key: 'second', title: 'Pengalaman kerja'},
