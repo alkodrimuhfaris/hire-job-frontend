@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, {useState} from 'react';
 import {
   StyleSheet,
   View,
@@ -10,10 +10,12 @@ import {Text, Button, Card, Item, Input} from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {Formik} from 'formik';
 import * as Yup from 'yup';
+import ImagePicker from 'react-native-image-picker';
 
 import Avatar from '../assets/img/profile.png';
 
 export default function EditProfileRecruiter({navigation}) {
+  const [photo, setPhoto] = useState('');
   const schema = Yup.object().shape({
     companyName: Yup.string().required('Company name field is required'),
     companyField: Yup.string().required('Company field is required'),
@@ -30,13 +32,45 @@ export default function EditProfileRecruiter({navigation}) {
     linkedin: Yup.string(),
   });
 
+  function selectImage() {
+    let options = {
+      maxWidth: 300,
+      maxHeight: 300,
+      mediaType: 'photo',
+      noData: true,
+      storageOptions: {
+        skipBackup: true,
+      },
+    };
+
+    ImagePicker.showImagePicker(options, (response) => {
+      if (response.didCancel) {
+      } else if (response.error) {
+        console.log('ImagePicker Error: ', response.error);
+      } else {
+        const source = {
+          uri: response.uri,
+          name: response.fileName,
+          type: response.type,
+        };
+
+        setPhoto(source.uri);
+        const form = new FormData();
+        form.append('image', source);
+      }
+    });
+  }
+
   return (
     <>
       <ScrollView>
         <Card style={styles.cardUp} transparent>
           <View style={styles.parent}>
-            <TouchableOpacity>
-              <Image source={Avatar} style={styles.avatar} />
+            <TouchableOpacity onPress={selectImage}>
+              <Image
+                source={photo ? {uri: photo} : Avatar}
+                style={styles.avatar}
+              />
             </TouchableOpacity>
             <Text style={styles.name}>PT. Martabat Jaya Abadi</Text>
             <Text style={styles.field}>Financial</Text>
