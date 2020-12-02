@@ -12,7 +12,6 @@ import SignupWorker from './SignupWorker';
 import Forgot from './ForgotPassword';
 import Reset from './ResetPassword';
 import Search from './Search';
-import Chat from './Chat';
 
 // import recruiter screen
 import HomeRecruiter from './HomeRecruiter';
@@ -27,7 +26,8 @@ import DetailRecruiter from './DetailRecruiter';
 import NotificationWorker from './NotificationWorker';
 import ProfileWorker from './ProfileWorker';
 import EditProfileWorker from './EditProfileWorker';
-
+import ResultSearch from './ResultSearch';
+import ListChat from './ListChat';
 // import navigator
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -39,7 +39,7 @@ const MainAppWorker = () => {
     <Tab.Navigator tabBar={(props) => <BottomNavigation {...props} />}>
       <Tab.Screen name="HomeWorker" component={HomeWorker} />
       <Tab.Screen name="Search" component={Search} />
-      <Tab.Screen name="Chat" component={Chat} />
+      <Tab.Screen name="Chat" component={ListChat} />
       <Tab.Screen name="ProfileWorker" component={ProfileWorker} />
     </Tab.Navigator>
   );
@@ -50,7 +50,7 @@ const MainAppRecruiter = () => {
     <Tab.Navigator tabBar={(props) => <BottomNavigation {...props} />}>
       <Tab.Screen name="HomeRecruiter" component={HomeRecruiter} />
       <Tab.Screen name="Search" component={Search} />
-      <Tab.Screen name="Chat" component={Chat} />
+      <Tab.Screen name="Chat" component={ListChat} />
       <Tab.Screen name="ProfileRecruiter" component={ProfileRecruiter} />
     </Tab.Navigator>
   );
@@ -143,6 +143,11 @@ export default function Main() {
           <Stack.Screen
             name="EditProfileRecruiter"
             component={EditProfileRecruiter}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="ResultSearch"
+            component={ResultSearch}
             options={{headerShown: false}}
           />
         </Stack.Navigator>
