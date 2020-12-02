@@ -8,12 +8,20 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import RadioForm from 'react-native-simple-radio-button';
+import {useDispatch} from 'react-redux';
 import {Text, Button, Card, Title, Form, Label, Textarea} from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import ImagePicker from 'react-native-image-picker';
 import {Formik} from 'formik';
 import * as yup from 'yup';
 
 import profile from '../assets/img/profile.png';
+
+const options = {
+  title: 'my picture',
+  takePhotoButtonTitle: 'Take Photo',
+  chooseFromLibraryButtonTitle: 'Choose Photo',
+};
 
 var radio_props = [
   {label: 'Aplikasi Mobile            ', data: 0},
@@ -43,13 +51,37 @@ const registerValidationSchema = yup.object().shape({
 
 const EditProfile = ({navigation}) => {
   const [data, setData] = React.useState(0);
+  const [AvatarSource, setAvatarSource] = React.useState('');
+
+  const takePictures = () => {
+    ImagePicker.showImagePicker(options, (response) => {
+      console.log('Response = ', response);
+
+      if (response.didCancel) {
+        console.log('User cancelled image picker');
+      } else if (response.error) {
+        console.log('ImagePicker Error: ', response.error);
+      } else {
+        setAvatarSource(response.uri);
+        const form = new FormData();
+        form.append('pictures', {
+          uri: response.uri,
+          name: response.fileName,
+          type: response.type,
+        });
+      }
+    });
+  };
+
   return (
     <>
       <ScrollView>
         {/*Card for Profile*/}
         <Card style={styles.cardUp} transparent>
           <View style={styles.parent}>
-            <Image source={profile} style={styles.avatar} />
+            <TouchableOpacity onPress={takePictures}>
+              <Image source={profile} style={styles.avatar} />
+            </TouchableOpacity>
             <View style={styles.edit}>
               <Icon name="pencil" size={20} color="#8e8e8e" />
               <Text style={styles.textEdit}>Edit</Text>
