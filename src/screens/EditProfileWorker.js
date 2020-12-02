@@ -50,7 +50,8 @@ const registerValidationSchema = yup.object().shape({
 
 const EditProfile = ({navigation}) => {
   const [data, setData] = React.useState(0);
-  const [AvatarSource, setAvatarSource] = React.useState();
+  const [AvatarSource, setAvatarSource] = React.useState(profile);
+  const [portofolio, setPortofolio] = React.useState();
 
   const takePictures = () => {
     ImagePicker.showImagePicker(options, (response) => {
@@ -59,7 +60,25 @@ const EditProfile = ({navigation}) => {
       } else if (response.error) {
         console.log('ImagePicker Error: ', response.error);
       } else {
-        setAvatarSource({uri: response.uri});
+        setAvatarSource({AvatarSource: response.uri});
+        const form = new FormData();
+        form.append('pictures', {
+          uri: response.uri,
+          name: response.fileName,
+          type: response.type,
+        });
+      }
+    });
+  };
+  // Open Image Library:
+  const pickPortofolio = () => {
+    ImagePicker.launchImageLibrary(options, (response) => {
+      if (response.didCancel) {
+        console.log('User cancelled image picker');
+      } else if (response.error) {
+        console.log('ImagePicker Error: ', response.error);
+      } else {
+        setPortofolio({portofolio: response.uri});
         const form = new FormData();
         form.append('pictures', {
           uri: response.uri,
@@ -76,10 +95,7 @@ const EditProfile = ({navigation}) => {
         {/*Card for Profile*/}
         <Card style={styles.cardUp} transparent>
           <View style={styles.parent}>
-            <Image
-              source={AvatarSource ? AvatarSource : profile}
-              style={styles.avatar}
-            />
+            <Image source={AvatarSource} style={styles.avatar} />
             <TouchableOpacity onPress={takePictures} style={styles.edit}>
               <Icon name="pencil" size={20} color="#8e8e8e" />
               <Text style={styles.textEdit}>Edit</Text>
@@ -422,7 +438,7 @@ const EditProfile = ({navigation}) => {
                       }}
                     />
                     <Label style={styles.label}>Upload Gambar</Label>
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={pickPortofolio}>
                       <View style={styles.InputImage}>
                         <Icon name="cloud-upload" size={50} color="#8e8e8e" />
                         <Text note>upload file dari penyimpanan</Text>
