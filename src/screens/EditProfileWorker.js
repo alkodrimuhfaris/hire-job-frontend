@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import RadioForm from 'react-native-simple-radio-button';
-import {Text, Button, Card, Title, Form, Label} from 'native-base';
+import {Text, Button, Card, Title, Form, Label, Textarea} from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {Formik} from 'formik';
 import * as yup from 'yup';
@@ -16,37 +16,29 @@ import * as yup from 'yup';
 import profile from '../assets/img/profile.png';
 
 var radio_props = [
-  {label: 'Aplikasi Mobile', data: 0},
+  {label: 'Aplikasi Mobile            ', data: 0},
   {label: 'Aplikasi Web', data: 1},
 ];
 
 const registerValidationSchema = yup.object().shape({
-  name: yup
+  name: yup.string().matches(/(\w.+\s).+/, 'Masukkan Lebih dari 2 nama'),
+  job: yup.string(),
+  domisili: yup.string(),
+  TempatKerja: yup.string(),
+  description: yup
     .string()
-    .matches(/(\w.+\s).+/, 'Masukkan Lebih dari 2 nama')
-    .required('Nama dibutuhkan'),
-  job: yup.string().required('Job title dibutuhkan'),
-  domisili: yup.string().required('domisili dibutuhkan'),
-  TempatKerja: yup.string().required('Tempat Kerja dibutuhkan'),
-  description: yup.string().required('deskripsi dibutuhkan'),
-  skill: yup
-    .string()
-    .matches(/(\w.+\s).+/, 'Masukkan Lebih dari 2 skill')
-    .required('Skill dibutuhkan'),
+    .max(255, 'cannot more 255 character')
+    .required('deskripsi dibutuhkan'),
+  skill: yup.string().matches(/(\w.+\s).+/, 'Masukkan Lebih dari 2 skill'),
   Time: yup.string().required('Waktu dibutuhkan'),
-  email: yup
+  link: yup
     .string()
-    .email('Please enter valid email')
-    .required('Alamat email dibutuhkan'),
-  phone: yup
-    .number()
-    .min(10, 'Phone number required minimal 10 chars')
-    .max(12, 'Phone number required maximal 12 chars')
-    .required('Phone number field is required'),
-  password: yup
-    .string()
-    .min(8, ({min}) => `Password must be at least ${min} characters`)
-    .required('Password dibutuhkan'),
+    .matches(
+      /((https?):\/\/)?(www.)?[a-z0-9]+(\.[a-z]{2,}){1,3}(#?\/?[a-zA-Z0-9#]+)*\/?(\?[a-zA-Z0-9-_]+=[a-zA-Z0-9-%]+&?)?$/,
+      'Enter correct url!',
+    )
+    .required('Please enter website'),
+  dueTime: yup.date(),
 });
 
 const EditProfile = ({navigation}) => {
@@ -160,10 +152,10 @@ const EditProfile = ({navigation}) => {
                       <Label style={styles.label}>
                         Masukkan Deskripsi Singkat
                       </Label>
-                      <TextInput
+                      <Textarea
                         name="description"
                         placeholder="Masukkan Deskripsi Singkat"
-                        style={styles.textInput}
+                        style={styles.InputDesc}
                         onChangeText={handleChange('description')}
                         onBlur={handleBlur('description')}
                         value={values.description}
@@ -276,21 +268,21 @@ const EditProfile = ({navigation}) => {
                     )}
                     <Label style={styles.label}>Bulan/ Tahun</Label>
                     <TextInput
-                      name="Time"
+                      name="dueTime"
                       placeholder="January 2020"
                       style={styles.textInput}
-                      onChangeText={handleChange('Time')}
-                      onBlur={handleBlur('Time')}
-                      value={values.Time}
+                      onChangeText={handleChange('dueTime')}
+                      onBlur={handleBlur('dueTime')}
+                      value={values.dueTime}
                     />
-                    {errors.Time && (
-                      <Text style={styles.textError}>{errors.Time}</Text>
+                    {errors.dueTime && (
+                      <Text style={styles.textError}>{errors.dueTime}</Text>
                     )}
-                    <Label style={styles.label}>Masukkan descripsi</Label>
-                    <TextInput
+                    <Label style={styles.label}>Masukkan deskripsi</Label>
+                    <Textarea
                       name="description"
-                      placeholder="Masukkan descripsi singkat"
-                      style={styles.textInput}
+                      placeholder="Masukkan deskripsi singkat"
+                      style={styles.InputDesc}
                       onChangeText={handleChange('description')}
                       onBlur={handleBlur('description')}
                       value={values.description}
@@ -316,13 +308,7 @@ const EditProfile = ({navigation}) => {
             <Formik
               validationSchema={registerValidationSchema}
               initialValues={{name: '', email: '', phone: '', password: ''}}
-              onSubmit={(values) =>
-                this.props.registerAction(
-                  values.name,
-                  values.email,
-                  values.password,
-                )
-              }>
+              onSubmit={(values) => console.log(values)}>
               {({
                 handleChange,
                 handleBlur,
@@ -345,11 +331,11 @@ const EditProfile = ({navigation}) => {
                     {errors.name && (
                       <Text style={styles.textError}>{errors.name}</Text>
                     )}
-                    <Label style={styles.label}>Masukkan descripsi</Label>
-                    <TextInput
+                    <Label style={styles.label}>Masukkan deskripsi</Label>
+                    <Textarea
                       name="description"
-                      placeholder="Masukkan descripsi singkat"
-                      style={styles.textInput}
+                      placeholder="Masukkan deskripsi singkat"
+                      style={styles.InputDesc}
                       onChangeText={handleChange('description')}
                       onBlur={handleBlur('description')}
                       value={values.description}
@@ -359,40 +345,41 @@ const EditProfile = ({navigation}) => {
                     )}
                     <Label style={styles.label}>Link Publikasi</Label>
                     <TextInput
-                      name="phone"
+                      name="link"
                       placeholder="Masukkan Link Publikasi"
                       style={styles.textInput}
-                      onChangeText={handleChange('phone')}
-                      onBlur={handleBlur('phone')}
-                      value={values.phone}
+                      onChangeText={handleChange('link')}
+                      onBlur={handleBlur('link')}
+                      value={values.link}
                     />
-                    {errors.phone && (
-                      <Text style={styles.textError}>{errors.phone}</Text>
+                    {errors.link && (
+                      <Text style={styles.textError}>{errors.link}</Text>
                     )}
                     <Label style={styles.label}>Link Repo</Label>
                     <TextInput
-                      name="password"
+                      name="link"
                       placeholder="Masukkan Link Repo"
                       style={styles.textInput}
-                      onChangeText={handleChange('password')}
-                      onBlur={handleBlur('password')}
-                      value={values.password}
+                      onChangeText={handleChange('link')}
+                      onBlur={handleBlur('link')}
+                      value={values.link}
                     />
-                    {errors.password && (
-                      <Text style={styles.textError}>{errors.password}</Text>
+                    {errors.link && (
+                      <Text style={styles.textError}>{errors.link}</Text>
                     )}
                     <Label style={styles.label}>Tempat Kerja</Label>
                     <TextInput
-                      name="password"
+                      name="TempatKerja"
                       placeholder="Tempat Kerja Terkait"
                       style={styles.textInput}
-                      onChangeText={handleChange('password')}
-                      onBlur={handleBlur('password')}
-                      value={values.password}
+                      onChangeText={handleChange('TempatKerja')}
+                      onBlur={handleBlur('TempatKerja')}
+                      value={values.TempatKerja}
                     />
-                    {errors.password && (
-                      <Text style={styles.textError}>{errors.password}</Text>
+                    {errors.TempatKerja && (
+                      <Text style={styles.textError}>{errors.TempatKerja}</Text>
                     )}
+                    <Label style={styles.label}>Jenis Portofolio</Label>
                     <RadioForm
                       style={styles.radioBtn}
                       radio_props={radio_props}
@@ -519,6 +506,11 @@ const styles = StyleSheet.create({
     borderRadius: 3,
     padding: 10,
   },
+  InputDesc: {
+    borderColor: '#e2e5ed',
+    borderWidth: 1,
+    height: 125,
+  },
   label: {
     marginTop: 20,
     color: '#9ea0a5',
@@ -571,6 +563,6 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderRadius: 1,
     position: 'relative',
-    height: 150,
+    height: 175,
   },
 });
