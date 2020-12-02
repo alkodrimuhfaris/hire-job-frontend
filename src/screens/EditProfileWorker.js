@@ -8,7 +8,6 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import RadioForm from 'react-native-simple-radio-button';
-import {useDispatch} from 'react-redux';
 import {Text, Button, Card, Title, Form, Label, Textarea} from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import ImagePicker from 'react-native-image-picker';
