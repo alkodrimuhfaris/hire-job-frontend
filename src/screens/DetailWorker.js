@@ -1,6 +1,7 @@
 import * as React from 'react';
 import {StyleSheet, View, ScrollView, Image} from 'react-native';
 import {Text, Button, Card} from 'native-base';
+import {useNavigation} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {TabView, SceneMap, TabBar} from 'react-native-tab-view';
 
@@ -10,6 +11,7 @@ import FirstRoute from '../components/Portofolio';
 import SecondRoute from '../components/Experience';
 
 const DetailWorker = () => {
+  const navigation = useNavigation();
   const [index, setIndex] = React.useState(0);
   const [routes] = React.useState([
     {key: 'first', title: 'Portofolio'},
@@ -40,7 +42,10 @@ const DetailWorker = () => {
               version 4.7. Want to request new icons? Here's how. Need vectors
               or want to use on the desktop? Check the cheatsheet.
             </Text>
-            <Button block style={styles.btnHire}>
+            <Button
+              block
+              style={styles.btnHire}
+              onPress={() => navigation.navigate('ChatRoom')}>
               <Text style={styles.textBtn}>Hire</Text>
             </Button>
           </View>

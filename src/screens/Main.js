@@ -28,6 +28,9 @@ import NotificationWorker from './NotificationWorker';
 import ProfileWorker from './ProfileWorker';
 import EditProfileWorker from './EditProfileWorker';
 
+//chat screen
+import ChatRoom from './ChatRoom';
+
 // import navigator
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -143,6 +146,11 @@ export default function Main() {
           <Stack.Screen
             name="EditProfileRecruiter"
             component={EditProfileRecruiter}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="ChatRoom"
+            component={ChatRoom}
             options={{headerShown: false}}
           />
         </Stack.Navigator>
