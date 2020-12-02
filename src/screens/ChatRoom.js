@@ -19,18 +19,18 @@ const ChatRoom = () => {
   // data dummy
   const [data, setData] = useState([
     {
-      message: 'hai',
-      mine: 'mine',
-    },
-    {
-      message: 'halo',
+      message: 'good',
     },
     {
       message: 'whats upp ??',
       mine: 'mine',
     },
     {
-      message: 'good',
+      message: 'hai',
+    },
+    {
+      message: 'halo',
+      mine: 'mine',
     },
   ]);
 
@@ -118,7 +118,7 @@ const styles = StyleSheet.create({
     padding: 10,
     bottom: -4,
     height: 50,
-    width: 359,
+    width: '100%',
     backgroundColor: '#ffffff',
     borderRadius: 25,
     shadowRadius: 2,
