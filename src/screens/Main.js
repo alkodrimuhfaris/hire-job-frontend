@@ -13,6 +13,7 @@ import Forgot from './ForgotPassword';
 import Reset from './ResetPassword';
 import Search from './Search';
 import ResultSearch from './ResultSearch';
+import ResultSearchWorker from './ResultSearchWorker';
 
 // import recruiter screen
 import HomeRecruiter from './HomeRecruiter';
@@ -124,6 +125,11 @@ export default function Main() {
           <Stack.Screen
             name="EditProfileWorker"
             component={EditProfileWorker}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="ResultSearchWorker"
+            component={ResultSearchWorker}
             options={{headerShown: false}}
           />
         </Stack.Navigator>
