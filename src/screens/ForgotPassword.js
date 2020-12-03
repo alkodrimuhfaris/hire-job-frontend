@@ -1,21 +1,40 @@
-import React from 'react';
-import {Image, StyleSheet, View} from 'react-native';
+import React, {useEffect} from 'react';
+import {Alert, Image, StyleSheet, View} from 'react-native';
 import {Button, Text, Container, Content, Item, Input} from 'native-base';
 import {Formik} from 'formik';
 import * as Yup from 'yup';
+import {useDispatch, useSelector} from 'react-redux';
+
+// import actions
+import authAction from '../redux/actions/auth';
 
 import Logo from '../assets/img/logo-purple.png';
 
 export default function ForgotPassword({navigation}) {
+  const dispatch = useDispatch();
+  const auth = useSelector((state) => state.auth);
+
   const schema = Yup.object().shape({
     email: Yup.string()
       .email('Email is invalid')
       .required('Email field is required'),
   });
 
-  function isEmailValid(values) {
-    navigation.navigate('Reset');
+  function isEmailValid(data) {
+    dispatch(authAction.forgotPassword(data));
   }
+
+  useEffect(() => {
+    if (auth.isEmailError) {
+      Alert.alert(auth.alertMsg);
+      dispatch(authAction.clearAlert());
+    }
+
+    if (auth.emailValidData.id) {
+      navigation.navigate('Reset', {id: auth.emailValidData.id});
+      dispatch(authAction.clearAlert());
+    }
+  });
 
   return (
     <Container style={styles.parent}>

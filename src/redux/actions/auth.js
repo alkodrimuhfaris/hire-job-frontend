@@ -20,4 +20,12 @@ export default {
   logout: () => ({
     type: 'LOGOUT',
   }),
+  forgotPassword: (data) => ({
+    type: 'FORGOT_PASSWORD',
+    payload: http().post('auth/reset/password', qs.stringify(data)),
+  }),
+  resetPassword: (id, data) => ({
+    type: 'RESET_PASSWORD',
+    payload: http().put(`auth/reset/password/${id}`, qs.stringify(data)),
+  }),
 };
