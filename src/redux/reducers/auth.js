@@ -5,6 +5,8 @@ const initialState = {
   isError: false,
   token: '',
   alertMsg: '',
+  id: 0,
+  isWorker: false,
 };
 
 export default (state = initialState, action) => {
@@ -25,7 +27,7 @@ export default (state = initialState, action) => {
       };
     }
     case 'LOGIN_FULFILLED': {
-      const {roleId} = jwt_decode(action.payload.data.token);
+      const {roleId, id} = jwt_decode(action.payload.data.token);
       return {
         ...state,
         token: action.payload.data.token,
@@ -33,6 +35,7 @@ export default (state = initialState, action) => {
         isError: false,
         isLogin: true,
         isWorker: roleId === 2 ? true : false,
+        id,
         alertMsg: 'Successfully login',
       };
     }

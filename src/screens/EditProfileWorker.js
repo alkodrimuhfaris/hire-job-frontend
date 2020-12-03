@@ -1,5 +1,4 @@
 import * as React from 'react';
-import {useDispatch, useSelector} from 'react-redux';
 import {
   StyleSheet,
   View,
@@ -7,19 +6,21 @@ import {
   Image,
   TextInput,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
 import RadioForm from 'react-native-simple-radio-button';
 import {Text, Button, Card, Title, Form, Label, Textarea} from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import ImagePicker from 'react-native-image-picker';
+import {useDispatch, useSelector} from 'react-redux';
 import {Formik} from 'formik';
 import * as yup from 'yup';
 
 import profile from '../assets/img/profile.png';
 import {API_URL} from '@env';
 
-import profileWorkerAction from '../redux/actions/profileWorker';
 import skillAction from '../redux/actions/skill';
+import profileAction from '../redux/actions/profileWorker';
 
 const options = {
   title: 'my picture',
@@ -28,20 +29,42 @@ const options = {
 };
 
 var radio_props = [
-  {label: 'Aplikasi Mobile            ', data: 0},
-  {label: 'Aplikasi Web', data: 1},
+  {label: 'Aplikasi Mobile            ', value: 0},
+  {label: 'Aplikasi Web', value: 1},
 ];
 
-const registerValidationSchema = yup.object().shape({
-  Time: yup.string().required('Waktu dibutuhkan'),
-  link: yup
+const schemaExperience = yup.object().shape({
+  position: yup.string().required('posisi dibutuhkan '),
+  companyName: yup.string().required('Nama perusahaan dibutuhkan '),
+  startAt: yup.date().required('YYYY-MM-DD'),
+  finishAt: yup.date().required('YYYY-MM-DD'),
+  description: yup
+    .string()
+    .max(255, 'cannot more 255 character')
+    .required('deskripsi dibutuhkan'),
+});
+
+const schemaPortofolio = yup.object().shape({
+  name: yup.string().required('Nama Aplikasi dibutuhkan '),
+  publicLink: yup
     .string()
     .matches(
       /((https?):\/\/)?(www.)?[a-z0-9]+(\.[a-z]{2,}){1,3}(#?\/?[a-zA-Z0-9#]+)*\/?(\?[a-zA-Z0-9-_]+=[a-zA-Z0-9-%]+&?)?$/,
       'Enter correct url!',
     )
     .required('Please enter website'),
-  dueTime: yup.date(),
+  repoLink: yup
+    .string()
+    .matches(
+      /((https?):\/\/)?(www.)?[a-z0-9]+(\.[a-z]{2,}){1,3}(#?\/?[a-zA-Z0-9#]+)*\/?(\?[a-zA-Z0-9-_]+=[a-zA-Z0-9-%]+&?)?$/,
+      'Enter correct url!',
+    )
+    .required('Please enter website'),
+  description: yup
+    .string()
+    .max(255, 'cannot more 255 character')
+    .required('deskripsi dibutuhkan'),
+  company: yup.string().required('Nama tempat kerja terkait '),
 });
 
 const skillValidation = yup.object().shape({
@@ -60,12 +83,14 @@ const profileValidation = yup.object().shape({
 });
 
 const EditProfile = ({navigation}) => {
+  const dispatch = useDispatch();
   const [data, setData] = React.useState(0);
+  const [AvatarSource, setAvatarSource] = React.useState('');
+  const [dataImage, setDataImage] = React.useState();
   const [portofolio, setPortofolio] = React.useState('');
   const profileWorker = useSelector((state) => state.profileWorker);
+  const token = useSelector((state) => state.auth.token);
   const skill = useSelector((state) => state.skill);
-  const auth = useSelector((state) => state.auth);
-  const dispatch = useDispatch();
 
   const takePictures = () => {
     ImagePicker.showImagePicker(options, async (response) => {
@@ -81,16 +106,14 @@ const EditProfile = ({navigation}) => {
           name: response.fileName,
           path: response.path,
         });
-        await dispatch(
-          profileWorkerAction.updateImageProfile(auth.token, form),
-        );
-        return dispatch(profileWorkerAction.getProfile(auth.token));
+        await dispatch(profileAction.updateImageProfile(token, form));
+        return dispatch(profileAction.getProfile(token));
       }
     });
   };
-  // Open Image Library:
+  // Open Image Library fro portofolio
   const pickPortofolio = () => {
-    ImagePicker.launchImageLibrary(options, (response) => {
+    ImagePicker.launchImageLibrary(options, async (response) => {
       if (response.didCancel) {
         console.log('User cancelled image picker');
       } else if (response.error) {
@@ -103,9 +126,30 @@ const EditProfile = ({navigation}) => {
           name: response.fileName,
           type: response.type,
         });
+        await setDataImage(form);
       }
     });
   };
+
+  React.useEffect(() => {
+    console.log(dataImage);
+  });
+
+  async function addExperienceWorker(dataExperience) {
+    await dispatch(profileAction.addExperience(token, dataExperience));
+    if (profileWorker.experienceIsAdded) {
+      Alert.alert(profileWorker.profileAlertMsg);
+    }
+    navigation.navigate('MainAppWorker');
+  }
+
+  async function addPortofolioWorker(dataPortofolio) {
+    await dispatch(profileAction.addPortofolio(token, dataPortofolio));
+    if (profileWorker.experienceIsAdded) {
+      Alert.alert(profileWorker.profileAlertMsg);
+    }
+    navigation.navigate('MainAppWorker');
+  }
 
   return (
     <>
@@ -157,10 +201,8 @@ const EditProfile = ({navigation}) => {
               company: values.TempatKerja,
               bio: values.description,
             };
-            await dispatch(
-              profileWorkerAction.updateProfile(auth.token, dataDiri),
-            );
-            await dispatch(profileWorkerAction.getProfile(auth.token));
+            await dispatch(profileAction.updateProfile(token, dataDiri));
+            await dispatch(profileAction.getProfile(token));
             navigation.goBack();
           }}>
           {({
@@ -276,8 +318,8 @@ const EditProfile = ({navigation}) => {
                 const dataSkill = {
                   name: values.skill,
                 };
-                dispatch(skillAction.postSkill(auth.token, dataSkill));
-                dispatch(skillAction.listSkill(auth.token));
+                dispatch(skillAction.postSkill(token, dataSkill));
+                dispatch(skillAction.listSkill(token));
                 resetForm('');
               }}>
               {({
@@ -296,7 +338,7 @@ const EditProfile = ({navigation}) => {
                       style={styles.inputSkill}
                       onChangeText={handleChange('skill')}
                       onChange={(text) =>
-                        dispatch(skillAction.getSkill(auth.token, text))
+                        dispatch(skillAction.getSkill(token, text))
                       }
                       onBlur={handleBlur('skill')}
                       value={values.skill}
@@ -332,14 +374,15 @@ const EditProfile = ({navigation}) => {
           <View style={styles.padding}>
             <Title style={styles.title}>Pengalaman Kerja</Title>
             <Formik
-              validationSchema={registerValidationSchema}
+              validationSchema={schemaExperience}
               initialValues={{
-                posisi: '',
-                perusahaan: '',
-                bulan: '',
-                descrption: '',
+                position: '',
+                companyName: '',
+                startAt: '',
+                finishAt: '',
+                description: '',
               }}
-              onSubmit={(values) => console.log(values)}>
+              onSubmit={(values) => addExperienceWorker(values)}>
               {({
                 handleChange,
                 handleBlur,
@@ -347,44 +390,57 @@ const EditProfile = ({navigation}) => {
                 values,
                 errors,
                 isValid,
+                touched,
               }) => (
                 <View>
                   <Form>
-                    <Label style={styles.label}>Nama</Label>
+                    <Label style={styles.label}>Position</Label>
                     <TextInput
-                      name="name"
+                      name="position"
                       placeholder="Masukkan Posisi"
                       style={styles.textInput}
-                      onChangeText={handleChange('name')}
-                      onBlur={handleBlur('name')}
-                      value={values.name}
+                      onChangeText={handleChange('position')}
+                      onBlur={handleBlur('position')}
+                      value={values.position}
                     />
-                    {errors.name && (
-                      <Text style={styles.textError}>{errors.name}</Text>
+                    {touched.position && errors.position && (
+                      <Text style={styles.textError}>{errors.position}</Text>
                     )}
                     <Label style={styles.label}>Masukkan Nama Perusahaan</Label>
                     <TextInput
-                      name="name"
+                      name="companyName"
                       placeholder="PT Example"
                       style={styles.textInput}
-                      onChangeText={handleChange('name')}
-                      onBlur={handleBlur('name')}
-                      value={values.name}
+                      onChangeText={handleChange('companyName')}
+                      onBlur={handleBlur('companyName')}
+                      value={values.companyName}
                     />
-                    {errors.name && (
-                      <Text style={styles.textError}>{errors.name}</Text>
+                    {touched.companyName && errors.companyName && (
+                      <Text style={styles.textError}>{errors.companyName}</Text>
                     )}
-                    <Label style={styles.label}>Bulan/ Tahun</Label>
+                    <Label style={styles.label}>Masuk Pada</Label>
                     <TextInput
-                      name="dueTime"
-                      placeholder="January 2020"
+                      name="startAt"
+                      placeholder="2000-1-1"
                       style={styles.textInput}
-                      onChangeText={handleChange('dueTime')}
-                      onBlur={handleBlur('dueTime')}
-                      value={values.dueTime}
+                      onChangeText={handleChange('startAt')}
+                      onBlur={handleBlur('startAt')}
+                      value={values.startAt}
                     />
-                    {errors.dueTime && (
-                      <Text style={styles.textError}>{errors.dueTime}</Text>
+                    {touched.startAt && errors.startAt && (
+                      <Text style={styles.textError}>{errors.startAt}</Text>
+                    )}
+                    <Label style={styles.label}>Keuar pada</Label>
+                    <TextInput
+                      name="finishAt"
+                      placeholder="2000-1-1"
+                      style={styles.textInput}
+                      onChangeText={handleChange('finishAt')}
+                      onBlur={handleBlur('finishAt')}
+                      value={values.finishAt}
+                    />
+                    {touched.finishAt && errors.finishAt && (
+                      <Text style={styles.textError}>{errors.finishAt}</Text>
                     )}
                     <Label style={styles.label}>Masukkan deskripsi</Label>
                     <Textarea
@@ -395,10 +451,15 @@ const EditProfile = ({navigation}) => {
                       onBlur={handleBlur('description')}
                       value={values.description}
                     />
-                    {errors.description && (
+                    {touched.c && errors.description && (
                       <Text style={styles.textError}>{errors.description}</Text>
                     )}
-                    <Button block style={styles.addExperience} transparent>
+                    <Button
+                      style={styles.addExperience}
+                      onPress={handleSubmit}
+                      disabled={!isValid}
+                      block
+                      transparent>
                       <Text style={styles.experience}>
                         Tambah Pengalaman Kerja
                       </Text>
@@ -414,16 +475,25 @@ const EditProfile = ({navigation}) => {
           <View style={styles.padding}>
             <Title style={styles.title}>Portofolio</Title>
             <Formik
-              validationSchema={registerValidationSchema}
-              initialValues={{name: '', email: '', phone: '', password: ''}}
-              onSubmit={(values) => console.log(values)}>
+              validationSchema={schemaPortofolio}
+              initialValues={{
+                name: '',
+                description: '',
+                publicLink: '',
+                repoLink: '',
+                company: '',
+                type: data,
+              }}
+              onSubmit={(values) =>
+                addPortofolioWorker(token, values, dataImage)
+              }>
               {({
                 handleChange,
                 handleBlur,
                 handleSubmit,
                 values,
                 errors,
-                isValid,
+                touched,
               }) => (
                 <View>
                   <Form>
@@ -436,7 +506,7 @@ const EditProfile = ({navigation}) => {
                       onBlur={handleBlur('name')}
                       value={values.name}
                     />
-                    {errors.name && (
+                    {touched.name && errors.name && (
                       <Text style={styles.textError}>{errors.name}</Text>
                     )}
                     <Label style={styles.label}>Masukkan deskripsi</Label>
@@ -448,44 +518,44 @@ const EditProfile = ({navigation}) => {
                       onBlur={handleBlur('description')}
                       value={values.description}
                     />
-                    {errors.description && (
+                    {touched.description && errors.description && (
                       <Text style={styles.textError}>{errors.description}</Text>
                     )}
                     <Label style={styles.label}>Link Publikasi</Label>
                     <TextInput
-                      name="link"
+                      name="publicLink"
                       placeholder="Masukkan Link Publikasi"
                       style={styles.textInput}
-                      onChangeText={handleChange('link')}
-                      onBlur={handleBlur('link')}
-                      value={values.link}
+                      onChangeText={handleChange('publicLink')}
+                      onBlur={handleBlur('publicLink')}
+                      value={values.publicLink}
                     />
-                    {errors.link && (
-                      <Text style={styles.textError}>{errors.link}</Text>
+                    {touched.publicLink && errors.publicLink && (
+                      <Text style={styles.textError}>{errors.publicLink}</Text>
                     )}
                     <Label style={styles.label}>Link Repo</Label>
                     <TextInput
-                      name="link"
+                      name="repoLink"
                       placeholder="Masukkan Link Repo"
                       style={styles.textInput}
-                      onChangeText={handleChange('link')}
-                      onBlur={handleBlur('link')}
-                      value={values.link}
+                      onChangeText={handleChange('repoLink')}
+                      onBlur={handleBlur('repoLink')}
+                      value={values.repoLink}
                     />
-                    {errors.link && (
-                      <Text style={styles.textError}>{errors.link}</Text>
+                    {touched.repoLink && errors.repoLink && (
+                      <Text style={styles.textError}>{errors.repoLink}</Text>
                     )}
                     <Label style={styles.label}>Tempat Kerja</Label>
                     <TextInput
-                      name="TempatKerja"
+                      name="company"
                       placeholder="Tempat Kerja Terkait"
                       style={styles.textInput}
-                      onChangeText={handleChange('TempatKerja')}
-                      onBlur={handleBlur('TempatKerja')}
-                      value={values.TempatKerja}
+                      onChangeText={handleChange('company')}
+                      onBlur={handleBlur('company')}
+                      value={values.company}
                     />
-                    {errors.TempatKerja && (
-                      <Text style={styles.textError}>{errors.TempatKerja}</Text>
+                    {errors.company && (
+                      <Text style={styles.textError}>{errors.company}</Text>
                     )}
                     <Label style={styles.label}>Jenis Portofolio</Label>
                     <RadioForm
@@ -495,9 +565,7 @@ const EditProfile = ({navigation}) => {
                       selectedButtonColor={'#5E50A1'}
                       buttonColor={'#5E50A1'}
                       formHorizontal={true}
-                      onPress={(value) => {
-                        setData({data: data});
-                      }}
+                      onPress={() => setData({data: data})}
                     />
                     <Label style={styles.label}>Upload Gambar</Label>
                     {portofolio === '' ? (
@@ -508,12 +576,18 @@ const EditProfile = ({navigation}) => {
                         </View>
                       </TouchableOpacity>
                     ) : (
-                      <Image
-                        style={styles.portofolioImg}
-                        source={{uri: portofolio}}
-                      />
+                      <TouchableOpacity onPress={pickPortofolio}>
+                        <Image
+                          style={styles.portofolioImg}
+                          source={{uri: portofolio}}
+                        />
+                      </TouchableOpacity>
                     )}
-                    <Button block style={styles.addExperience} transparent>
+                    <Button
+                      block
+                      style={styles.addExperience}
+                      transparent
+                      onPress={handleSubmit}>
                       <Text style={styles.experience}>Tambah Portofolio</Text>
                     </Button>
                   </Form>

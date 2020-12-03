@@ -33,7 +33,6 @@ export default function SignupRecruiter({navigation}) {
 
   function doRegister(data) {
     dispatch(authAction.registerRecruiter(data));
-    navigation.navigate('LoginRecruiter');
   }
 
   useEffect(() => {
