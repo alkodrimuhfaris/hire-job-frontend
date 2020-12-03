@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {
   Image,
   StyleSheet,
@@ -6,10 +6,15 @@ import {
   ScrollView,
   TextInput,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
 import {Button, Text, Container, Title, Form, Label} from 'native-base';
+import {useNavigation} from '@react-navigation/native';
+import {useDispatch, useSelector} from 'react-redux';
 import {Formik} from 'formik';
 import * as yup from 'yup';
+
+import authAction from '../redux/actions/auth';
 
 import Logo from '../assets/img/logo-purple.png';
 
@@ -22,8 +27,8 @@ const registerValidationSchema = yup.object().shape({
     .string()
     .email('Please enter valid email')
     .required('Alamat email dibutuhkan'),
-  phone: yup
-    .number()
+  phoneNumber: yup
+    .string()
     .min(10, 'Phone number required minimal 10 chars')
     .max(12, 'Phone number required maximal 12 chars')
     .required('Phone number field is required'),
@@ -31,9 +36,29 @@ const registerValidationSchema = yup.object().shape({
     .string()
     .min(8, ({min}) => `Password must be at least ${min} characters`)
     .required('Password dibutuhkan'),
+  confirmPassword: yup
+    .string()
+    .oneOf([yup.ref('password'), null], "Password doesn't match")
+    .required('Confirm password field is required'),
 });
 
 const SignupWorker = () => {
+  const navigation = useNavigation();
+  const dispatch = useDispatch();
+  const regiter = useSelector((state) => state.register);
+
+  function doRegister(data) {
+    dispatch(authAction.registerWorker(data));
+    navigation.navigate('LoginWorker');
+  }
+
+  useEffect(() => {
+    if (regiter.isError) {
+      Alert.alert(regiter.message);
+      dispatch(authAction.clearAlert());
+    }
+  });
+
   return (
     <Container>
       <ScrollView>
@@ -43,14 +68,14 @@ const SignupWorker = () => {
           <Text note>Cari pekerjaan yang sesuai impianmu</Text>
           <Formik
             validationSchema={registerValidationSchema}
-            initialValues={{name: '', email: '', phone: '', password: ''}}
-            onSubmit={(values) =>
-              this.props.registerAction(
-                values.name,
-                values.email,
-                values.password,
-              )
-            }>
+            initialValues={{
+              name: '',
+              email: '',
+              phoneNumber: '',
+              password: '',
+              confirmPassword: '',
+            }}
+            onSubmit={(values) => doRegister(values)}>
             {({
               handleChange,
               handleBlur,
@@ -58,6 +83,7 @@ const SignupWorker = () => {
               values,
               errors,
               isValid,
+              touched,
             }) => (
               <View style={styles.register}>
                 <Form>
@@ -70,7 +96,7 @@ const SignupWorker = () => {
                     onBlur={handleBlur('name')}
                     value={values.name}
                   />
-                  {errors.name && (
+                  {touched.name && errors.name && (
                     <Text style={styles.textError}>{errors.name}</Text>
                   )}
                   <Label style={styles.label}>Email</Label>
@@ -83,20 +109,21 @@ const SignupWorker = () => {
                     value={values.email}
                     keyboardType="email-address"
                   />
-                  {errors.email && (
+                  {touched.email && errors.email && (
                     <Text style={styles.textError}>{errors.email}</Text>
                   )}
                   <Label style={styles.label}>Phone</Label>
                   <TextInput
-                    name="phone"
+                    name="phoneNumber"
                     placeholder="Masukkan no handphone"
                     style={styles.textInput}
-                    onChangeText={handleChange('phone')}
-                    onBlur={handleBlur('phone')}
-                    value={values.phone}
+                    onChangeText={handleChange('phoneNumber')}
+                    onBlur={handleBlur('phoneNumber')}
+                    value={values.phoneNumber}
+                    keyboardType={'phone-pad'}
                   />
-                  {errors.phone && (
-                    <Text style={styles.textError}>{errors.phone}</Text>
+                  {errors.phoneNumber && (
+                    <Text style={styles.textError}>{errors.phoneNumber}</Text>
                   )}
                   <Label style={styles.label}>Kata Sandi</Label>
                   <TextInput
@@ -108,7 +135,7 @@ const SignupWorker = () => {
                     value={values.password}
                     secureTextEntry
                   />
-                  {errors.password && (
+                  {touched.password && errors.password && (
                     <Text style={styles.textError}>{errors.password}</Text>
                   )}
                   <Label style={styles.label}>Konfirmasi Kata Sandi</Label>
@@ -116,13 +143,15 @@ const SignupWorker = () => {
                     name="password"
                     placeholder="Konfirmasi kata sandi"
                     style={styles.textInput}
-                    onChangeText={handleChange('password')}
-                    onBlur={handleBlur('password')}
-                    value={values.password}
+                    onChangeText={handleChange('confirmPassword')}
+                    onBlur={handleBlur('confirmPassword')}
+                    value={values.confirmPassword}
                     secureTextEntry
                   />
-                  {errors.password && (
-                    <Text style={styles.textError}>{errors.password}</Text>
+                  {touched.confirmPassword && errors.confirmPassword && (
+                    <Text style={styles.textError}>
+                      {errors.confirmPassword}
+                    </Text>
                   )}
                   <Button
                     style={styles.btnSignup}
