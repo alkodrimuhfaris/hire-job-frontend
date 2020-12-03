@@ -24,8 +24,12 @@ export default function ResultSearch({navigation}) {
     },
   ];
   const dispatch = useDispatch()
-  const data = useSelector(state=> state.resultSearch)
-
+  const worker = useSelector(state=> state.resultSearch)
+  console.log(worker);
+  
+  React.useEffect(() => {
+    dispatch()
+  })
   return (
     <Container style={styles.parent}>
       <View style={styles.btnBack}>

@@ -8,6 +8,7 @@ import {
   FlatList,
   StyleSheet,
 } from 'react-native';
+import Null from '../assets/img/bgChatNull.svg'
 import {useSelector, useDispatch} from 'react-redux';
 import messageAction from '../redux/actions/message';
 import RenderItem from '../components/MessageList';
@@ -22,7 +23,7 @@ export default function ListChat({navigation}) {
   const pageInfo = useSelector((state) => state.message.allChatPageInfo);
   const isLoading = useSelector((state) => state.message.isLoading);
   const [loading, setLoading] = React.useState(false);
-
+  console.log(chatList.length)
   React.useEffect(() => {
     dispatch(messageAction.getAllList(token));
   }, []);
@@ -48,7 +49,12 @@ export default function ListChat({navigation}) {
       <View style={styles.title}>
         <Text style={styles.header}>Utama</Text>
       </View>
-      <View>
+      {chatList.length === 0 ? (
+        <View style={styles.null}>
+        <Null />
+      </View>
+      ):(
+        <View>
         <FlatList
           data={chatList}
           onRefresh={doRefresh}
@@ -61,13 +67,10 @@ export default function ListChat({navigation}) {
           keyExtractor={(index) => index.id.toString()}
         />
       </View>
+      )
 
-      {/* rendering if no message list */}
-      {/* {chatList.length || isLoading ? null : (
-        <View style={styles.null}>
-          <Null />
-        </View>
-      )} */}
+      }
+      
     </View>
   );
 }
