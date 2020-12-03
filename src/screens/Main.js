@@ -29,7 +29,7 @@ import NotificationWorker from './NotificationWorker';
 import ProfileWorker from './ProfileWorker';
 import EditProfileWorker from './EditProfileWorker';
 
-//chat screen
+// chat screen
 import ChatRoom from './ChatRoom';
 import ListChat from './ListChat';
 
@@ -130,6 +130,11 @@ export default function Main() {
           <Stack.Screen
             name="ResultSearchWorker"
             component={ResultSearchWorker}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="ChatRoom"
+            component={ChatRoom}
             options={{headerShown: false}}
           />
         </Stack.Navigator>
