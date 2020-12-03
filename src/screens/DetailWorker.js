@@ -1,6 +1,7 @@
 import * as React from 'react';
 import {StyleSheet, View, ScrollView, Image} from 'react-native';
 import {Text, Button, Card} from 'native-base';
+import {useNavigation} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {TabView, SceneMap, TabBar} from 'react-native-tab-view';
 
@@ -9,11 +10,12 @@ import profile from '../assets/img/profile.png';
 import FirstRoute from '../components/Portofolio';
 import SecondRoute from '../components/Experience';
 
-const Profile = () => {
+const DetailWorker = () => {
+  const navigation = useNavigation();
   const [index, setIndex] = React.useState(0);
   const [routes] = React.useState([
     {key: 'first', title: 'Portofolio'},
-    {key: 'second', title: 'Pengalaman Kerja'},
+    {key: 'second', title: 'Pengalaman kerja'},
   ]);
 
   const renderScene = SceneMap({
@@ -29,9 +31,9 @@ const Profile = () => {
           <View style={styles.parent}>
             <Image source={profile} style={styles.avatar} />
             <Text style={styles.name}>Louis Tamlison</Text>
-            <Text>Web developer</Text>
+            <Text style={styles.field}>Web developer</Text>
             <View style={styles.location}>
-              <Icon name="map-marker" size={25} color="#8e8e8e" />
+              <Icon name="map-marker" size={24} color="#8e8e8e" />
               <Text style={styles.map}>Purwokerto, Jawa Tengah</Text>
             </View>
             <Text style={styles.map}>Freelancer</Text>
@@ -40,32 +42,46 @@ const Profile = () => {
               version 4.7. Want to request new icons? Here's how. Need vectors
               or want to use on the desktop? Check the cheatsheet.
             </Text>
-            <Button block style={styles.btnHire}>
-              <Text>Hire</Text>
+            <Button
+              block
+              style={styles.btnHire}
+              onPress={() => navigation.navigate('ChatRoom')}>
+              <Text style={styles.textBtn}>Hire</Text>
             </Button>
           </View>
           <View style={styles.div}>
             <Text style={styles.tag}>Skill</Text>
             <View style={styles.skillContainer}>
-              <Text style={styles.skill}> SKILL </Text>
-              <Text style={styles.skill}> SKILL </Text>
-              <Text style={styles.skill}> SKILL </Text>
-              <Text style={styles.skill}> SKILL </Text>
+              <View style={styles.skill}>
+                <Text style={styles.skillText}>Python</Text>
+              </View>
+              <View style={styles.skill}>
+                <Text style={styles.skillText}>Laravel</Text>
+              </View>
+              <View style={styles.skill}>
+                <Text style={styles.skillText}>Golang</Text>
+              </View>
+              <View style={styles.skill}>
+                <Text style={styles.skillText}>Javascript</Text>
+              </View>
+              <View style={styles.skill}>
+                <Text style={styles.skillText}>HTML</Text>
+              </View>
             </View>
             <View style={styles.sosmed}>
-              <Icon name="envelope-o" size={24} color="#8e8e8e" />
+              <Icon name="envelope-o" size={20} color="#8e8e8e" />
               <Text style={styles.email}>LouisVutton@mail.com</Text>
             </View>
             <View style={styles.sosmed}>
-              <Icon name="instagram" size={27} color="#8e8e8e" />
+              <Icon name="instagram" size={24} color="#8e8e8e" />
               <Text style={styles.email}>@Louis91</Text>
             </View>
             <View style={styles.sosmed}>
-              <Icon name="github" size={27} color="#8e8e8e" />
+              <Icon name="github" size={24} color="#8e8e8e" />
               <Text style={styles.email}>@LouisVutton21</Text>
             </View>
             <View style={styles.sosmed}>
-              <Icon name="gitlab" size={23} color="#8e8e8e" />
+              <Icon name="gitlab" size={20} color="#8e8e8e" />
               <Text style={styles.email}>@Vutton21</Text>
             </View>
           </View>
@@ -92,7 +108,7 @@ const Profile = () => {
   );
 };
 
-export default Profile;
+export default DetailWorker;
 
 const styles = StyleSheet.create({
   cardUp: {
@@ -111,51 +127,72 @@ const styles = StyleSheet.create({
   avatar: {
     width: 150,
     height: 150,
-    marginTop: 50,
+    marginTop: 40,
     borderRadius: 100,
+    resizeMode: 'cover',
   },
   name: {
-    fontSize: 25,
-    fontWeight: 'bold',
+    fontSize: 22,
+    fontWeight: '600',
     paddingTop: 25,
     paddingBottom: 10,
   },
   location: {
     flexDirection: 'row',
     alignItems: 'center',
-    margin: 15,
+    marginTop: 13,
+    marginBottom: 8,
   },
   map: {
     marginLeft: 15,
-    color: '#8e8e8e',
+    color: '#9EA0A5',
+    fontSize: 14,
+    fontWeight: '400',
   },
   desc: {
     textAlign: 'center',
-    color: '#8e8e8e',
-    padding: 25,
+    color: '#9EA0A5',
+    padding: 20,
+    fontSize: 14,
+    fontWeight: '400',
+    lineHeight: 24,
   },
   btnHire: {
     margin: 20,
     backgroundColor: '#5E50A1',
+  },
+  textBtn: {
+    color: '#ffffff',
+    fontSize: 16,
+    fontWeight: '700',
+    textTransform: 'capitalize',
   },
   div: {
     margin: 20,
     paddingBottom: 35,
   },
   tag: {
-    fontSize: 20,
-    fontWeight: 'bold',
+    fontSize: 18,
+    fontWeight: '600',
+    marginBottom: 20,
   },
   skillContainer: {
-    marginBottom: 40,
+    marginBottom: 20,
     flexDirection: 'row',
+    flexWrap: 'wrap',
   },
   skill: {
     backgroundColor: '#FBB017',
-    margin: 10,
-    width: 45,
-    height: 20,
+    marginRight: 10,
+    marginBottom: 20,
+    paddingVertical: 4,
+    paddingHorizontal: 14,
+    borderRadius: 4,
+  },
+  skillText: {
     color: '#ffffff',
+    fontSize: 12,
+    fontWeight: '600',
   },
   sosmed: {
     flexDirection: 'row',
@@ -163,8 +200,10 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   email: {
-    color: '#8e8e8e',
-    marginLeft: 25,
+    color: '#9EA0A5',
+    marginLeft: 22,
+    fontSize: 14,
+    fontWeight: '400',
   },
   cardBottom: {
     marginLeft: 20,
@@ -182,5 +221,12 @@ const styles = StyleSheet.create({
   txtTabView: {
     color: '#000000',
     margin: 8,
+    fontSize: 14,
+    fontWeight: '600',
+  },
+  field: {
+    fontSize: 14,
+    color: '#1F2A36',
+    fontWeight: '400',
   },
 });

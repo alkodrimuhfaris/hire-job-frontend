@@ -1,9 +1,10 @@
-import React, {useState,useEffect} from 'react';
+import React, {useState} from 'react';
 
 import {
   StyleSheet,
   TouchableOpacity,
   Text,
+  Alert,
   View,
   Image,
   Modal,
@@ -21,40 +22,22 @@ import SearchIcon from '../assets/img/search.svg';
 import ListIcon from '../assets/img/list.svg';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-const data =[
-  {
-    name:'ardian'
-  },
-  {
-    name:'mamat'
-  }
-]
-
-
 const Search = ({navigation}) => {
   const [modalVisible, setModalVisible] = useState(false);
-  const [search,setSearch] = useState('');
-  const [searchResult,setSearchResult] = useState([])
+  const [search, setSearch] = useState('');
 
-  const handleChange = (e) => {
-    setSearch(e.target.value)
-    console.log(e.target.value)
-  }
-  // console.log(searchResult);
-  useEffect(() => {
-    console.log(data);
-   const results = data.filter( (test) => test.name);
-   setSearchResult(results)
-  }, [search])
+  const submitSearch = () => {
+    console.log(search);
+    navigation.navigate('ResultSearchWorker');
+  };
+
   return (
     <>
       <Modal
         animationType="slide"
         transparent={true}
         visible={modalVisible}
-        onRequestClose={() => {
-          Alert.alert('Modal has been closed.');
-        }}>
+        onRequestClose={() => setModalVisible(false)}>
         <View style={styles.modalParent}>
           <View style={styles.list}>
             <View style={styles.child}>
@@ -111,10 +94,11 @@ const Search = ({navigation}) => {
               </TouchableOpacity>
               <Input
                 style={styles.placeholder}
+                value={search}
+                onChangeText={(e) => setSearch(e)}
                 placeholder="Android developer"
                 placeholderTextColor="#9EA0A5"
-                value={search}
-                onChangeText={() => handleChange()}
+                onSubmitEditing={() => submitSearch()}
               />
             </Item>
             <Item regular style={styles.filter}>
@@ -126,11 +110,6 @@ const Search = ({navigation}) => {
               </TouchableOpacity>
             </Item>
           </Form>
-          {searchResult.map(item => (
-
-          <Text>{item.name}</Text>
-          ))
-        }
         </Content>
       </Container>
     </>

@@ -1,7 +1,7 @@
 import React from 'react';
 import {View, Text, FlatList, StyleSheet, TouchableOpacity} from 'react-native';
 import {Container, Content} from 'native-base';
-import Card from '../components/HomeCard';
+import Card from '../components/HomeCardRecruiter';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 export default function ResultSearch({navigation}) {

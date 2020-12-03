@@ -9,7 +9,7 @@ import {
   StyleSheet,
 } from 'react-native';
 
-import avatar from '../assets/img/avatar.png';
+import avatar from '../assets/img/profile.png';
 import Null from '../assets/img/bgChatNull.svg';
 
 const DATA = [
