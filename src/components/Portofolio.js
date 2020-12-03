@@ -16,9 +16,8 @@ import {API_URL_IMAGE} from '@env';
 // import actions
 import portfolioAction from '../redux/actions/portfolio';
 
-const FirstRoute = () => {
+const FirstRoute = ({token}) => {
   const dispatch = useDispatch();
-  const auth = useSelector((state) => state.auth);
   const {portfolioData} = useSelector((state) => state.portfolio);
   const [modalVisible, setModalVisible] = useState(false);
   const [img, setImg] = useState('');
@@ -41,7 +40,9 @@ const FirstRoute = () => {
   }
 
   useEffect(() => {
-    dispatch(portfolioAction.getPortfolioList(auth.token));
+    if (token) {
+      dispatch(portfolioAction.getPortfolioList(token));
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
 

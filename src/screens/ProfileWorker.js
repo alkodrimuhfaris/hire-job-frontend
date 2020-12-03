@@ -2,8 +2,8 @@ import * as React from 'react';
 import {StyleSheet, View, ScrollView, Image} from 'react-native';
 import {Text, Button, Card} from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import {TabView, SceneMap, TabBar} from 'react-native-tab-view';
-import {useDispatch} from 'react-redux';
+import {TabView, TabBar} from 'react-native-tab-view';
+import {useDispatch, useSelector} from 'react-redux';
 
 // import actions
 import authAction from '../redux/actions/auth';
@@ -20,17 +20,24 @@ import SecondRoute from '../components/Experience';
 
 const ProfileWorker = ({navigation}) => {
   const dispatch = useDispatch();
+  const auth = useSelector((state) => state.auth);
+
   const [index, setIndex] = React.useState(0);
   const [routes] = React.useState([
     {key: 'first', title: 'Portofolio'},
     {key: 'second', title: 'Pengalaman kerja'},
   ]);
 
-  const renderScene = SceneMap({
-    indicatorStyle: {backgroundColor: 'pink'},
-    first: FirstRoute,
-    second: SecondRoute,
-  });
+  const renderScene = ({route}) => {
+    switch (route.key) {
+      case 'first':
+        return <FirstRoute token={auth.token} />;
+      case 'second':
+        return <SecondRoute />;
+      default:
+        return null;
+    }
+  };
 
   function logout() {
     dispatch(authAction.logout());
