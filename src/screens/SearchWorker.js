@@ -173,7 +173,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   filter: {
-    width: '20%',
+    width: '15%',
     height: 50,
     marginTop: 20,
     marginLeft: 10,
@@ -188,6 +188,7 @@ const styles = StyleSheet.create({
     marginLeft: 13,
     width: 24,
     height: 24,
+    padding: 10,
   },
   modalParent: {
     flex: 1,

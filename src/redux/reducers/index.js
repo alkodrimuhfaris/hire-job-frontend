@@ -13,6 +13,7 @@ import updateProfileRecruiter from './updateProfileRecruiter';
 import updateCompany from './updateCompany';
 import myCompany from './getCompany';
 
+import resultSearch from './resultSearch';
 export default combineReducers({
   auth,
   register,
@@ -26,4 +27,5 @@ export default combineReducers({
   myCompany,
   updateProfileRecruiter,
   updateCompany,
+  resultSearch,
 });
