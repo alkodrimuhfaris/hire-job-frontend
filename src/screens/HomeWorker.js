@@ -27,7 +27,8 @@ export default function HomeWorker({navigation}) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
 
-  function getRecruiterDetail() {
+  async function getRecruiterDetail(id) {
+    await dispatch(homeAction.getDetailsUser(auth.token, id));
     navigation.navigate('DetailRecruiter');
   }
 
@@ -65,7 +66,8 @@ export default function HomeWorker({navigation}) {
                       data={item.data}
                       keyExtractor={(item, index) => index.toString()}
                       renderItem={({item}) => (
-                        <TouchableOpacity onPress={getRecruiterDetail}>
+                        <TouchableOpacity
+                          onPress={() => getRecruiterDetail(item.id)}>
                           <Card item={item} />
                         </TouchableOpacity>
                       )}

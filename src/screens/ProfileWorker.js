@@ -118,7 +118,7 @@ const ProfileWorker = ({navigation}) => {
             <View style={styles.sosmed}>
               <Icon name="gitlab" size={20} color="#8e8e8e" />
               <Text style={styles.email}>
-                {profileWorker.profileData.lindkin}
+                {profileWorker.profileData.linkedin}
               </Text>
             </View>
           </View>

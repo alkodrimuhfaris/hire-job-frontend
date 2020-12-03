@@ -3,6 +3,10 @@ const initialState = {
   homeIsLoading: false,
   homeIsError: false,
   homeAlertMsg: '',
+  userDetailsData: {},
+  userDetailsIsLoading: false,
+  userDetailsIsError: false,
+  userDetailsAlertMsg: '',
 };
 
 export default (state = initialState, action) => {
@@ -27,6 +31,28 @@ export default (state = initialState, action) => {
         homeIsLoading: false,
         homeIsError: false,
         homeData: action.payload.data.results,
+      };
+    }
+    case 'GET_DETAILS_USER_PENDING': {
+      return {
+        ...state,
+        userDetailsIsLoading: true,
+      };
+    }
+    case 'GET_DETAILS_USER_REJECTED': {
+      return {
+        ...state,
+        userDetailsIsLoading: false,
+        userDetailsIsError: true,
+        userDetailsAlertMsg: action.payload.response.data.message,
+      };
+    }
+    case 'GET_DETAILS_USER_FULFILLED': {
+      return {
+        ...state,
+        userDetailsIsLoading: false,
+        userDetailsIsError: false,
+        userDetailsData: action.payload.data.results,
       };
     }
     case 'DESTROY': {
