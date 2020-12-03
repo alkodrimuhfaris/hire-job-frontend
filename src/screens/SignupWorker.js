@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {
   Image,
   StyleSheet,
@@ -6,14 +6,15 @@ import {
   ScrollView,
   TextInput,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
 import {Button, Text, Container, Title, Form, Label} from 'native-base';
 import {useNavigation} from '@react-navigation/native';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {Formik} from 'formik';
 import * as yup from 'yup';
 
-import {registerWorker} from '../redux/actions/auth';
+import authAction from '../redux/actions/auth';
 
 import Logo from '../assets/img/logo-purple.png';
 
@@ -26,10 +27,9 @@ const registerValidationSchema = yup.object().shape({
     .string()
     .email('Please enter valid email')
     .required('Alamat email dibutuhkan'),
-  phone: yup
+  phoneNumber: yup
     .number()
-    .min(10, 'Phone number required minimal 10 chars')
-    .max(12, 'Phone number required maximal 12 chars')
+    .min(10, ({min}) => `Phone number required minimal ${min} chars`)
     .required('Phone number field is required'),
   password: yup
     .string()
@@ -44,6 +44,19 @@ const registerValidationSchema = yup.object().shape({
 const SignupWorker = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
+  const regiter = useSelector((state) => state.register);
+
+  function doRegister(data) {
+    dispatch(authAction.registerWorker(data));
+    navigation.navigate('LoginWorker');
+  }
+
+  useEffect(() => {
+    if (regiter.isError) {
+      Alert.alert(regiter.message);
+      dispatch(authAction.clearAlert());
+    }
+  });
 
   return (
     <Container>
@@ -57,19 +70,11 @@ const SignupWorker = () => {
             initialValues={{
               name: '',
               email: '',
-              phone: '',
+              phoneNumber: '',
               password: '',
               confirmPassword: '',
             }}
-            onSubmit={(values) =>
-              console.log(
-                values.name,
-                values.email,
-                values.phone,
-                values.password,
-                values.confirmPassword,
-              )
-            }>
+            onSubmit={(values) => doRegister(values)}>
             {({
               handleChange,
               handleBlur,
@@ -107,15 +112,15 @@ const SignupWorker = () => {
                   )}
                   <Label style={styles.label}>Phone</Label>
                   <TextInput
-                    name="phone"
+                    name="phoneNumber"
                     placeholder="Masukkan no handphone"
                     style={styles.textInput}
-                    onChangeText={handleChange('phone')}
-                    onBlur={handleBlur('phone')}
-                    value={values.phone}
+                    onChangeText={handleChange('phoneNumber')}
+                    onBlur={handleBlur('phoneNumber')}
+                    value={values.phoneNumber}
                   />
-                  {errors.phone && (
-                    <Text style={styles.textError}>{errors.phone}</Text>
+                  {errors.phoneNumber && (
+                    <Text style={styles.textError}>{errors.phoneNumber}</Text>
                   )}
                   <Label style={styles.label}>Kata Sandi</Label>
                   <TextInput

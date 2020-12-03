@@ -1,9 +1,19 @@
 import http from '../../helpers/http';
 import qs from 'querystring';
 
-const registerWorker = (phone) => ({
-  type: 'REGISTER_WORKER',
-  payload: http().post('auth/signup/2', qs.stringify({phone})),
-});
-
-export {registerWorker};
+export default {
+  login: (data) => ({
+    type: 'LOGIN',
+    payload: http().post('auth/login', qs.stringify(data)),
+  }),
+  registerWorker: (data) => ({
+    type: 'REGISTER_WORKER',
+    payload: http().post('auth/signup/2', qs.stringify(data)),
+  }),
+  clearAlert: () => ({
+    type: 'CLEAR_ALERT',
+  }),
+  logout: () => ({
+    type: 'LOGOUT',
+  }),
+};

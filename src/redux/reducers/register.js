@@ -30,6 +30,13 @@ export default (state = initialState, action) => {
         message: 'register as worker succcess',
       };
     }
+    case 'CLEAR_ALERT': {
+      return {
+        ...state,
+        isError: false,
+        alertMsg: '',
+      };
+    }
     default: {
       return state;
     }
