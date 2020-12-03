@@ -1,16 +1,30 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import * as React from 'react';
 import {StyleSheet, View, ScrollView, Image} from 'react-native';
 import {Text, Button, Card} from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 
 // import actions
 import authAction from '../redux/actions/auth';
+import companyAction from '../redux/actions/profileRecruiter';
 
 import profile from '../assets/img/profile.png';
 
+import {API_URL} from '@env';
+
 const ProfileRecruiter = ({navigation}) => {
   const dispatch = useDispatch();
+  const auth = useSelector((state) => state.auth);
+  const profileState = useSelector((state) => state.profileRecruiter);
+  const {profileData} = profileState;
+  const companyState = useSelector((state) => state.myCompany);
+  const {companyData} = companyState;
+  console.log(companyData);
+
+  // React.useEffect(() => {
+  //   dispatch(companyAction.getMyCompany(auth.token));
+  // }, [dispatch]);
 
   function logout() {
     dispatch(authAction.logout());
@@ -22,17 +36,16 @@ const ProfileRecruiter = ({navigation}) => {
         <Card style={styles.cardUp} transparent>
           <View style={styles.parent}>
             <Image source={profile} style={styles.avatar} />
-            <Text style={styles.name}>PT. Martabat Jaya Abadi</Text>
+            <Text style={styles.name}>{profileData[0].company}</Text>
+
+            {/* ambil dari table company yang field */}
             <Text style={styles.field}>Financial</Text>
+
             <View style={styles.location}>
               <Icon name="map-marker" size={24} color="#8e8e8e" />
-              <Text style={styles.map}>Purwokerto, Jawa Tengah</Text>
+              <Text style={styles.map}>{profileData[0].address}</Text>
             </View>
-            <Text style={styles.desc}>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-              Vestibulum erat orci, mollis nec gravida sed, ornare quis urna.
-              Curabitur eu lacus fringilla, vestibulum risus at.
-            </Text>
+            <Text style={styles.desc}>{profileData[0].bio}</Text>
             <Button
               block
               style={styles.btn}
@@ -43,19 +56,19 @@ const ProfileRecruiter = ({navigation}) => {
           <View style={styles.div}>
             <View style={styles.sosmed}>
               <Icon name="envelope-o" size={20} color="#8e8e8e" />
-              <Text style={styles.email}>LouisVutton@mail.com</Text>
+              <Text style={styles.email}>{profileData[0].email}</Text>
             </View>
             <View style={styles.sosmed}>
               <Icon name="instagram" size={24} color="#8e8e8e" />
-              <Text style={styles.email}>@Louis91</Text>
+              <Text style={styles.email}>{profileData[0].instagram}</Text>
             </View>
             <View style={styles.sosmed}>
               <Icon name="github" size={24} color="#8e8e8e" />
-              <Text style={styles.email}>@LouisVutton21</Text>
+              <Text style={styles.email}>{profileData[0].github}</Text>
             </View>
             <View style={styles.sosmed}>
               <Icon name="gitlab" size={20} color="#8e8e8e" />
-              <Text style={styles.email}>@Vutton21</Text>
+              <Text style={styles.email}>{profileData[0].linkedin}</Text>
             </View>
           </View>
         </Card>

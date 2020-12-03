@@ -14,7 +14,20 @@ import ImagePicker from 'react-native-image-picker';
 
 import Avatar from '../assets/img/profile.png';
 
+import {useSelector, useDispatch} from 'react-redux';
+
+import profileAction from '../redux/actions/profileRecruiter';
+
 export default function EditProfileRecruiter({navigation}) {
+  const dispatch = useDispatch();
+  const auth = useSelector((state) => state.auth);
+  const profileState = useSelector((state) => state.profileRecruiter);
+  const {profileData} = profileState;
+
+  // state untuk companynya, mksd aku ini nnt buat ambil photo companynya
+  // const companyState = useSelector((state) => state.myCompany);
+  // const {companyData} = companyState;
+
   const [photo, setPhoto] = useState('');
   const schema = Yup.object().shape({
     companyName: Yup.string().required('Company name field is required'),
@@ -56,9 +69,42 @@ export default function EditProfileRecruiter({navigation}) {
 
         setPhoto(source.uri);
         const form = new FormData();
-        form.append('image', source);
+        form.append('photo', source);
+        dispatch(profileAction.updatePhotoCompany(auth.token, form));
       }
     });
+  }
+
+  // updatenya
+  function change(value) {
+    // console.log(value);
+    const {
+      companyName,
+      companyField,
+      city,
+      email,
+      instagram,
+      linkedin,
+      description,
+      phoneNumber,
+    } = value;
+    const dataRecruiter = {
+      email,
+      phoneNumber,
+      company: companyName,
+      // jobTitle: companyField,
+      address: city,
+      instagram,
+      bio: description,
+      linkedin,
+    };
+    const dataCompany = {
+      name: companyName,
+      field: companyField,
+      city,
+    };
+    dispatch(profileAction.updateProfile(auth.token, dataRecruiter));
+    dispatch(profileAction.updateCompany(auth.token, dataCompany));
   }
 
   return (
@@ -72,11 +118,11 @@ export default function EditProfileRecruiter({navigation}) {
                 style={styles.avatar}
               />
             </TouchableOpacity>
-            <Text style={styles.name}>PT. Martabat Jaya Abadi</Text>
+            <Text style={styles.name}>{profileData[0].company}</Text>
             <Text style={styles.field}>Financial</Text>
             <View style={styles.location}>
               <Icon name="map-marker" size={24} color="#8e8e8e" />
-              <Text style={styles.map}>Purwokerto, Jawa Tengah</Text>
+              <Text style={styles.map}>{profileData[0].address}</Text>
             </View>
           </View>
         </Card>
@@ -92,7 +138,7 @@ export default function EditProfileRecruiter({navigation}) {
             linkedin: '',
           }}
           validationSchema={schema}
-          onSubmit={(values) => console.log(values)}>
+          onSubmit={(values) => change(values)}>
           {({
             handleChange,
             handleBlur,
