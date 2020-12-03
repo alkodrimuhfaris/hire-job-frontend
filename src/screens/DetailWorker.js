@@ -55,7 +55,13 @@ const DetailWorker = () => {
             <Button
               block
               style={styles.btnHire}
-              onPress={() => navigation.navigate('ChatRoom')}>
+              onPress={() =>
+                navigation.navigate('ChatRoom', {
+                  id: home.userDetailsData.id,
+                  message:
+                    'Selamat, anda kami pilih untuk menjadi salah satu kandidat pekerja di perusahaan kami, apabila anda bersedia mengikuti tahapan tes dari perusahaan kami balas pesan ini dengan YA',
+                })
+              }>
               <Text style={styles.textBtn}>Hire</Text>
             </Button>
           </View>
@@ -63,13 +69,14 @@ const DetailWorker = () => {
             <Text style={styles.tag}>Skill</Text>
             <View style={styles.skillContainer}>
               {!home.userDetailsIsLoading &&
-                !home.userDetailsIsError &&
-                home.userDetailsData.WorkerSkills.length &&
-                home.userDetailsData.WorkerSkills.map((item) => (
-                  <View style={styles.skill}>
-                    <Text style={styles.skillText}>{item.Skill.name}</Text>
-                  </View>
-                ))}
+              !home.userDetailsIsError &&
+              home.userDetailsData.WorkerSkills.length
+                ? home.userDetailsData.WorkerSkills.map((item) => (
+                    <View style={styles.skill}>
+                      <Text style={styles.skillText}>{item.Skill.name}</Text>
+                    </View>
+                  ))
+                : null}
             </View>
             <View style={styles.sosmed}>
               <Icon name="envelope-o" size={20} color="#8e8e8e" />

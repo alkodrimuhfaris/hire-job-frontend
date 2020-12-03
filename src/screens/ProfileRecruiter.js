@@ -23,9 +23,13 @@ const ProfileRecruiter = ({navigation}) => {
   const dispatch = useDispatch();
   const auth = useSelector((state) => state.auth);
   const profileState = useSelector((state) => state.profileRecruiter);
-  const {profileData} = profileState;
+  // const {profileData} = profileState;
+  const profileData = useSelector(
+    (state) => state.profileRecruiter.profileData,
+  );
   const companyState = useSelector((state) => state.myCompany);
-  const {companyData} = companyState;
+  // const {companyData} = companyState;
+  const companyData = useSelector((state) => state.myCompany.companyData);
   // console.log(companyData);
 
   const updateProfileState = useSelector(
@@ -36,6 +40,11 @@ const ProfileRecruiter = ({navigation}) => {
   React.useEffect(() => {
     dispatch(companyAction.getMyCompany(auth.token));
   }, [profileData, updateProfileState, updateCompanyState]);
+
+  React.useEffect(() => {
+    dispatch(companyAction.getMyCompany(auth.token));
+    console.log(companyData);
+  }, []);
 
   function logout() {
     dispatch(authAction.logout());
@@ -63,7 +72,9 @@ const ProfileRecruiter = ({navigation}) => {
 
             {/* ambil dari table company yang field */}
             <Text style={styles.field}>
-              {companyData[0].field !== null ? companyData[0].field : 'Field'}
+              {companyData.length && companyData[0].field !== null
+                ? companyData[0].field
+                : 'Field'}
             </Text>
 
             <View style={styles.location}>
