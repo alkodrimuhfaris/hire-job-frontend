@@ -17,7 +17,7 @@ export default function HomeWorker({navigation}) {
   const auth = useSelector((state) => state.auth);
   const profileWorker = useSelector((state) => state.profileWorker);
   const {homeData} = useSelector((state) => state.home);
-  const data = sectionConditioner.byJobTitle(homeData);
+  const data = sectionConditioner.byCompanyField(homeData);
 
   useEffect(() => {
     dispatch(profileWorkerAction.getProfile(auth.token));

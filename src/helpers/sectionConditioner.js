@@ -64,7 +64,7 @@ module.exports = {
       const item = {title: Company};
       const data = [];
       for (const result of searchResult) {
-        if (Company === result.Company) {
+        if (Company === result.Company.field) {
           data.push(result);
         }
       }
