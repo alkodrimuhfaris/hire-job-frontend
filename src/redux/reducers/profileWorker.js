@@ -54,6 +54,9 @@ export default (state = initialState, action) => {
         profileAlertMsg: 'add experience worker succcess',
       };
     }
+    case 'DESTROY': {
+      return initialState;
+    }
     default: {
       return state;
     }

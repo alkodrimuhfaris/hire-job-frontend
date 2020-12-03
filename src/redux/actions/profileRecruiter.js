@@ -7,4 +7,7 @@ export default {
       payload: http(token).get('recruiter/account'),
     };
   },
+  destroy: () => ({
+    type: 'DESTROY',
+  }),
 };

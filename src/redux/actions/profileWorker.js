@@ -12,4 +12,7 @@ export default {
     type: 'ADD_EXPERIENCE',
     payload: http(token).post('worker/experience', qs.stringify(data)),
   }),
+  destroy: () => ({
+    type: 'DESTROY',
+  }),
 };

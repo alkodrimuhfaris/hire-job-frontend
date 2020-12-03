@@ -7,4 +7,7 @@ export default {
       payload: http(token).get('home?limit=30'),
     };
   },
+  destroy: () => ({
+    type: 'DESTROY',
+  }),
 };
