@@ -23,9 +23,14 @@ const ProfileRecruiter = ({navigation}) => {
   const {companyData} = companyState;
   // console.log(companyData);
 
+  const updateProfileState = useSelector(
+    (state) => state.updateProfileRecruiter,
+  );
+  const updateCompanyState = useSelector((state) => state.updateCompany);
+
   React.useEffect(() => {
     dispatch(companyAction.getMyCompany(auth.token));
-  }, [dispatch, profileData]);
+  }, [profileData, updateProfileState, updateCompanyState]);
 
   function logout() {
     dispatch(authAction.logout());
@@ -37,21 +42,31 @@ const ProfileRecruiter = ({navigation}) => {
         <Card style={styles.cardUp} transparent>
           <View style={styles.parent}>
             <Image
-              source={{uri: `${API_URL_IMAGE}${profileData[0].photo}`}}
+              source={
+                profileData[0].photo !== null
+                  ? {uri: `${API_URL_IMAGE}${profileData[0].photo}`}
+                  : profile
+              }
               style={styles.avatar}
             />
             <Text style={styles.name}>{profileData[0].company}</Text>
 
             {/* ambil dari table company yang field */}
             <Text style={styles.field}>
-              {companyData.length ? companyData[0].field : ''}
+              {companyData[0].field !== null ? companyData[0].field : 'Field'}
             </Text>
 
             <View style={styles.location}>
               <Icon name="map-marker" size={24} color="#8e8e8e" />
-              <Text style={styles.map}>{profileData[0].address}</Text>
+              <Text style={styles.map}>
+                {profileData[0].address !== null
+                  ? profileData[0].address
+                  : 'City'}
+              </Text>
             </View>
-            <Text style={styles.desc}>{profileData[0].bio}</Text>
+            <Text style={styles.desc}>
+              {profileData[0].bio !== null ? profileData[0].bio : 'Bio'}
+            </Text>
             <Button
               block
               style={styles.btn}
