@@ -9,6 +9,9 @@ import searchCompany from './searchCompany';
 import searchWorker from './searchWorker';
 import home from './home';
 import portfolio from './portfolio';
+import updateProfileRecruiter from './updateProfileRecruiter';
+import updateCompany from './updateCompany';
+import myCompany from './getCompany';
 
 export default combineReducers({
   auth,
@@ -20,4 +23,7 @@ export default combineReducers({
   searchWorker,
   home,
   portfolio,
+  myCompany,
+  updateProfileRecruiter,
+  updateCompany,
 });
