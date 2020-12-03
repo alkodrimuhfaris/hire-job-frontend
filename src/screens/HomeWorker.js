@@ -7,6 +7,7 @@ import {useDispatch, useSelector} from 'react-redux';
 
 // import actions
 import profileWorkerAction from '../redux/actions/profileWorker';
+import skillAction from '../redux/actions/skill';
 
 import Card from '../components/HomeCardWorker';
 
@@ -17,6 +18,7 @@ export default function HomeWorker({navigation}) {
 
   useEffect(() => {
     dispatch(profileWorkerAction.getProfile(auth.token));
+    dispatch(skillAction.listSkill(auth.token));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
 

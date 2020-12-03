@@ -3,7 +3,8 @@ import {StyleSheet, View, ScrollView, Image} from 'react-native';
 import {Text, Button, Card} from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {TabView, SceneMap, TabBar} from 'react-native-tab-view';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
+import {API_URL} from '@env';
 
 // import actions
 import authAction from '../redux/actions/auth';
@@ -14,6 +15,8 @@ import FirstRoute from '../components/Portofolio';
 import SecondRoute from '../components/Experience';
 
 const ProfileWorker = ({navigation}) => {
+  const profileWorker = useSelector((state) => state.profileWorker);
+  const skill = useSelector((state) => state.skill);
   const dispatch = useDispatch();
   const [index, setIndex] = React.useState(0);
   const [routes] = React.useState([
@@ -36,18 +39,27 @@ const ProfileWorker = ({navigation}) => {
       <ScrollView>
         <Card style={styles.cardUp} transparent>
           <View style={styles.parent}>
-            <Image source={profile} style={styles.avatar} />
-            <Text style={styles.name}>Louis Tamlison</Text>
-            <Text style={styles.field}>Web developer</Text>
+            <Image
+              source={
+                profileWorker.profileData.photo
+                  ? {uri: API_URL + profileWorker.profileData.photo}
+                  : profile
+              }
+              style={styles.avatar}
+            />
+            <Text style={styles.name}>{profileWorker.profileData.name}</Text>
+            <Text style={styles.field}>
+              {profileWorker.profileData.jobTitle || ''}
+            </Text>
             <View style={styles.location}>
               <Icon name="map-marker" size={24} color="#8e8e8e" />
-              <Text style={styles.map}>Purwokerto, Jawa Tengah</Text>
+              <Text style={styles.map}>
+                {profileWorker.profileData.address || ''}
+              </Text>
             </View>
-            <Text style={styles.map}>Freelancer</Text>
+            {/* <Text style={styles.map}>Freelancer</Text> */}
             <Text style={styles.desc}>
-              You asked, Font Awesome delivers with 41 shiny new icons in
-              version 4.7. Want to request new icons? Here's how. Need vectors
-              or want to use on the desktop? Check the cheatsheet.
+              {profileWorker.profileData.bio || ''}
             </Text>
             <Button
               block
@@ -59,37 +71,38 @@ const ProfileWorker = ({navigation}) => {
           <View style={styles.div}>
             <Text style={styles.tag}>Skill</Text>
             <View style={styles.skillContainer}>
-              <View style={styles.skill}>
-                <Text style={styles.skillText}>Python</Text>
-              </View>
-              <View style={styles.skill}>
-                <Text style={styles.skillText}>Laravel</Text>
-              </View>
-              <View style={styles.skill}>
-                <Text style={styles.skillText}>Golang</Text>
-              </View>
-              <View style={styles.skill}>
-                <Text style={styles.skillText}>Javascript</Text>
-              </View>
-              <View style={styles.skill}>
-                <Text style={styles.skillText}>HTML</Text>
-              </View>
+              {!skill.listSkillIsLoading &&
+                !skill.listSkillIsError &&
+                skill.listSkillData.length &&
+                skill.listSkillData.map((item) => (
+                  <View style={styles.skill}>
+                    <Text style={styles.skillText}>{item.Skill.name}</Text>
+                  </View>
+                ))}
             </View>
             <View style={styles.sosmed}>
               <Icon name="envelope-o" size={20} color="#8e8e8e" />
-              <Text style={styles.email}>LouisVutton@mail.com</Text>
+              <Text style={styles.email}>
+                {profileWorker.profileData.email}
+              </Text>
             </View>
             <View style={styles.sosmed}>
               <Icon name="instagram" size={24} color="#8e8e8e" />
-              <Text style={styles.email}>@Louis91</Text>
+              <Text style={styles.email}>
+                {profileWorker.profileData.instagram}
+              </Text>
             </View>
             <View style={styles.sosmed}>
               <Icon name="github" size={24} color="#8e8e8e" />
-              <Text style={styles.email}>@LouisVutton21</Text>
+              <Text style={styles.email}>
+                {profileWorker.profileData.github}
+              </Text>
             </View>
             <View style={styles.sosmed}>
               <Icon name="gitlab" size={20} color="#8e8e8e" />
-              <Text style={styles.email}>@Vutton21</Text>
+              <Text style={styles.email}>
+                {profileWorker.profileData.lindkin}
+              </Text>
             </View>
           </View>
         </Card>
