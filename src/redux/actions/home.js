@@ -1,10 +1,10 @@
 import http from '../../helpers/http';
 
 export default {
-  getProfile: (token) => {
+  getHome: (token) => {
     return {
-      type: 'GET_PROFILE',
-      payload: http(token).get('recruiter/account'),
+      type: 'GET_HOME',
+      payload: http(token).get('home?limit=30'),
     };
   },
   destroy: () => ({

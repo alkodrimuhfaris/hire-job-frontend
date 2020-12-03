@@ -7,6 +7,12 @@ const initialState = {
   alertMsg: '',
   id: 0,
   isWorker: false,
+
+  isEmailError: false,
+  emailValidData: {},
+
+  isResetError: false,
+  isReset: false,
 };
 
 export default (state = initialState, action) => {
@@ -44,6 +50,58 @@ export default (state = initialState, action) => {
         ...state,
         isError: false,
         alertMsg: '',
+        isEmailError: false,
+        emailValidData: {},
+        isResetError: false,
+        isReset: false,
+      };
+    }
+    case 'FORGOT_PASSWORD_PENDING': {
+      return {
+        ...state,
+        isLoading: true,
+        alertMsg: 'Checking your email. Please wait..',
+      };
+    }
+    case 'FORGOT_PASSWORD_REJECTED': {
+      return {
+        ...state,
+        isLoading: false,
+        isEmailError: true,
+        alertMsg: action.payload.response.data.message,
+      };
+    }
+    case 'FORGOT_PASSWORD_FULFILLED': {
+      return {
+        ...state,
+        isLoading: false,
+        isEmailError: false,
+        emailValidData: action.payload.data.validate,
+        alertMsg: action.payload.data.message,
+      };
+    }
+    case 'RESET_PASSWORD_PENDING': {
+      return {
+        ...state,
+        isLoading: true,
+        alertMsg: 'Resetting your password. Please wait..',
+      };
+    }
+    case 'RESET_PASSWORD_REJECTED': {
+      return {
+        ...state,
+        isLoading: false,
+        isResetError: true,
+        alertMsg: action.payload.response.data.message,
+      };
+    }
+    case 'RESET_PASSWORD_FULFILLED': {
+      return {
+        ...state,
+        isLoading: false,
+        isResetError: false,
+        isReset: true,
+        alertMsg: action.payload.data.message,
       };
     }
     case 'LOGOUT': {

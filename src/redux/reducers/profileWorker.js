@@ -78,6 +78,9 @@ export default (state = initialState, action) => {
         profileAlertMsg: 'portofolio added',
       };
     }
+    case 'DESTROY': {
+      return initialState;
+    }
     default: {
       return state;
     }

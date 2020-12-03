@@ -26,4 +26,7 @@ export default {
       payload: http(token).post('worker/portofolio', qs.stringify(data)),
     };
   },
+  destroy: () => ({
+    type: 'DESTROY',
+  }),
 };

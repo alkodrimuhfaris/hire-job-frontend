@@ -206,6 +206,9 @@ export default (state = initialState, action) => {
         alertMsg: 'Read chat failed',
       };
     }
+    case 'DESTROY': {
+      return initialState;
+    }
     default: {
       return state;
     }
