@@ -25,6 +25,7 @@ import EditProfileRecruiter from './EditProfileRecruiter';
 import HomeWorker from './HomeWorker';
 import DetailRecruiter from './DetailRecruiter';
 import NotificationWorker from './NotificationWorker';
+import SearchRecruiter from './SearchRecruiter';
 import ResultSearchRecruiter from './ResultSearchRecruiter';
 import ProfileWorker from './ProfileWorker';
 import EditProfileWorker from './EditProfileWorker';
@@ -43,7 +44,7 @@ const MainAppWorker = () => {
   return (
     <Tab.Navigator tabBar={(props) => <BottomNavigation {...props} />}>
       <Tab.Screen name="HomeWorker" component={HomeWorker} />
-      <Tab.Screen name="SearchRecruiter" component={SearchWorker} />
+      <Tab.Screen name="SearchRecruiter" component={SearchRecruiter} />
       <Tab.Screen name="Chat" component={ListChat} />
       <Tab.Screen name="ProfileWorker" component={ProfileWorker} />
     </Tab.Navigator>
@@ -63,7 +64,7 @@ const MainAppRecruiter = () => {
 
 export default function Main() {
   const isLogin = true;
-  const isWorker = false;
+  const isWorker = true;
 
   return (
     <NavigationContainer>

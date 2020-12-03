@@ -1,34 +1,9 @@
 import React from 'react';
-import {
-  View,
-  Text,
-  FlatList,
-  SectionList,
-  StyleSheet,
-  TouchableOpacity,
-} from 'react-native';
+import {View, Text, FlatList, StyleSheet, TouchableOpacity} from 'react-native';
 import {Container, Content} from 'native-base';
 import Card from '../components/HomeCardWorker';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import sectionConditioner from '../helpers/sectionConditioner';
-
-const DATA = [
-  {
-    id: 1,
-    name: 'asd',
-    skill: 'web',
-  },
-  {
-    id: 1,
-    name: 'asd',
-    skill: 'web',
-  },
-  {
-    id: 1,
-    name: 'asd',
-    skill: 'web',
-  },
-];
 
 const dataCompany = [
   {
@@ -63,12 +38,12 @@ const dataCompany = [
   },
 ];
 
-const FlatListItemSeparator = () => {
-  return (
-    //Item Separator
-    <View style={styles.listItemSeparatorStyle} />
-  );
-};
+// const FlatListItemSeparator = () => {
+//   return (
+//     //Item Separator
+//     <View style={styles.listItemSeparatorStyle} />
+//   );
+// };
 
 export default function ResultSearch({navigation}) {
   const data = dataCompany;
@@ -89,7 +64,7 @@ export default function ResultSearch({navigation}) {
             renderItem={({item}) => {
               return (
                 <>
-                  <Text style={styles.title}>{item.title}</Text>
+                  {item.title && <Text style={styles.title}>{item.title}</Text>}
                   <View style={styles.flatListWrapper}>
                     <FlatList
                       data={item.data}
