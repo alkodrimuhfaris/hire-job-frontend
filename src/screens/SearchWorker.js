@@ -1,6 +1,5 @@
 import React, {useState} from 'react';
 
-
 import {StyleSheet, TouchableOpacity, Text, View, Modal} from 'react-native';
 import {Container, Content, Form, Item, Input} from 'native-base';
 import SearchIcon from '../assets/img/search.svg';
@@ -122,7 +121,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   filter: {
-    width: '20%',
+    width: '10%',
     height: 50,
     marginTop: 20,
     marginLeft: 10,
@@ -137,6 +136,7 @@ const styles = StyleSheet.create({
     marginLeft: 13,
     width: 24,
     height: 24,
+    padding:10
   },
   modalParent: {
     flex: 1,
