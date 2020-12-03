@@ -1,12 +1,25 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {FlatList, StyleSheet, View, TouchableOpacity} from 'react-native';
 import {Text, Container, Content} from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import dayjs from 'dayjs';
+import {useDispatch, useSelector} from 'react-redux';
+
+// import actions
+import profileWorkerAction from '../redux/actions/profileWorker';
 
 import Card from '../components/HomeCardWorker';
 
 export default function HomeWorker({navigation}) {
+  const dispatch = useDispatch();
+  const auth = useSelector((state) => state.auth);
+  const profileWorker = useSelector((state) => state.profileWorker);
+
+  useEffect(() => {
+    dispatch(profileWorkerAction.getProfile(auth.token));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch]);
+
   //dummy data
   const DATA = [
     {
@@ -29,16 +42,22 @@ export default function HomeWorker({navigation}) {
 
   return (
     <Container style={styles.parent}>
-      <View style={[styles.header, styles.padding]}>
-        <View>
-          <Text style={styles.date}>{dayjs().format('ddd, D MMMM YYYY')}</Text>
-          <Text style={styles.user}>Hai, Mohammad!</Text>
+      {profileWorker.profileData && (
+        <View style={[styles.header, styles.padding]}>
+          <View>
+            <Text style={styles.date}>
+              {dayjs().format('ddd, D MMMM YYYY')}
+            </Text>
+            <Text style={styles.user}>
+              Hai, {profileWorker.profileData.name}!
+            </Text>
+          </View>
+          <TouchableOpacity
+            onPress={() => navigation.navigate('NotificationWorker')}>
+            <Icon name="bell" size={24} color="#ffff" />
+          </TouchableOpacity>
         </View>
-        <TouchableOpacity
-          onPress={() => navigation.navigate('NotificationWorker')}>
-          <Icon name="bell" size={24} color="#ffff" />
-        </TouchableOpacity>
-      </View>
+      )}
       <Content style={styles.padding}>
         <View>
           <Text style={styles.jobPosition}>Information and Technology</Text>
