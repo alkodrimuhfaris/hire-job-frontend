@@ -1,36 +1,3 @@
-const dataCompany = [
-  {
-    id: 3,
-    name: 'PT. eSea Indonesia',
-    field: null,
-    city: null,
-    photo: null,
-    authorId: 2,
-    createdAt: '2020-12-02T09:34:30.000Z',
-    updatedAt: '2020-12-02T09:34:30.000Z',
-  },
-  {
-    id: 1,
-    name: 'Tuku Bae',
-    field: 'Ecommerce',
-    city: 'Jakarta',
-    photo: null,
-    authorId: 1,
-    createdAt: '2020-12-02T06:20:34.000Z',
-    updatedAt: '2020-12-02T06:20:34.000Z',
-  },
-  {
-    id: 2,
-    name: 'Send Bae',
-    field: 'Comunication',
-    city: 'Jakarta',
-    photo: null,
-    authorId: 1,
-    createdAt: '2020-12-02T06:20:34.000Z',
-    updatedAt: '2020-12-02T06:20:34.000Z',
-  },
-];
-
 module.exports = {
   byCity: (searchResult) => {
     let cityArr = searchResult.map((item) => {
@@ -48,6 +15,56 @@ module.exports = {
       const data = [];
       for (const result of searchResult) {
         if (city === result.city) {
+          data.push(result);
+        }
+      }
+      Object.assign(item, {data});
+      resultSearch.push(item);
+    }
+
+    return resultSearch;
+  },
+  byJobTitle: (searchResult) => {
+    let jobTitleArr = searchResult.map((item) => {
+      item = item.jobTitle;
+      return item;
+    });
+    jobTitleArr = [...new Set(jobTitleArr)];
+
+    searchResult = [...new Set(searchResult)];
+
+    const resultSearch = [];
+
+    for (const jobTitle of jobTitleArr) {
+      const item = {title: jobTitle};
+      const data = [];
+      for (const result of searchResult) {
+        if (jobTitle === result.jobTitle) {
+          data.push(result);
+        }
+      }
+      Object.assign(item, {data});
+      resultSearch.push(item);
+    }
+
+    return resultSearch;
+  },
+  byCompanyField: (searchResult) => {
+    let CompanyArr = searchResult.map((item) => {
+      item = item.Company.field;
+      return item;
+    });
+    CompanyArr = [...new Set(CompanyArr)];
+
+    searchResult = [...new Set(searchResult)];
+
+    const resultSearch = [];
+
+    for (const Company of CompanyArr) {
+      const item = {title: Company};
+      const data = [];
+      for (const result of searchResult) {
+        if (Company === result.Company) {
           data.push(result);
         }
       }
