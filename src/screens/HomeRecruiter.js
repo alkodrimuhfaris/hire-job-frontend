@@ -42,7 +42,7 @@ export default function HomeRecruiter({navigation}) {
 
   return (
     <Container style={styles.parent}>
-      {profileRecruiter.profileData &&
+      {profileRecruiter.profileData.length > 0 &&
         profileRecruiter.profileData.map((user) => {
           return (
             <View style={[styles.header, styles.padding]} key={user.id}>
