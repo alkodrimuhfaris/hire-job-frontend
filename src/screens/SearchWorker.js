@@ -10,7 +10,6 @@ const Search = ({navigation}) => {
   const [search, setSearch] = useState('');
 
   const submitSearch = () => {
-    console.log(search);
     navigation.navigate('ResultSearchWorker');
   };
 
@@ -36,7 +35,7 @@ const Search = ({navigation}) => {
                 onPress={() => {
                   setModalVisible(!modalVisible);
                 }}>
-                <Text>Sortir berdasarkan Skill</Text>
+                <Text>Sortir berdasarkan skill</Text>
               </TouchableOpacity>
             </View>
             <View style={styles.child}>
@@ -44,10 +43,10 @@ const Search = ({navigation}) => {
                 onPress={() => {
                   setModalVisible(!modalVisible);
                 }}>
-                <Text>Sortir berdasarkan Lokasi</Text>
+                <Text>Sortir berdasarkan lokasi</Text>
               </TouchableOpacity>
             </View>
-            <View style={styles.child}>
+            {/* <View style={styles.child}>
               <TouchableOpacity
                 onPress={() => {
                   setModalVisible(!modalVisible);
@@ -62,26 +61,25 @@ const Search = ({navigation}) => {
                 }}>
                 <Text>Sortir berdasarkan fulltime</Text>
               </TouchableOpacity>
-            </View>
+            </View> */}
           </View>
         </View>
       </Modal>
+
       <Container style={styles.parent}>
-        <Content>
+        <Content style={styles.padding}>
           <Form style={styles.form}>
             <Item regular style={styles.searcInput}>
-              <TouchableOpacity
-                style={styles.searchIcon}
-                onPress={() => navigation.navigate('ResultSearch')}>
+              <View style={styles.searchIcon}>
                 <SearchIcon />
-              </TouchableOpacity>
+              </View>
               <Input
                 style={styles.placeholder}
                 value={search}
                 onChangeText={(e) => setSearch(e)}
-                placeholder="Android developer"
+                placeholder="Search"
                 placeholderTextColor="#9EA0A5"
-                onSubmitEditing={() => submitSearch()}
+                onSubmitEditing={submitSearch}
               />
             </Item>
             <Item regular style={styles.filter}>
@@ -103,7 +101,7 @@ export default Search;
 
 const styles = StyleSheet.create({
   parent: {
-    backgroundColor: '#E5E5E5',
+    backgroundColor: '#F6F7F8',
     position: 'relative',
   },
   form: {
@@ -111,31 +109,51 @@ const styles = StyleSheet.create({
   },
   searcInput: {
     position: 'relative',
-    width: 280,
+    width: '80%',
     height: 50,
-    marginLeft: 26,
-    marginTop: 70,
+    marginTop: 20,
     borderRadius: 4,
     backgroundColor: '#ffff',
   },
-  placeholder: {paddingLeft: 47, color: '#9EA0A5', fontSize: 14},
+  placeholder: {
+    paddingLeft: 47,
+    color: '#9EA0A5',
+    fontSize: 14,
+  },
   filter: {
-    width: 53,
+    width: '20%',
     height: 50,
-    marginTop: 70,
+    marginTop: 20,
     marginLeft: 10,
     borderRadius: 4,
     backgroundColor: '#ffff',
   },
-  searchIcon: {position: 'absolute', marginLeft: 10},
-  listIcon: {marginLeft: 13, width: 24, height: 24},
-  modalParent: {flex: 1, justifyContent: 'center', alignItems: 'center'},
-  list: {width: 258, height: 300, backgroundColor: '#ffff'},
+  searchIcon: {
+    position: 'absolute',
+    marginLeft: 10,
+  },
+  listIcon: {
+    marginLeft: 13,
+    width: 24,
+    height: 24,
+  },
+  modalParent: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  list: {
+    width: 258,
+    backgroundColor: '#ffff',
+  },
   child: {
     borderBottomColor: 'gray',
     width: '100%',
     paddingLeft: 25,
     paddingTop: 20,
     paddingBottom: 20,
+  },
+  padding: {
+    paddingHorizontal: 16,
   },
 });

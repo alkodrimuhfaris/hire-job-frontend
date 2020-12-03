@@ -11,14 +11,13 @@ import SignupRecruiter from './SignupRecruiter';
 import SignupWorker from './SignupWorker';
 import Forgot from './ForgotPassword';
 import Reset from './ResetPassword';
-import Search from './Search';
-import ResultSearch from './ResultSearch';
-import ResultSearchWorker from './ResultSearchWorker';
 
 // import recruiter screen
 import HomeRecruiter from './HomeRecruiter';
 import DetailWorker from './DetailWorker';
 import NotificationRecruiter from './NotificationRecruiter';
+import SearchWorker from './SearchWorker';
+import ResultSearchWorker from './ResultSearchWorker';
 import ProfileRecruiter from './ProfileRecruiter';
 import EditProfileRecruiter from './EditProfileRecruiter';
 
@@ -26,6 +25,7 @@ import EditProfileRecruiter from './EditProfileRecruiter';
 import HomeWorker from './HomeWorker';
 import DetailRecruiter from './DetailRecruiter';
 import NotificationWorker from './NotificationWorker';
+import ResultSearchRecruiter from './ResultSearchRecruiter';
 import ProfileWorker from './ProfileWorker';
 import EditProfileWorker from './EditProfileWorker';
 
@@ -43,7 +43,7 @@ const MainAppWorker = () => {
   return (
     <Tab.Navigator tabBar={(props) => <BottomNavigation {...props} />}>
       <Tab.Screen name="HomeWorker" component={HomeWorker} />
-      <Tab.Screen name="Search" component={Search} />
+      <Tab.Screen name="SearchRecruiter" component={SearchWorker} />
       <Tab.Screen name="Chat" component={ListChat} />
       <Tab.Screen name="ProfileWorker" component={ProfileWorker} />
     </Tab.Navigator>
@@ -54,7 +54,7 @@ const MainAppRecruiter = () => {
   return (
     <Tab.Navigator tabBar={(props) => <BottomNavigation {...props} />}>
       <Tab.Screen name="HomeRecruiter" component={HomeRecruiter} />
-      <Tab.Screen name="Search" component={Search} />
+      <Tab.Screen name="SearchWorker" component={SearchWorker} />
       <Tab.Screen name="Chat" component={ListChat} />
       <Tab.Screen name="ProfileRecruiter" component={ProfileRecruiter} />
     </Tab.Navigator>
@@ -128,8 +128,8 @@ export default function Main() {
             options={{headerShown: false}}
           />
           <Stack.Screen
-            name="ResultSearchWorker"
-            component={ResultSearchWorker}
+            name="ResultSearchRecruiter"
+            component={ResultSearchRecruiter}
             options={{headerShown: false}}
           />
           <Stack.Screen
@@ -161,8 +161,8 @@ export default function Main() {
             options={{headerShown: false}}
           />
           <Stack.Screen
-            name="ResultSearch"
-            component={ResultSearch}
+            name="ResultSearchWorker"
+            component={ResultSearchWorker}
             options={{headerShown: false}}
           />
           <Stack.Screen

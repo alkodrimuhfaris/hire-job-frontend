@@ -1,79 +1,27 @@
 import React from 'react';
-import {
-  View,
-  Text,
-  FlatList,
-  SectionList,
-  StyleSheet,
-  TouchableOpacity,
-} from 'react-native';
+import {View, Text, FlatList, StyleSheet, TouchableOpacity} from 'react-native';
 import {Container, Content} from 'native-base';
-import Card from '../components/HomeCardWorker';
+import Card from '../components/HomeCardRecruiter';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import sectionConditioner from '../helpers/sectionConditioner';
-
-const DATA = [
-  {
-    id: 1,
-    name: 'asd',
-    skill: 'web',
-  },
-  {
-    id: 1,
-    name: 'asd',
-    skill: 'web',
-  },
-  {
-    id: 1,
-    name: 'asd',
-    skill: 'web',
-  },
-];
-
-const dataCompany = [
-  {
-    id: 3,
-    name: 'PT. eSea Indonesia',
-    field: null,
-    city: null,
-    photo: null,
-    authorId: 2,
-    createdAt: '2020-12-02T09:34:30.000Z',
-    updatedAt: '2020-12-02T09:34:30.000Z',
-  },
-  {
-    id: 1,
-    name: 'Tuku Bae',
-    field: 'Ecommerce',
-    city: 'Jakarta',
-    photo: null,
-    authorId: 1,
-    createdAt: '2020-12-02T06:20:34.000Z',
-    updatedAt: '2020-12-02T06:20:34.000Z',
-  },
-  {
-    id: 2,
-    name: 'Send Bae',
-    field: 'Comunication',
-    city: 'Jakarta',
-    photo: null,
-    authorId: 1,
-    createdAt: '2020-12-02T06:20:34.000Z',
-    updatedAt: '2020-12-02T06:20:34.000Z',
-  },
-];
-
-const FlatListItemSeparator = () => {
-  return (
-    //Item Separator
-    <View style={styles.listItemSeparatorStyle} />
-  );
-};
 
 export default function ResultSearch({navigation}) {
-  const data = dataCompany;
-  const renderItem = sectionConditioner.byCity(data);
-
+  const DATA = [
+    {
+      id: 1,
+      name: 'asd',
+      skill: 'web',
+    },
+    {
+      id: 2,
+      name: 'asd',
+      skill: 'web',
+    },
+    {
+      id: 3,
+      name: 'asd',
+      skill: 'web',
+    },
+  ];
   return (
     <Container style={styles.parent}>
       <View style={styles.btnBack}>
@@ -83,26 +31,27 @@ export default function ResultSearch({navigation}) {
       </View>
       <Content style={styles.content}>
         <View style={styles.flatList}>
+          <Text style={styles.title}>Web developer</Text>
           <FlatList
-            data={renderItem}
-            keyExtractor={(item, index) => index.toString()}
-            renderItem={({item}) => {
-              return (
-                <>
-                  <Text style={styles.title}>{item.title}</Text>
-                  <View style={styles.flatListWrapper}>
-                    <FlatList
-                      data={item.data}
-                      numColumns={2}
-                      keyExtractor={(item, index) => index.toString()}
-                      renderItem={({item}) => {
-                        return <Card />;
-                      }}
-                    />
-                  </View>
-                </>
-              );
-            }}
+            horizontal
+            data={DATA}
+            renderItem={({item}) => (
+              <TouchableOpacity>
+                <Card item={item} />
+              </TouchableOpacity>
+            )}
+          />
+        </View>
+        <View style={styles.flatList}>
+          <Text style={styles.title}>Android developer</Text>
+          <FlatList
+            horizontal
+            data={DATA}
+            renderItem={({item}) => (
+              <TouchableOpacity>
+                <Card item={item} />
+              </TouchableOpacity>
+            )}
           />
         </View>
       </Content>
@@ -115,7 +64,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#E5E5E5',
   },
   btnBack: {
-    marginTop: 78,
+    marginTop: 28,
     marginBottom: 28,
     marginLeft: 28,
   },
@@ -128,14 +77,5 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 18,
     marginBottom: 18,
-  },
-  listItemSeparatorStyle: {
-    height: 0.5,
-    width: '100%',
-    backgroundColor: '#C8C8C8',
-  },
-  flatListWrapper: {
-    height: 'auto',
-    marginBottom: 10,
   },
 });
