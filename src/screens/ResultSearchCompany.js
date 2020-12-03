@@ -52,6 +52,10 @@ export default function ResultSearch({navigation}) {
     }
   };
 
+  const getRecruiterDetail = () => {
+    navigation.navigate('DetailRecruiter');
+  };
+
   return (
     <Container style={styles.parent}>
       <View style={styles.btnBack}>
@@ -76,9 +80,11 @@ export default function ResultSearch({navigation}) {
                 keyExtractor={(_item, index) => index.toString()}
                 renderItem={({item}) => {
                   return (
-                    <View style={styles.cardWrapper}>
+                    <TouchableOpacity
+                      onPress={getRecruiterDetail}
+                      style={styles.cardWrapper}>
                       <SearchCompanyCard item={item} />
-                    </View>
+                    </TouchableOpacity>
                   );
                 }}
               />
@@ -104,9 +110,11 @@ export default function ResultSearch({navigation}) {
                         keyExtractor={(_item, index) => index.toString()}
                         renderItem={({item: itemDetail}) => {
                           return (
-                            <View style={styles.cardWrapper}>
+                            <TouchableOpacity
+                              onPress={getRecruiterDetail}
+                              style={styles.cardWrapper}>
                               <SearchCompanyCard item={itemDetail} />
-                            </View>
+                            </TouchableOpacity>
                           );
                         }}
                       />

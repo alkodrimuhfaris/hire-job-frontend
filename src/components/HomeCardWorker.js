@@ -1,18 +1,22 @@
 import React from 'react';
 import {Image, StyleSheet, View} from 'react-native';
 import {Text} from 'native-base';
+import {API_URL_IMAGE} from '@env';
 
 import Avatar from '../assets/img/profile.png';
 
 export default function HomeCardWorker({item}) {
   return (
     <View style={styles.card}>
-      <Image source={Avatar} style={styles.avatar} />
+      <Image
+        source={item.photo ? {uri: `${API_URL_IMAGE}${item.photo}`} : Avatar}
+        style={styles.avatar}
+      />
       <Text numberOfLines={1} ellipsizeMode="tail" style={styles.name}>
-        PT. Martabat Jaya Abadi
+        {item.Company.name}
       </Text>
       <Text numberOfLines={1} ellipsizeMode="tail" style={styles.position}>
-        Purwokerto
+        {item.Company.city}
       </Text>
     </View>
   );

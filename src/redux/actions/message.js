@@ -35,4 +35,7 @@ export default {
     type: 'READ_CHAT',
     payload: services(token).patch('message/read/' + id),
   }),
+  destroy: () => ({
+    type: 'DESTROY',
+  }),
 };

@@ -1,10 +1,10 @@
 import http from '../../helpers/http';
 
 export default {
-  getProfile: (token) => {
+  getPortfolioList: (token) => {
     return {
-      type: 'GET_PROFILE',
-      payload: http(token).get('recruiter/account'),
+      type: 'GET_PORTFOLIO',
+      payload: http(token).get('worker/portofolio'),
     };
   },
   destroy: () => ({

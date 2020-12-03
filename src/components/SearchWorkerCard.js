@@ -18,29 +18,20 @@ export default function HomeCardRecruiter({item}) {
         {item.name}
       </Text>
       <Text numberOfLines={1} ellipsizeMode="tail" style={styles.position}>
-        {item.jobTitle || 'Unemployed'}
-        {/* {API_URL_IMAGE + item.photo} */}
+        {item.jobTitle}
       </Text>
       <View style={styles.skillList}>
-        {skillArr.length ? (
-          skillArr.map((skillItem) => {
-            return (
-              <View style={styles.skill}>
-                <Text style={styles.skillText}>{skillItem.Skill.name}</Text>
-              </View>
-            );
-          })
-        ) : (
-          <View style={styles.skill}>
-            <Text style={styles.skillText}>Skilless</Text>
-          </View>
-        )}
+        {skillArr.length
+          ? skillArr.map((skillItem) => {
+              return (
+                <View style={styles.skill}>
+                  <Text style={styles.skillText}>{skillItem.Skill.name}</Text>
+                </View>
+              );
+            })
+          : null}
         <Text style={styles.skillMore}>
-          {item.SkillAmmount > 8
-            ? '8+'
-            : item.SkillAmmount
-            ? item.SkillAmmount
-            : null}
+          {item.SkillAmount > 3 ? `${item.SkillAmount - 3}+` : null}
         </Text>
       </View>
     </View>

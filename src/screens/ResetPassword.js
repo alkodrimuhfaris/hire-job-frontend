@@ -1,12 +1,20 @@
-import React from 'react';
-import {Image, StyleSheet, View} from 'react-native';
+import React, {useEffect} from 'react';
+import {Alert, Image, StyleSheet, View} from 'react-native';
 import {Button, Text, Container, Content, Item, Input} from 'native-base';
 import {Formik} from 'formik';
 import * as Yup from 'yup';
+import {useDispatch, useSelector} from 'react-redux';
+
+// import actions
+import authAction from '../redux/actions/auth';
 
 import Logo from '../assets/img/logo-purple.png';
 
-export default function ResetPassword() {
+export default function ResetPassword({navigation, route}) {
+  const dispatch = useDispatch();
+  const auth = useSelector((state) => state.auth);
+  const {id} = route.params;
+
   const schema = Yup.object().shape({
     password: Yup.string()
       .min(6, 'Password required minimal 6 characters')
@@ -14,6 +22,22 @@ export default function ResetPassword() {
     confirmPassword: Yup.string()
       .oneOf([Yup.ref('password'), null], "Password doesn't match")
       .required('Confirm password field is required'),
+  });
+
+  function doResetPassword(values) {
+    const data = {
+      newPassword: values.password,
+      confirmPassword: values.confirmPassword,
+    };
+    dispatch(authAction.resetPassword(id, data));
+  }
+
+  useEffect(() => {
+    if (auth.isReset) {
+      Alert.alert('Reset password successfully, please login to continue.');
+      navigation.navigate('Welcome');
+      dispatch(authAction.clearAlert());
+    }
   });
 
   return (
@@ -24,7 +48,7 @@ export default function ResetPassword() {
           confirmPassword: '',
         }}
         validationSchema={schema}
-        onSubmit={(values) => console.log(values)}>
+        onSubmit={(values) => doResetPassword(values)}>
         {({
           handleChange,
           handleBlur,

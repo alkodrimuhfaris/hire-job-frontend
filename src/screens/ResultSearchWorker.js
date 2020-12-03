@@ -40,6 +40,10 @@ export default function ResultSearch({navigation}) {
     setLoading(false);
   };
 
+  const getWorkerDetail = () => {
+    navigation.navigate('DetailWorker');
+  };
+
   const nextPage = () => {
     if (pageInfo.pages > pageInfo.currentPage) {
       dispatch(
@@ -76,9 +80,11 @@ export default function ResultSearch({navigation}) {
                 keyExtractor={(_item, index) => index.toString()}
                 renderItem={({item}) => {
                   return (
-                    <View style={styles.cardWrapper}>
+                    <TouchableOpacity
+                      onPress={getWorkerDetail}
+                      style={styles.cardWrapper}>
                       <SearchWorkerCard item={item} />
-                    </View>
+                    </TouchableOpacity>
                   );
                 }}
               />
@@ -104,9 +110,11 @@ export default function ResultSearch({navigation}) {
                         keyExtractor={(_item, index) => index.toString()}
                         renderItem={({item: itemDetail}) => {
                           return (
-                            <View style={styles.cardWrapper}>
+                            <TouchableOpacity
+                              onPress={getWorkerDetail}
+                              style={styles.cardWrapper}>
                               <SearchWorkerCard item={itemDetail} />
-                            </View>
+                            </TouchableOpacity>
                           );
                         }}
                       />
