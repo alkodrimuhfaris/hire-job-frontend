@@ -54,7 +54,7 @@ const BottomNavigation = ({state, descriptors, navigation}) => {
           if (label === 'HomeWorker' || label === 'HomeRecruiter') {
             return isFocused ? <HomeActive /> : <Home />;
           }
-          if (label === 'Search') {
+          if (label === 'SearchWorker' || label === 'SearchRecruiter') {
             return isFocused ? <SearchActive /> : <Search />;
           }
           if (label === 'Chat') {

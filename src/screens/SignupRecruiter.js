@@ -1,29 +1,46 @@
-import React from 'react';
-import {Image, TouchableOpacity, StyleSheet, View} from 'react-native';
+import React, {useEffect} from 'react';
+import {Image, TouchableOpacity, StyleSheet, View, Alert} from 'react-native';
 import {Button, Text, Container, Content, Item, Input} from 'native-base';
+import {useDispatch, useSelector} from 'react-redux';
 import {Formik} from 'formik';
 import * as Yup from 'yup';
+import authAction from '../redux/actions/auth';
 
 import Logo from '../assets/img/logo-purple.png';
 
 export default function SignupRecruiter({navigation}) {
+  const dispatch = useDispatch();
+  const regiter = useSelector((state) => state.register);
+
   const schema = Yup.object().shape({
     name: Yup.string().required('Name field is required'),
     email: Yup.string()
       .email('Email is invalid')
       .required('Email field is required'),
     company: Yup.string().required('Company field is required'),
-    position: Yup.string().required('Position field is required'),
+    jobTitle: Yup.string().required('Position field is required'),
     phoneNumber: Yup.string()
       .min(10, 'Phone number required minimal 10 chars')
       .max(12, 'Phone number required maximal 12 chars')
       .required('Phone number field is required'),
     password: Yup.string()
-      .min(6, 'Password required minimal 6 characters')
+      .min(8, 'Password required minimal 8 characters')
       .required('Password field is required'),
     confirmPassword: Yup.string()
       .oneOf([Yup.ref('password'), null], "Password doesn't match")
       .required('Confirm password field is required'),
+  });
+
+  function doRegister(data) {
+    dispatch(authAction.registerRecruiter(data));
+    navigation.navigate('LoginRecruiter');
+  }
+
+  useEffect(() => {
+    if (regiter.isError) {
+      Alert.alert(regiter.message);
+      dispatch(authAction.clearAlert());
+    }
   });
 
   return (
@@ -33,13 +50,13 @@ export default function SignupRecruiter({navigation}) {
           name: '',
           email: '',
           company: '',
-          position: '',
+          jobTitle: '',
           phoneNumber: '',
           password: '',
           confirmPassword: '',
         }}
         validationSchema={schema}
-        onSubmit={(values) => console.log(values)}>
+        onSubmit={(values) => doRegister(values)}>
         {({
           handleChange,
           handleBlur,
@@ -75,6 +92,7 @@ export default function SignupRecruiter({navigation}) {
                   onChangeText={handleChange('email')}
                   onBlur={handleBlur('email')}
                   value={values.email}
+                  keyboardType="email-address"
                 />
               </Item>
               {touched.email && errors.email && (
@@ -102,13 +120,13 @@ export default function SignupRecruiter({navigation}) {
                 <Input
                   placeholder="Posisi di perusahaan anda"
                   style={styles.input}
-                  onChangeText={handleChange('position')}
-                  onBlur={handleBlur('position')}
-                  value={values.position}
+                  onChangeText={handleChange('jobTitle')}
+                  onBlur={handleBlur('jobTitle')}
+                  value={values.jobTitle}
                 />
               </Item>
-              {touched.position && errors.position && (
-                <Text style={styles.error}>{errors.position}</Text>
+              {touched.jobTitle && errors.jobTitle && (
+                <Text style={styles.error}>{errors.jobTitle}</Text>
               )}
             </View>
             <View style={styles.fieldMargin}>

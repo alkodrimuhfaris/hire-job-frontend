@@ -10,10 +10,17 @@ import {
 import RadioForm from 'react-native-simple-radio-button';
 import {Text, Button, Card, Title, Form, Label, Textarea} from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import ImagePicker from 'react-native-image-picker';
 import {Formik} from 'formik';
 import * as yup from 'yup';
 
 import profile from '../assets/img/profile.png';
+
+const options = {
+  title: 'my picture',
+  takePhotoButtonTitle: 'Take Photo',
+  chooseFromLibraryButtonTitle: 'Choose Photo',
+};
 
 var radio_props = [
   {label: 'Aplikasi Mobile            ', data: 0},
@@ -43,17 +50,59 @@ const registerValidationSchema = yup.object().shape({
 
 const EditProfile = ({navigation}) => {
   const [data, setData] = React.useState(0);
+  const [AvatarSource, setAvatarSource] = React.useState('');
+  const [portofolio, setPortofolio] = React.useState('');
+
+  const takePictures = () => {
+    ImagePicker.showImagePicker(options, (response) => {
+      if (response.didCancel) {
+        console.log('User cancelled image picker');
+      } else if (response.error) {
+        console.log('ImagePicker Error: ', response.error);
+      } else {
+        setAvatarSource(response.uri);
+        const form = new FormData();
+        form.append('pictures', {
+          uri: response.uri,
+          name: response.fileName,
+          type: response.type,
+        });
+      }
+    });
+  };
+  // Open Image Library:
+  const pickPortofolio = () => {
+    ImagePicker.launchImageLibrary(options, (response) => {
+      if (response.didCancel) {
+        console.log('User cancelled image picker');
+      } else if (response.error) {
+        console.log('ImagePicker Error: ', response.error);
+      } else {
+        setPortofolio(response.uri);
+        const form = new FormData();
+        form.append('pictures', {
+          uri: response.uri,
+          name: response.fileName,
+          type: response.type,
+        });
+      }
+    });
+  };
+
   return (
     <>
       <ScrollView>
         {/*Card for Profile*/}
         <Card style={styles.cardUp} transparent>
           <View style={styles.parent}>
-            <Image source={profile} style={styles.avatar} />
-            <View style={styles.edit}>
+            <Image
+              source={AvatarSource ? {uri: AvatarSource} : profile}
+              style={styles.avatar}
+            />
+            <TouchableOpacity onPress={takePictures} style={styles.edit}>
               <Icon name="pencil" size={20} color="#8e8e8e" />
               <Text style={styles.textEdit}>Edit</Text>
-            </View>
+            </TouchableOpacity>
           </View>
           <View style={styles.identity}>
             <Text style={styles.name}>Louis Tamlison</Text>
@@ -392,12 +441,19 @@ const EditProfile = ({navigation}) => {
                       }}
                     />
                     <Label style={styles.label}>Upload Gambar</Label>
-                    <TouchableOpacity>
-                      <View style={styles.InputImage}>
-                        <Icon name="cloud-upload" size={50} color="#8e8e8e" />
-                        <Text note>upload file dari penyimpanan</Text>
-                      </View>
-                    </TouchableOpacity>
+                    {portofolio === '' ? (
+                      <TouchableOpacity onPress={pickPortofolio}>
+                        <View style={styles.InputImage}>
+                          <Icon name="cloud-upload" size={50} color="#8e8e8e" />
+                          <Text note>upload file dari penyimpanan</Text>
+                        </View>
+                      </TouchableOpacity>
+                    ) : (
+                      <Image
+                        style={styles.portofolioImg}
+                        source={{uri: portofolio}}
+                      />
+                    )}
                     <Button block style={styles.addExperience} transparent>
                       <Text style={styles.experience}>Tambah Portofolio</Text>
                     </Button>
@@ -564,5 +620,11 @@ const styles = StyleSheet.create({
     borderRadius: 1,
     position: 'relative',
     height: 175,
+  },
+  portofolioImg: {
+    width: 287,
+    height: 175,
+    marginTop: 10,
+    borderRadius: 10,
   },
 });

@@ -12,12 +12,12 @@ export default function ResultSearch({navigation}) {
       skill: 'web',
     },
     {
-      id: 1,
+      id: 2,
       name: 'asd',
       skill: 'web',
     },
     {
-      id: 1,
+      id: 3,
       name: 'asd',
       skill: 'web',
     },
@@ -60,9 +60,22 @@ export default function ResultSearch({navigation}) {
 }
 
 const styles = StyleSheet.create({
-  parent: {backgroundColor: '#E5E5E5'},
-  btnBack: {marginTop: 78, marginBottom: 28, marginLeft: 28},
-  content: {marginLeft: 16},
-  flatList: {marginBottom: 30},
-  title: {fontSize: 18, marginBottom: 18},
+  parent: {
+    backgroundColor: '#E5E5E5',
+  },
+  btnBack: {
+    marginTop: 28,
+    marginBottom: 28,
+    marginLeft: 28,
+  },
+  content: {
+    marginLeft: 16,
+  },
+  flatList: {
+    marginBottom: 30,
+  },
+  title: {
+    fontSize: 18,
+    marginBottom: 18,
+  },
 });
