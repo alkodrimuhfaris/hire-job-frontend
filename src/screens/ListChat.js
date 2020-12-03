@@ -7,12 +7,18 @@ import {
   FlatList,
   StyleSheet,
 } from 'react-native';
+import {useSelector, useDispatch} from 'react-redux';
+import messageAction from '../redux/actions/message';
+import moment from 'moment';
+import RenderItem from '../components/MessageList';
 
 // import assets
 import avatar from '../assets/img/profile.png';
 import Null from '../assets/img/bgChatNull.svg';
+import {API_URL} from '@env';
 
 export default function ListChat({navigation}) {
+  const dispatch = useDispatch();
   // dummy data
   const DATA = [
     {
@@ -29,23 +35,30 @@ export default function ListChat({navigation}) {
     },
   ];
 
-  const RenderItem = ({data}) => {
-    return (
-      <TouchableOpacity onPress={() => navigation.navigate('ChatRoom')}>
-        <View style={styles.imgParent}>
-          <Image source={avatar} style={styles.image} />
-          <View style={styles.parentList}>
-            <View style={styles.list}>
-              <Text style={styles.listName}>{data.name}</Text>
-              <Text style={styles.listTime}>{data.time}</Text>
-            </View>
-            <Text numberOfLines={1} ellipsizeMode="tail" style={styles.message}>
-              {data.message}
-            </Text>
-          </View>
-        </View>
-      </TouchableOpacity>
-    );
+  const {token, id} = useSelector((state) => state.auth);
+  const chatList = useSelector((state) => state.message.listAllChat);
+  const pageInfo = useSelector((state) => state.message.allChatPageInfo);
+  const isLoading = useSelector((state) => state.message.isLoading);
+  const [loading, setLoading] = React.useState(false);
+
+  React.useEffect(() => {
+    dispatch(messageAction.getAllList(token));
+  }, []);
+
+  React.useEffect(() => {
+    console.log(chatList);
+  }, [chatList]);
+
+  const doRefresh = () => {
+    setLoading(true);
+    dispatch(messageAction.getAllList(token));
+    setLoading(false);
+  };
+
+  const nextPage = () => {
+    if (pageInfo.pages > pageInfo.currentPage) {
+      dispatch(messageAction.allListScroll(token, pageInfo.currentPage + 1));
+    }
   };
 
   return (
@@ -55,16 +68,24 @@ export default function ListChat({navigation}) {
       </View>
       <View>
         <FlatList
-          data={DATA}
-          renderItem={({item}) => <RenderItem data={item} />}
+          data={chatList}
+          onRefresh={doRefresh}
+          refreshing={loading}
+          onEndReached={nextPage}
+          onEndReachedThreshold={0.5}
+          renderItem={({item}) => (
+            <RenderItem item={item} navigation={navigation} />
+          )}
           keyExtractor={(index) => index.id.toString()}
         />
       </View>
 
       {/* rendering if no message list */}
-      {/* <View style={styles.null}>
+      {/* {chatList.length || isLoading ? null : (
+        <View style={styles.null}>
           <Null />
-        </View> */}
+        </View>
+      )} */}
     </View>
   );
 }

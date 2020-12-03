@@ -11,6 +11,36 @@ const initialState = {
 
 export default (state = initialState, action) => {
   switch (action.type) {
+    case 'GET_USER_PENDING': {
+      return {
+        ...state,
+        isLoading: true,
+        isError: false,
+        alertMsg: 'getting user chats ...',
+      };
+    }
+    case 'GET_USER_FULFILLED': {
+      return {
+        ...state,
+        isError: false,
+        isLoading: false,
+        profileColluctor: {
+          name: action.payload.data.results.name,
+          company: action.payload.data.results.company,
+          photo: action.payload.data.results.photo,
+          jobTitle: action.payload.data.results.jobTitle,
+        },
+        alertMsg: 'get list chats successfull',
+      };
+    }
+    case 'GET_USER_REJECTED': {
+      return {
+        ...state,
+        isLoading: false,
+        isError: true,
+        alertMsg: 'get list chats failed',
+      };
+    }
     case 'GET_LIST_PENDING': {
       return {
         ...state,
@@ -22,7 +52,7 @@ export default (state = initialState, action) => {
     case 'GET_LIST_FULFILLED': {
       return {
         ...state,
-        isLogin: true,
+        isLoading: false,
         isError: false,
         listAllChat: action.payload.data.results,
         allChatPageInfo: action.payload.data.pageInfo,
@@ -32,7 +62,7 @@ export default (state = initialState, action) => {
     case 'GET_LIST_REJECTED': {
       return {
         ...state,
-        isLogin: false,
+        isLoading: false,
         isError: true,
         alertMsg: 'get list chats failed',
       };
@@ -48,7 +78,7 @@ export default (state = initialState, action) => {
     case 'LIST_SCROLL_FULFILLED': {
       return {
         ...state,
-        isLogin: true,
+        isLoading: false,
         isError: false,
         listAllChat: [...state.listAllChat, ...action.payload.data.results],
         allChatPageInfo: {
@@ -61,7 +91,7 @@ export default (state = initialState, action) => {
     case 'LIST_SCROLL_REJECTED': {
       return {
         ...state,
-        isLogin: false,
+        isLoading: false,
         isError: true,
         alertMsg: 'get list chats next page failed',
       };
@@ -78,18 +108,17 @@ export default (state = initialState, action) => {
       console.log(action.payload.data);
       return {
         ...state,
-        isLogin: true,
+        isLoading: false,
         isError: false,
         privateChat: action.payload.data.results,
         privateChatPageInfo: action.payload.data.pageInfo,
-        profileColluctor: action.payload.data.colluctorProfile,
         alertMsg: 'Get private chat successfull',
       };
     }
     case 'GET_PRIVATE_REJECTED': {
       return {
         ...state,
-        isLogin: false,
+        isLoading: false,
         isError: true,
         alertMsg: 'Get private chat failed',
       };
@@ -106,7 +135,7 @@ export default (state = initialState, action) => {
       console.log(action.payload.data);
       return {
         ...state,
-        isLogin: true,
+        isLoading: false,
         isError: false,
         privateChat: [...state.privateChat, ...action.payload.data.results],
         privateChatPageInfo: {
@@ -123,7 +152,7 @@ export default (state = initialState, action) => {
     case 'PRIVATE_SCROLL_REJECTED': {
       return {
         ...state,
-        isLogin: false,
+        isLoading: false,
         isError: true,
         alertMsg: 'Get next page of private chat failed',
       };
@@ -139,7 +168,7 @@ export default (state = initialState, action) => {
     case 'SEND_CHAT_FULFILLED': {
       return {
         ...state,
-        isLogin: true,
+        isLoading: false,
         isError: false,
         privateChat: [action.payload.data.results, ...state.privateChat],
         alertMsg: 'Chat sent successfull',
@@ -148,7 +177,7 @@ export default (state = initialState, action) => {
     case 'SEND_CHAT_REJECTED': {
       return {
         ...state,
-        isLogin: false,
+        isLoading: false,
         isError: true,
         alertMsg: 'Sent chat failed',
       };
@@ -164,7 +193,7 @@ export default (state = initialState, action) => {
     case 'READ_CHAT_FULFILLED': {
       return {
         ...state,
-        isLogin: true,
+        isLoading: false,
         isError: false,
         alertMsg: 'Read chat successfull',
       };
@@ -172,7 +201,7 @@ export default (state = initialState, action) => {
     case 'READ_CHAT_REJECTED': {
       return {
         ...state,
-        isLogin: false,
+        isLoading: false,
         isError: true,
         alertMsg: 'Read chat failed',
       };

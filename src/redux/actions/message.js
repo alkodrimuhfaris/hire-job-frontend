@@ -1,7 +1,11 @@
-import services from '../../helpers/services';
+import services from '../../helpers/http';
 import qs from 'qs';
 
 export default {
+  getProfile: (token, id) => ({
+    type: 'GET_USER',
+    payload: services(token).get('home/' + id),
+  }),
   getAllList: (token) => ({
     type: 'GET_LIST',
     payload: services(token).get('message/list/person'),
@@ -20,9 +24,12 @@ export default {
     type: 'LIST_SCROLL',
     payload: services(token).get('message/list/person?' + qs.stringify({page})),
   }),
-  sendChat: (token, id, chat) => ({
+  sendChat: (token, id, message) => ({
     type: 'SEND_CHAT',
-    payload: services(token).post('message/chat/' + id, qs.stringify({chat})),
+    payload: services(token).post(
+      'message/chat/' + id,
+      qs.stringify({message}),
+    ),
   }),
   readChat: (token, id) => ({
     type: 'READ_CHAT',

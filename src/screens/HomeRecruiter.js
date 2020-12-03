@@ -2,10 +2,37 @@ import React from 'react';
 import {FlatList, StyleSheet, View, TouchableOpacity} from 'react-native';
 import {Text, Container, Content} from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import {useSelector, useDispatch} from 'react-redux';
+
+// realtime chat
+import io from 'socket.io-client';
+import {API_URL} from '@env';
+import messageAction from '../redux/actions/message';
 
 import Card from '../components/HomeCardRecruiter';
 
 export default function HomeRecruiter({navigation}) {
+  const dispatch = useDispatch();
+  const {id: selfId, token} = useSelector((state) => state.auth);
+  React.useEffect(() => {
+    const socket = io(API_URL);
+    const readEvent = 'read ' + selfId;
+    const sendEvent = 'send ' + selfId;
+    dispatch(messageAction.getAllList(token));
+    socket.on(sendEvent, ({sender, message}) => {
+      console.log('theres an event');
+      dispatch(messageAction.getAllList(token));
+      dispatch(messageAction.getPrivate(token, sender));
+    });
+    socket.on(readEvent, ({reciever, read}) => {
+      dispatch(messageAction.getAllList(token));
+      dispatch(messageAction.getPrivate(token, reciever));
+    });
+    return () => {
+      socket.close();
+    };
+  }, []);
+
   //dummy data
   const DATA = [
     {
