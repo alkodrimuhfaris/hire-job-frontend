@@ -12,6 +12,7 @@ import messageAction from '../redux/actions/message';
 import Card from '../components/HomeCardRecruiter';
 
 export default function HomeRecruiter({navigation}) {
+  // realtime
   const dispatch = useDispatch();
   const {id: selfId, token} = useSelector((state) => state.auth);
   React.useEffect(() => {
@@ -31,6 +32,7 @@ export default function HomeRecruiter({navigation}) {
     return () => {
       socket.close();
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   //dummy data

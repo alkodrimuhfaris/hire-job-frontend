@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React from 'react';
 import {
   View,
@@ -9,33 +10,14 @@ import {
 } from 'react-native';
 import {useSelector, useDispatch} from 'react-redux';
 import messageAction from '../redux/actions/message';
-import moment from 'moment';
 import RenderItem from '../components/MessageList';
 
 // import assets
-import avatar from '../assets/img/profile.png';
-import Null from '../assets/img/bgChatNull.svg';
-import {API_URL} from '@env';
 
 export default function ListChat({navigation}) {
   const dispatch = useDispatch();
-  // dummy data
-  const DATA = [
-    {
-      id: 1,
-      name: 'maman',
-      message: 'helllooooooo ',
-      time: '21 Apr',
-    },
-    {
-      id: 2,
-      name: 'maman',
-      message: 'Lorem ipsum dolor sit amet, consectetur adasdada',
-      time: '21 Apr',
-    },
-  ];
 
-  const {token, id} = useSelector((state) => state.auth);
+  const {token, id: selfId} = useSelector((state) => state.auth);
   const chatList = useSelector((state) => state.message.listAllChat);
   const pageInfo = useSelector((state) => state.message.allChatPageInfo);
   const isLoading = useSelector((state) => state.message.isLoading);
