@@ -72,7 +72,7 @@ export default function ListChat({navigation}) {
 const styles = StyleSheet.create({
   parent: {
     flex: 1,
-    backgroundColor: '#ffff',
+    backgroundColor: '#F6F7F8',
     paddingHorizontal: 16,
   },
   title: {
