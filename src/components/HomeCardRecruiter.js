@@ -1,31 +1,37 @@
 import React from 'react';
 import {Image, StyleSheet, View} from 'react-native';
 import {Text} from 'native-base';
+import {API_URL_IMAGE} from '@env';
 
 import Avatar from '../assets/img/profile.png';
 
 export default function HomeCardRecruiter({item}) {
   return (
     <View style={styles.card}>
-      <Image source={Avatar} style={styles.avatar} />
+      <Image
+        source={item.photo ? {uri: `${API_URL_IMAGE}${item.photo}`} : Avatar}
+        style={styles.avatar}
+      />
       <Text numberOfLines={1} ellipsizeMode="tail" style={styles.name}>
-        Louis Tomlinson
+        {item.name}
       </Text>
       <Text numberOfLines={1} ellipsizeMode="tail" style={styles.position}>
-        Web developer
+        {item.jobTitle}
       </Text>
-      <View style={styles.skillList}>
-        <View style={styles.skill}>
-          <Text style={styles.skillText}>PHP</Text>
+      {item.SkillAmount > 0 && (
+        <View style={styles.skillList}>
+          {item.WorkerSkills.slice(0, 3).map((skill) => {
+            return (
+              <View style={styles.skill} key={skill.id}>
+                <Text style={styles.skillText}>{skill.Skill.name}</Text>
+              </View>
+            );
+          })}
+          {item.SkillAmount > 3 && (
+            <Text style={styles.skillMore}>{item.SkillAmount - 3}+</Text>
+          )}
         </View>
-        <View style={styles.skill}>
-          <Text style={styles.skillText}>nodeJs</Text>
-        </View>
-        <View style={styles.skill}>
-          <Text style={styles.skillText}>C++</Text>
-        </View>
-        <Text style={styles.skillMore}>8+</Text>
-      </View>
+      )}
     </View>
   );
 }
