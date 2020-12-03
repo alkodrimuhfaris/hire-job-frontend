@@ -56,6 +56,7 @@ const registerValidationSchema = yup.object().shape({
 const schemaExperience = yup.object().shape({
   position: yup.string().required('posisi dibutuhkan '),
   companyName: yup.string().required('Nama perusahaan dibutuhkan '),
+  startAt: yup.date().required('YYYY-MM-DD'),
   finishAt: yup.date().required('YYYY-MM-DD'),
   description: yup
     .string()
@@ -300,6 +301,7 @@ const EditProfile = ({navigation}) => {
               initialValues={{
                 position: '',
                 companyName: '',
+                startAt: '',
                 finishAt: '',
                 description: '',
               }}
@@ -339,7 +341,19 @@ const EditProfile = ({navigation}) => {
                     {touched.companyName && errors.companyName && (
                       <Text style={styles.textError}>{errors.companyName}</Text>
                     )}
-                    <Label style={styles.label}>Bulan/ Tahun</Label>
+                    <Label style={styles.label}>Masuk Pada</Label>
+                    <TextInput
+                      name="startAt"
+                      placeholder="2000-1-1"
+                      style={styles.textInput}
+                      onChangeText={handleChange('startAt')}
+                      onBlur={handleBlur('startAt')}
+                      value={values.startAt}
+                    />
+                    {touched.startAt && errors.startAt && (
+                      <Text style={styles.textError}>{errors.startAt}</Text>
+                    )}
+                    <Label style={styles.label}>Keuar pada</Label>
                     <TextInput
                       name="finishAt"
                       placeholder="2000-1-1"
