@@ -14,17 +14,19 @@ import profile from '../assets/img/profile.png';
 import {API_URL} from '@env';
 
 const ProfileRecruiter = ({navigation}) => {
+  const [field, setField] = React.useState('Financial');
   const dispatch = useDispatch();
   const auth = useSelector((state) => state.auth);
   const profileState = useSelector((state) => state.profileRecruiter);
   const {profileData} = profileState;
   const companyState = useSelector((state) => state.myCompany);
   const {companyData} = companyState;
-  console.log(companyData);
+  // console.log(companyData);
 
-  // React.useEffect(() => {
-  //   dispatch(companyAction.getMyCompany(auth.token));
-  // }, [dispatch]);
+  React.useEffect(() => {
+    dispatch(companyAction.getMyCompany(auth.token));
+    setField(companyData[0].field);
+  }, [dispatch]);
 
   function logout() {
     dispatch(authAction.logout());
@@ -39,7 +41,7 @@ const ProfileRecruiter = ({navigation}) => {
             <Text style={styles.name}>{profileData[0].company}</Text>
 
             {/* ambil dari table company yang field */}
-            <Text style={styles.field}>Financial</Text>
+            <Text style={styles.field}>{field}</Text>
 
             <View style={styles.location}>
               <Icon name="map-marker" size={24} color="#8e8e8e" />

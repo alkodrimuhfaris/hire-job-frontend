@@ -14,6 +14,12 @@ export default {
       payload: http(token).patch('recruiter/account', qs.stringify(data)),
     };
   },
+  updatePhotoRecruiter: (token, data) => {
+    return {
+      type: 'UPDATE_PROFILE',
+      payload: http(token).patch('recruiter/account', data),
+    };
+  },
   // COMPANY
   getMyCompany: (token) => {
     return {
@@ -29,7 +35,7 @@ export default {
   },
   updatePhotoCompany: (token, data) => {
     return {
-      type: 'UPDATE_PHOTO_COMPANY',
+      type: 'UPDATE_COMPANY',
       payload: http(token).patch('recruiter/company', data),
     };
   },

@@ -71,6 +71,7 @@ export default function EditProfileRecruiter({navigation}) {
         const form = new FormData();
         form.append('photo', source);
         dispatch(profileAction.updatePhotoCompany(auth.token, form));
+        dispatch(profileAction.updatePhotoRecruiter(auth.token, form));
       }
     });
   }
