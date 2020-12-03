@@ -2,6 +2,7 @@ import React from 'react';
 import {FlatList, StyleSheet, View, TouchableOpacity} from 'react-native';
 import {Text, Container, Content} from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import dayjs from 'dayjs';
 
 import Card from '../components/HomeCardWorker';
 
@@ -30,7 +31,7 @@ export default function HomeWorker({navigation}) {
     <Container style={styles.parent}>
       <View style={[styles.header, styles.padding]}>
         <View>
-          <Text style={styles.date}>Sen, 21 April 2020</Text>
+          <Text style={styles.date}>{dayjs().format('ddd, D MMMM YYYY')}</Text>
           <Text style={styles.user}>Hai, Mohammad!</Text>
         </View>
         <TouchableOpacity
