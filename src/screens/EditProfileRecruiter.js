@@ -18,6 +18,8 @@ import {useSelector, useDispatch} from 'react-redux';
 
 import profileAction from '../redux/actions/profileRecruiter';
 
+import {API_URL_IMAGE} from '@env';
+
 export default function EditProfileRecruiter({navigation}) {
   const dispatch = useDispatch();
   const auth = useSelector((state) => state.auth);
@@ -28,7 +30,7 @@ export default function EditProfileRecruiter({navigation}) {
   // const companyState = useSelector((state) => state.myCompany);
   // const {companyData} = companyState;
 
-  const [photo, setPhoto] = useState('');
+  const [photo, setPhoto] = useState(profileData[0].photo);
   const schema = Yup.object().shape({
     companyName: Yup.string().required('Company name field is required'),
     companyField: Yup.string().required('Company field is required'),
@@ -115,7 +117,7 @@ export default function EditProfileRecruiter({navigation}) {
           <View style={styles.parent}>
             <TouchableOpacity onPress={selectImage}>
               <Image
-                source={photo ? {uri: photo} : Avatar}
+                source={photo ? {uri: `${API_URL_IMAGE}${photo}`} : Avatar}
                 style={styles.avatar}
               />
             </TouchableOpacity>

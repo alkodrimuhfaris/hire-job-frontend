@@ -11,7 +11,7 @@ import companyAction from '../redux/actions/profileRecruiter';
 
 import profile from '../assets/img/profile.png';
 
-import {API_URL} from '@env';
+import {API_URL_IMAGE} from '@env';
 
 const ProfileRecruiter = ({navigation}) => {
   const [field, setField] = React.useState('Financial');
@@ -25,8 +25,7 @@ const ProfileRecruiter = ({navigation}) => {
 
   React.useEffect(() => {
     dispatch(companyAction.getMyCompany(auth.token));
-    setField(companyData[0].field);
-  }, [dispatch]);
+  }, [dispatch, profileData]);
 
   function logout() {
     dispatch(authAction.logout());
@@ -37,11 +36,16 @@ const ProfileRecruiter = ({navigation}) => {
       <ScrollView>
         <Card style={styles.cardUp} transparent>
           <View style={styles.parent}>
-            <Image source={profile} style={styles.avatar} />
+            <Image
+              source={{uri: `${API_URL_IMAGE}${profileData[0].photo}`}}
+              style={styles.avatar}
+            />
             <Text style={styles.name}>{profileData[0].company}</Text>
 
             {/* ambil dari table company yang field */}
-            <Text style={styles.field}>{field}</Text>
+            <Text style={styles.field}>
+              {companyData.length ? companyData[0].field : ''}
+            </Text>
 
             <View style={styles.location}>
               <Icon name="map-marker" size={24} color="#8e8e8e" />
