@@ -6,6 +6,8 @@ import message from './message';
 import profileRecruiter from './profileRecruiter';
 import profileWorker from './profileWorker';
 import skill from './skill';
+import home from './home';
+import portfolio from './portfolio';
 
 export default combineReducers({
   auth,
@@ -14,4 +16,6 @@ export default combineReducers({
   profileRecruiter,
   profileWorker,
   skill,
+  home,
+  portfolio,
 });

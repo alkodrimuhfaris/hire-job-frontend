@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   View,
   Image,
@@ -6,28 +6,73 @@ import {
   Modal,
   TouchableOpacity,
   ScrollView,
+  FlatList,
 } from 'react-native';
 import {Text, Button} from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import {useDispatch, useSelector} from 'react-redux';
+import {API_URL_IMAGE} from '@env';
 
-import portofolio from '../assets/img/portofolio.jpg';
+// import actions
+import portfolioAction from '../redux/actions/portfolio';
 
-const FirstRoute = () => {
+const FirstRoute = ({token}) => {
+  const dispatch = useDispatch();
+  const {portfolioData} = useSelector((state) => state.portfolio);
   const [modalVisible, setModalVisible] = useState(false);
+  const [img, setImg] = useState('');
+  const [name, setName] = useState('');
+  const [type, setType] = useState('');
+  const [description, setDescription] = useState('');
+  const [company, setCompany] = useState('');
+  const [link, setLink] = useState('');
+  const [github, setGithub] = useState('');
+
+  function setData(_img, _name, _type, _description, _company, _link, _github) {
+    setModalVisible(true);
+    setImg(_img);
+    setName(_name);
+    setType(_type ? 'Aplikasi mobile' : 'Aplikasi web');
+    setDescription(_description);
+    setCompany(_company);
+    setLink(_link);
+    setGithub(_github);
+  }
+
+  useEffect(() => {
+    if (token) {
+      dispatch(portfolioAction.getPortfolioList(token));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch]);
 
   return (
     <>
       <View style={styles.portofolioContainer}>
-        <TouchableOpacity
-          style={styles.space}
-          onPress={() => setModalVisible(true)}>
-          <Image source={portofolio} style={styles.portofolio} />
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.space}
-          onPress={() => setModalVisible(true)}>
-          <Image source={portofolio} style={styles.portofolio} />
-        </TouchableOpacity>
+        <FlatList
+          data={portfolioData}
+          keyExtractor={(item, index) => index.toString()}
+          renderItem={({item}) => (
+            <TouchableOpacity
+              style={styles.space}
+              onPress={() =>
+                setData(
+                  item.photo,
+                  item.name,
+                  item.type,
+                  item.description,
+                  item.company,
+                  item.publicLink,
+                  item.repoLink,
+                )
+              }>
+              <Image
+                source={{uri: `${API_URL_IMAGE}${item.photo}`}}
+                style={styles.portofolio}
+              />
+            </TouchableOpacity>
+          )}
+        />
       </View>
 
       <Modal
@@ -37,28 +82,24 @@ const FirstRoute = () => {
         onRequestClose={() => setModalVisible(false)}>
         <ScrollView contentContainerStyle={styles.centeredView}>
           <View style={styles.modalView}>
-            <Image source={portofolio} style={styles.portofolio} />
-            <Text style={styles.name}>Tokopedia</Text>
-            <Text style={styles.apps}>Aplikasi mobile</Text>
-            <Text style={styles.description}>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-              Vestibulum erat orci, mollis nec gravida sed, ornare quis urna.
-              Curabitur eu lacus fringilla, vestibulum risus at. Lorem ipsum
-              dolor sit amet, consectetur adipiscing elit. Vestibulum erat orci,
-              mollis nec gravida sed, ornare quis urna. Curabitur eu lacus
-              fringilla, vestibulum risus at.
-            </Text>
+            <Image
+              source={{uri: `${API_URL_IMAGE}${img}`}}
+              style={styles.portofolio}
+            />
+            <Text style={styles.name}>{name}</Text>
+            <Text style={styles.apps}>{type}</Text>
+            <Text style={styles.description}>{description}</Text>
             <View style={styles.sosmed}>
               <Icon name="map-marker" size={24} color="#9EA0A5" />
-              <Text style={styles.sosmedText}>PT. Tokopedia</Text>
+              <Text style={styles.sosmedText}>{company}</Text>
             </View>
             <View style={styles.sosmed}>
               <Icon name="globe" size={24} color="#9EA0A5" />
-              <Text style={styles.sosmedText}>tokopedia.com</Text>
+              <Text style={styles.sosmedText}>{link}</Text>
             </View>
             <View style={styles.sosmed}>
               <Icon name="github" size={24} color="#9EA0A5" />
-              <Text style={styles.sosmedText}>github.com/tokopedia/mobile</Text>
+              <Text style={styles.sosmedText}>{github}</Text>
             </View>
             <Button
               block

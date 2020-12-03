@@ -8,6 +8,11 @@ import {API_URL} from '@env';
 
 // import actions
 import authAction from '../redux/actions/auth';
+import homeAction from '../redux/actions/home';
+import messageAction from '../redux/actions/message';
+import profileRecruiterAction from '../redux/actions/profileRecruiter';
+import profileWorkerAction from '../redux/actions/profileWorker';
+import portfolioAction from '../redux/actions/portfolio';
 
 import profile from '../assets/img/profile.png';
 
@@ -18,20 +23,32 @@ const ProfileWorker = ({navigation}) => {
   const profileWorker = useSelector((state) => state.profileWorker);
   const skill = useSelector((state) => state.skill);
   const dispatch = useDispatch();
+  const auth = useSelector((state) => state.auth);
+
   const [index, setIndex] = React.useState(0);
   const [routes] = React.useState([
     {key: 'first', title: 'Portofolio'},
     {key: 'second', title: 'Pengalaman kerja'},
   ]);
 
-  const renderScene = SceneMap({
-    indicatorStyle: {backgroundColor: 'pink'},
-    first: FirstRoute,
-    second: SecondRoute,
-  });
+  const renderScene = ({route}) => {
+    switch (route.key) {
+      case 'first':
+        return <FirstRoute token={auth.token} />;
+      case 'second':
+        return <SecondRoute />;
+      default:
+        return null;
+    }
+  };
 
   function logout() {
     dispatch(authAction.logout());
+    dispatch(homeAction.destroy());
+    dispatch(messageAction.destroy());
+    dispatch(profileRecruiterAction.destroy());
+    dispatch(profileWorkerAction.destroy());
+    dispatch(portfolioAction.destroy());
   }
 
   return (
