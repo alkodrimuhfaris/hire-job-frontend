@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, {useState} from 'react';
 import {
   StyleSheet,
@@ -10,29 +11,67 @@ import {
 import {Button, Card, Body, Header, Right, Text, Textarea} from 'native-base';
 import {useNavigation} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import {useSelector, useDispatch} from 'react-redux';
+import {API_URL_IMAGE} from '@env';
+import Null from '../assets/img/bgChatNull.svg';
 
 import MessageBubble from '../components/bubbleChat';
-import profile from '../assets/img/profile.png';
+import photoPlaceholder from '../assets/img/profile.png';
+import messageAction from '../redux/actions/message';
 
-const ChatRoom = () => {
+const ChatRoom = ({route}) => {
+  const dispatch = useDispatch();
   const navigation = useNavigation();
-  // data dummy
-  const [data, setData] = useState([
-    {
-      message: 'good',
-    },
-    {
-      message: 'whats upp ??',
-      mine: 'mine',
-    },
-    {
-      message: 'hai',
-    },
-    {
-      message: 'halo',
-      mine: 'mine',
-    },
-  ]);
+  const {id, message = ''} = route.params;
+  const {isWorker, token, id: selfId} = useSelector((state) => state.auth);
+  const profile = useSelector((state) => state.message.profileColluctor);
+  const data = useSelector((state) => state.message.privateChat);
+  const pageInfo = useSelector((state) => state.message.privateChatPageInfo);
+  const isLoading = useSelector((state) => state.message.isLoading);
+  const [name, setName] = React.useState('');
+  const [loading, setLoading] = React.useState(false);
+
+  React.useEffect(() => {
+    if (Object.keys(profile).length) {
+      setName(isWorker ? profile.company : profile.name);
+    }
+  }, [profile]);
+
+  React.useEffect(() => {
+    console.log(data);
+    dispatch(messageAction.getProfile(token, id));
+    dispatch(messageAction.getAllList(token));
+    dispatch(messageAction.readChat(token, id));
+  }, [data]);
+
+  React.useEffect(() => {
+    console.log(id);
+    dispatch(messageAction.getProfile(token, id));
+    dispatch(messageAction.getPrivate(token, id));
+    dispatch(messageAction.readChat(token, id));
+  }, []);
+
+  const doRefresh = () => {
+    setLoading(true);
+    dispatch(messageAction.getPrivate(token, id));
+    setLoading(false);
+  };
+
+  const nextPage = () => {
+    if (pageInfo.pages > pageInfo.currentPage) {
+      dispatch(
+        messageAction.privateScroll(token, id, pageInfo.currentPage + 1),
+      );
+    }
+  };
+
+  const [textMessage, setTextMessage] = React.useState(message);
+
+  const sendChat = () => {
+    console.log(textMessage);
+    dispatch(messageAction.sendChat(token, id, textMessage));
+    setTextMessage('');
+  };
 
   return (
     <>
@@ -42,28 +81,50 @@ const ChatRoom = () => {
           <Button transparent onPress={() => navigation.goBack()}>
             <Icon name="angle-left" size={40} color="#000000" />
           </Button>
-          <Image style={styles.avatar} source={profile} />
+          <Image
+            style={styles.avatar}
+            source={
+              profile.photo
+                ? {uri: API_URL_IMAGE + profile.photo}
+                : photoPlaceholder
+            }
+          />
           <View style={styles.identitiy}>
-            <Text style={styles.name}>Louis tamlison</Text>
-            <Text style={styles.status}>Frelencer</Text>
+            <Text style={styles.name}>{name}</Text>
+            <Text style={styles.status}>{profile.jobTitle}</Text>
           </View>
           <Right />
         </Header>
       </TouchableOpacity>
       <View style={styles.parrent}>
-        <FlatList
-          data={data}
-          keyExtractor={(item, index) => index.toString()}
-          renderItem={({item, index}) => (
-            <MessageBubble mine={item.mine} text={item.message} />
-          )}
-          inverted
-        />
+        {
+          <FlatList
+            refreshing={loading}
+            onRefresh={doRefresh}
+            onEndReached={nextPage}
+            onEndReachedThreshold={0.5}
+            data={data}
+            keyExtractor={(item, index) => index.toString()}
+            renderItem={({item, index}) => (
+              <MessageBubble
+                sender={item.sender}
+                selfId={selfId}
+                text={item.message}
+              />
+            )}
+            inverted
+          />
+        }
       </View>
       <Card style={styles.inputChat} transparent>
         <Body style={styles.write}>
-          <Textarea style={styles.textInput} placeholder="Pesan" />
-          <TouchableOpacity transparent>
+          <Textarea
+            style={styles.textInput}
+            placeholder="Pesan"
+            value={textMessage}
+            onChangeText={(e) => setTextMessage(e)}
+          />
+          <TouchableOpacity onPress={() => sendChat()} transparent>
             <Icon
               name="paper-plane"
               color="#5E50A1"
@@ -90,6 +151,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#F6F7F8',
     paddingBottom: 50,
   },
+  center: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   title: {
     fontSize: 25,
     marginLeft: 25,
@@ -97,7 +162,7 @@ const styles = StyleSheet.create({
   avatar: {
     width: 50,
     height: 50,
-    backgroundColor: '#000000',
+    aspectRatio: 1 / 1,
     borderRadius: 50,
     marginLeft: 20,
   },

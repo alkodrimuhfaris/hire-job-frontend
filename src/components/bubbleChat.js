@@ -10,18 +10,26 @@ class bubbleChat extends React.Component {
       <View
         style={[
           styles.message,
-          this.props.mine ? styles.mine : styles.not_mine,
+          this.props.sender !== this.props.selfId
+            ? styles.mine
+            : styles.not_mine,
         ]}>
         <View
           style={[
             styles.cloud,
             {
-              backgroundColor: this.props.mine ? '#e8e8e8' : '#5E50A1',
+              backgroundColor:
+                this.props.sender !== this.props.selfId ? '#e8e8e8' : '#5E50A1',
             },
           ]}>
           {this.props.image ? (
             <Image
-              style={{alignSelf: this.props.mine ? 'flex-start' : 'flex-end'}}
+              style={{
+                alignSelf:
+                  this.props.sender !== this.props.selfId
+                    ? 'flex-start'
+                    : 'flex-end',
+              }}
               borderRadius={10}
               source={this.props.image}
             />
@@ -31,7 +39,10 @@ class bubbleChat extends React.Component {
               style={[
                 styles.text,
                 {
-                  color: this.props.mine ? '#000000' : '#ffffff',
+                  color:
+                    this.props.sender !== this.props.selfId
+                      ? '#000000'
+                      : '#ffffff',
                 },
               ]}>
               {this.props.text}
@@ -40,23 +51,31 @@ class bubbleChat extends React.Component {
           <View
             style={[
               styles.arrow_container,
-              this.props.mine
+              this.props.sender !== this.props.selfId
                 ? styles.arrow_left_container
                 : styles.arrow_right_container,
             ]}>
             <Svg
-              style={this.props.mine ? styles.arrow_left : styles.arrow_right}
+              style={
+                this.props.sender !== this.props.selfId
+                  ? styles.arrow_left
+                  : styles.arrow_right
+              }
               width={moderateScale(15.5, 0.6)}
               height={moderateScale(17.5, 0.6)}
               viewBox="32.484 17.5 15.515 17.5"
               enable-background="new 32.485 17.5 15.515 17.5">
               <Path
                 d={
-                  this.props.mine
+                  this.props.sender !== this.props.selfId
                     ? 'M38.484,17.5c0,8.75,1,13.5-6,17.5C51.484,35,52.484,17.5,38.484,17.5z'
                     : 'M48,35c-7-4-6-8.75-6-17.5C28,17.5,29,35,48,35z'
                 }
-                fill={this.props.mine ? '#e8e8e8' : '#5E50A1'}
+                fill={
+                  this.props.sender !== this.props.selfId
+                    ? '#e8e8e8'
+                    : '#5E50A1'
+                }
                 x="0"
                 y="0"
               />

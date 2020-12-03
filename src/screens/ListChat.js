@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React from 'react';
 import {
   View,
@@ -7,45 +8,39 @@ import {
   FlatList,
   StyleSheet,
 } from 'react-native';
+import {useSelector, useDispatch} from 'react-redux';
+import messageAction from '../redux/actions/message';
+import RenderItem from '../components/MessageList';
 
 // import assets
-import avatar from '../assets/img/profile.png';
-import Null from '../assets/img/bgChatNull.svg';
 
 export default function ListChat({navigation}) {
-  // dummy data
-  const DATA = [
-    {
-      id: 1,
-      name: 'maman',
-      message: 'helllooooooo ',
-      time: '21 Apr',
-    },
-    {
-      id: 2,
-      name: 'maman',
-      message: 'Lorem ipsum dolor sit amet, consectetur adasdada',
-      time: '21 Apr',
-    },
-  ];
+  const dispatch = useDispatch();
 
-  const RenderItem = ({data}) => {
-    return (
-      <TouchableOpacity onPress={() => navigation.navigate('ChatRoom')}>
-        <View style={styles.imgParent}>
-          <Image source={avatar} style={styles.image} />
-          <View style={styles.parentList}>
-            <View style={styles.list}>
-              <Text style={styles.listName}>{data.name}</Text>
-              <Text style={styles.listTime}>{data.time}</Text>
-            </View>
-            <Text numberOfLines={1} ellipsizeMode="tail" style={styles.message}>
-              {data.message}
-            </Text>
-          </View>
-        </View>
-      </TouchableOpacity>
-    );
+  const {token, id: selfId} = useSelector((state) => state.auth);
+  const chatList = useSelector((state) => state.message.listAllChat);
+  const pageInfo = useSelector((state) => state.message.allChatPageInfo);
+  const isLoading = useSelector((state) => state.message.isLoading);
+  const [loading, setLoading] = React.useState(false);
+
+  React.useEffect(() => {
+    dispatch(messageAction.getAllList(token));
+  }, []);
+
+  React.useEffect(() => {
+    console.log(chatList);
+  }, [chatList]);
+
+  const doRefresh = () => {
+    setLoading(true);
+    dispatch(messageAction.getAllList(token));
+    setLoading(false);
+  };
+
+  const nextPage = () => {
+    if (pageInfo.pages > pageInfo.currentPage) {
+      dispatch(messageAction.allListScroll(token, pageInfo.currentPage + 1));
+    }
   };
 
   return (
@@ -55,16 +50,24 @@ export default function ListChat({navigation}) {
       </View>
       <View>
         <FlatList
-          data={DATA}
-          renderItem={({item}) => <RenderItem data={item} />}
+          data={chatList}
+          onRefresh={doRefresh}
+          refreshing={loading}
+          onEndReached={nextPage}
+          onEndReachedThreshold={0.5}
+          renderItem={({item}) => (
+            <RenderItem item={item} navigation={navigation} />
+          )}
           keyExtractor={(index) => index.id.toString()}
         />
       </View>
 
       {/* rendering if no message list */}
-      {/* <View style={styles.null}>
+      {/* {chatList.length || isLoading ? null : (
+        <View style={styles.null}>
           <Null />
-        </View> */}
+        </View>
+      )} */}
     </View>
   );
 }
