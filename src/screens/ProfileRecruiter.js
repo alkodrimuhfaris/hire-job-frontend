@@ -2,10 +2,20 @@ import * as React from 'react';
 import {StyleSheet, View, ScrollView, Image} from 'react-native';
 import {Text, Button, Card} from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import {useDispatch} from 'react-redux';
+
+// import actions
+import authAction from '../redux/actions/auth';
 
 import profile from '../assets/img/profile.png';
 
 const ProfileRecruiter = ({navigation}) => {
+  const dispatch = useDispatch();
+
+  function logout() {
+    dispatch(authAction.logout());
+  }
+
   return (
     <>
       <ScrollView>
@@ -48,6 +58,12 @@ const ProfileRecruiter = ({navigation}) => {
               <Text style={styles.email}>@Vutton21</Text>
             </View>
           </View>
+        </Card>
+        <Card style={styles.cardUp} transparent>
+          <Button block style={styles.btn} onPress={logout}>
+            <Icon name="sign-out" size={24} color="#ffffff" />
+            <Text style={styles.textBtn}>Logout</Text>
+          </Button>
         </Card>
       </ScrollView>
     </>

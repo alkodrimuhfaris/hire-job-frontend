@@ -3,6 +3,10 @@ import {StyleSheet, View, ScrollView, Image} from 'react-native';
 import {Text, Button, Card} from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {TabView, SceneMap, TabBar} from 'react-native-tab-view';
+import {useDispatch} from 'react-redux';
+
+// import actions
+import authAction from '../redux/actions/auth';
 
 import profile from '../assets/img/profile.png';
 
@@ -10,6 +14,7 @@ import FirstRoute from '../components/Portofolio';
 import SecondRoute from '../components/Experience';
 
 const ProfileWorker = ({navigation}) => {
+  const dispatch = useDispatch();
   const [index, setIndex] = React.useState(0);
   const [routes] = React.useState([
     {key: 'first', title: 'Portofolio'},
@@ -21,6 +26,10 @@ const ProfileWorker = ({navigation}) => {
     first: FirstRoute,
     second: SecondRoute,
   });
+
+  function logout() {
+    dispatch(authAction.logout());
+  }
 
   return (
     <>
@@ -100,6 +109,12 @@ const ProfileWorker = ({navigation}) => {
               />
             )}
           />
+        </Card>
+        <Card style={styles.cardBottom} transparent>
+          <Button block style={styles.btnHire} onPress={logout}>
+            <Icon name="sign-out" size={24} color="#ffffff" />
+            <Text style={styles.textBtn}>Logout</Text>
+          </Button>
         </Card>
       </ScrollView>
     </>
