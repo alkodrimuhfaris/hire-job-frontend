@@ -28,8 +28,9 @@ const registerValidationSchema = yup.object().shape({
     .email('Please enter valid email')
     .required('Alamat email dibutuhkan'),
   phoneNumber: yup
-    .number()
-    .min(10, ({min}) => `Phone number required minimal ${min} chars`)
+    .string()
+    .min(10, 'Phone number required minimal 10 chars')
+    .max(12, 'Phone number required maximal 12 chars')
     .required('Phone number field is required'),
   password: yup
     .string()
@@ -82,6 +83,7 @@ const SignupWorker = () => {
               values,
               errors,
               isValid,
+              touched,
             }) => (
               <View style={styles.register}>
                 <Form>
@@ -94,7 +96,7 @@ const SignupWorker = () => {
                     onBlur={handleBlur('name')}
                     value={values.name}
                   />
-                  {errors.name && (
+                  {touched.name && errors.name && (
                     <Text style={styles.textError}>{errors.name}</Text>
                   )}
                   <Label style={styles.label}>Email</Label>
@@ -107,7 +109,7 @@ const SignupWorker = () => {
                     value={values.email}
                     keyboardType="email-address"
                   />
-                  {errors.email && (
+                  {touched.email && errors.email && (
                     <Text style={styles.textError}>{errors.email}</Text>
                   )}
                   <Label style={styles.label}>Phone</Label>
@@ -118,6 +120,7 @@ const SignupWorker = () => {
                     onChangeText={handleChange('phoneNumber')}
                     onBlur={handleBlur('phoneNumber')}
                     value={values.phoneNumber}
+                    keyboardType={'phone-pad'}
                   />
                   {errors.phoneNumber && (
                     <Text style={styles.textError}>{errors.phoneNumber}</Text>
@@ -132,7 +135,7 @@ const SignupWorker = () => {
                     value={values.password}
                     secureTextEntry
                   />
-                  {errors.password && (
+                  {touched.password && errors.password && (
                     <Text style={styles.textError}>{errors.password}</Text>
                   )}
                   <Label style={styles.label}>Konfirmasi Kata Sandi</Label>
@@ -145,7 +148,7 @@ const SignupWorker = () => {
                     value={values.confirmPassword}
                     secureTextEntry
                   />
-                  {errors.confirmPassword && (
+                  {touched.confirmPassword && errors.confirmPassword && (
                     <Text style={styles.textError}>
                       {errors.confirmPassword}
                     </Text>

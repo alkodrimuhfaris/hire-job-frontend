@@ -30,6 +30,29 @@ export default (state = initialState, action) => {
         message: 'register as worker succcess',
       };
     }
+    case 'REGISTER_RECRUITER_PENDING': {
+      return {
+        ...state,
+        isLoading: true,
+      };
+    }
+    case 'REGISTER_RECRUITER_REJECTED': {
+      return {
+        ...state,
+        isError: true,
+        isLoading: false,
+        message: 'Register as recruiter denied',
+      };
+    }
+    case 'REGISTER_RECRUITER_FULFILLED': {
+      return {
+        ...state,
+        isRegistry: true,
+        isError: false,
+        isLoading: false,
+        message: 'Register as recruiter succcess',
+      };
+    }
     case 'CLEAR_ALERT': {
       return {
         ...state,
