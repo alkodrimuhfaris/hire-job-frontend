@@ -1,12 +1,19 @@
-import React from 'react';
-import {Image, TouchableOpacity, StyleSheet, View} from 'react-native';
+import React, {useEffect} from 'react';
+import {Alert, Image, TouchableOpacity, StyleSheet, View} from 'react-native';
 import {Button, Text, Container, Content, Item, Input} from 'native-base';
 import {Formik} from 'formik';
 import * as Yup from 'yup';
+import {useDispatch, useSelector} from 'react-redux';
 
 import Logo from '../assets/img/logo-purple.png';
 
+// import actions
+import authAction from '../redux/actions/auth';
+
 export default function LoginRecruiter({navigation}) {
+  const dispatch = useDispatch();
+  const auth = useSelector((state) => state.auth);
+
   const schema = Yup.object().shape({
     email: Yup.string()
       .email('Email is invalid')
@@ -14,6 +21,17 @@ export default function LoginRecruiter({navigation}) {
     password: Yup.string()
       .min(6, 'Password required minimal 6 characters')
       .required('Password field is required'),
+  });
+
+  function doLogin(data) {
+    dispatch(authAction.login(data));
+  }
+
+  useEffect(() => {
+    if (auth.isError) {
+      Alert.alert(auth.alertMsg);
+      dispatch(authAction.clearAlert());
+    }
   });
 
   return (
@@ -24,7 +42,7 @@ export default function LoginRecruiter({navigation}) {
           password: '',
         }}
         validationSchema={schema}
-        onSubmit={(values) => console.log(values)}>
+        onSubmit={(values) => doLogin(values)}>
         {({
           handleChange,
           handleBlur,
