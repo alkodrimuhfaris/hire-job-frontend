@@ -8,7 +8,7 @@ import ListIcon from '../assets/img/list.svg';
 const Search = ({navigation}) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [search, setSearch] = useState('');
-
+  console.log('search 2',search,setSearch);
   const submitSearch = () => {
     navigation.navigate('ResultSearchRecruiter');
   };

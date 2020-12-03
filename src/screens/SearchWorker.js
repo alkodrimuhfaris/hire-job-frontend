@@ -9,6 +9,7 @@ const Search = ({navigation}) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [search, setSearch] = useState('');
 
+  console.log('search 1',search);
   const submitSearch = () => {
     navigation.navigate('ResultSearchWorker');
   };
@@ -121,7 +122,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   filter: {
-    width: '10%',
+    width: '15%',
     height: 50,
     marginTop: 20,
     marginLeft: 10,
