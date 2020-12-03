@@ -6,6 +6,7 @@ import message from './message';
 import profileRecruiter from './profileRecruiter';
 import profileWorker from './profileWorker';
 import searchCompany from './searchCompany';
+import searchWorker from './searchWorker';
 
 export default combineReducers({
   auth,
@@ -14,4 +15,5 @@ export default combineReducers({
   profileRecruiter,
   profileWorker,
   searchCompany,
+  searchWorker,
 });

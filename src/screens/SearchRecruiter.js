@@ -56,15 +56,6 @@ const Search = ({navigation}) => {
     dispatch(searchCompanyAction.sortBy(n));
   };
 
-  React.useEffect(() => {
-    console.log(sortBy);
-  }, [sortBy]);
-
-  React.useEffect(() => {
-    console.log(isLoading);
-    console.log(isSuccess);
-  }, [isLoading, isSuccess]);
-
   return (
     <>
       <Modal

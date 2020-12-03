@@ -1,12 +1,5 @@
 import React from 'react';
-import {
-  View,
-  Text,
-  SectionList,
-  FlatList,
-  StyleSheet,
-  TouchableOpacity,
-} from 'react-native';
+import {View, Text, FlatList, StyleSheet, TouchableOpacity} from 'react-native';
 import {Container, Content} from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import sectionConditioner from '../helpers/sectionConditioner';
@@ -16,7 +9,6 @@ import SearchCompanyCard from '../components/SearchCompanyCard';
 
 export default function ResultSearch({navigation}) {
   const dispatch = useDispatch();
-  const coba = useSelector((state) => state.searchCompany);
   const data = useSelector((state) => state.searchCompany.searchResult);
   const pageInfo = useSelector((state) => state.searchCompany.pageInfo);
   const search = useSelector((state) => state.searchCompany.searchQuery);
@@ -42,22 +34,8 @@ export default function ResultSearch({navigation}) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
 
-  React.useEffect(() => {
-    console.log(coba);
-    console.log(data);
-    console.log(search);
-    console.log(sortBy);
-    console.log(pageInfo);
-  }, [coba]);
-
-  React.useEffect(() => {
-    console.log(renderItem);
-    console.log(!renderItem.length);
-  }, [renderItem]);
-
   const doRefresh = () => {
     setLoading(true);
-    console.log('refresh ni');
     dispatch(searchCompanyAction.search(token, search));
     setLoading(false);
   };
@@ -83,7 +61,7 @@ export default function ResultSearch({navigation}) {
       </View>
       <Content style={styles.content}>
         {sortBy === 1 ? (
-          <Text style={styles.title}>Urutkan Berdasarkan Nama</Text>
+          <Text style={styles.title}>Berdasarkan Nama</Text>
         ) : null}
         <View style={styles.flatList}>
           {!renderItem.length ? null : sortBy === 1 ? (
