@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   Alert,
 } from 'react-native';
+import qs from 'querystring';
 import RadioForm from 'react-native-simple-radio-button';
 import {Text, Button, Card, Title, Form, Label, Textarea} from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -90,7 +91,7 @@ const EditProfile = ({navigation}) => {
   const dispatch = useDispatch();
   const [data, setData] = React.useState(0);
   const [AvatarSource, setAvatarSource] = React.useState('');
-  const [dataImage, setDataImage] = React.useState();
+  const [dataImage, setDataImage] = React.useState('');
   const [portofolio, setPortofolio] = React.useState('');
   const profileWorker = useSelector((state) => state.profileWorker);
   const token = useSelector((state) => state.auth.token);
@@ -113,28 +114,22 @@ const EditProfile = ({navigation}) => {
     });
   };
   // Open Image Library fro portofolio
-  const pickPortofolio = () => {
-    ImagePicker.launchImageLibrary(options, async (response) => {
-      if (response.didCancel) {
-        console.log('User cancelled image picker');
-      } else if (response.error) {
-        console.log('ImagePicker Error: ', response.error);
-      } else {
-        setPortofolio(response.uri);
-        const form = new FormData();
-        form.append('pictures', {
-          uri: response.uri,
-          name: response.fileName,
-          type: response.type,
-        });
-        await setDataImage(form);
-      }
-    });
-  };
-
-  React.useEffect(() => {
-    console.log(dataImage);
-  });
+  // const pickPortofolio = () => {
+  //   ImagePicker.launchImageLibrary(options, async (response) => {
+  //     if (response.didCancel) {
+  //       console.log('User cancelled image picker');
+  //     } else {
+  //       setPortofolio(response.uri);
+  //       const form = new FormData();
+  //       form.append('pictures', {
+  //         uri: response.uri,
+  //         name: response.fileName,
+  //         type: response.type,
+  //       });
+  //       dispatch(profileAction.addPortofolioImg(token, form));
+  //     }
+  //   });
+  // };
 
   async function addExperienceWorker(dataExperience) {
     await dispatch(profileAction.addExperience(token, dataExperience));
@@ -144,8 +139,10 @@ const EditProfile = ({navigation}) => {
     navigation.navigate('MainAppWorker');
   }
 
-  async function addPortofolioWorker(dataPortofolio) {
-    await dispatch(profileAction.addPortofolio(token, dataPortofolio));
+  async function addPortofolioWorker(FormData) {
+    const dataPorto = FormData;
+    await dispatch(profileAction.addPortofolio(token, dataImage));
+    await dispatch(profileAction.addPortofolioData(token, dataPorto));
     if (profileWorker.experienceIsAdded) {
       Alert.alert(profileWorker.profileAlertMsg);
     }
@@ -434,15 +431,13 @@ const EditProfile = ({navigation}) => {
               validationSchema={schemaPortofolio}
               initialValues={{
                 name: '',
-                description: '',
                 publicLink: '',
                 repoLink: '',
                 company: '',
                 type: data,
+                description: '',
               }}
-              onSubmit={(values) =>
-                addPortofolioWorker(token, values, dataImage)
-              }>
+              onSubmit={(values) => addPortofolioWorker(values)}>
               {({
                 handleChange,
                 handleBlur,
@@ -510,7 +505,7 @@ const EditProfile = ({navigation}) => {
                       onBlur={handleBlur('company')}
                       value={values.company}
                     />
-                    {errors.company && (
+                    {touched.company && errors.company && (
                       <Text style={styles.textError}>{errors.company}</Text>
                     )}
                     <Label style={styles.label}>Jenis Portofolio</Label>
@@ -525,14 +520,52 @@ const EditProfile = ({navigation}) => {
                     />
                     <Label style={styles.label}>Upload Gambar</Label>
                     {portofolio === '' ? (
-                      <TouchableOpacity onPress={pickPortofolio}>
+                      <TouchableOpacity
+                        onPress={() =>
+                          ImagePicker.launchImageLibrary(
+                            options,
+                            async (response) => {
+                              if (response.didCancel) {
+                                console.log('User cancelled image picker');
+                              } else {
+                                setPortofolio(response.uri);
+                                const form = new FormData();
+                                form.append('photo', {
+                                  uri: response.uri,
+                                  name: response.fileName,
+                                  type: response.type,
+                                });
+                                setDataImage(form);
+                              }
+                            },
+                          )
+                        }>
                         <View style={styles.InputImage}>
                           <Icon name="cloud-upload" size={50} color="#8e8e8e" />
                           <Text note>upload file dari penyimpanan</Text>
                         </View>
                       </TouchableOpacity>
                     ) : (
-                      <TouchableOpacity onPress={pickPortofolio}>
+                      <TouchableOpacity
+                        onPress={() =>
+                          ImagePicker.launchImageLibrary(
+                            options,
+                            async (response) => {
+                              if (response.didCancel) {
+                                console.log('User cancelled image picker');
+                              } else {
+                                setPortofolio(response.uri);
+                                const form = new FormData();
+                                form.append('photo', {
+                                  uri: response.uri,
+                                  name: response.fileName,
+                                  type: response.type,
+                                });
+                                setDataImage(form);
+                              }
+                            },
+                          )
+                        }>
                         <Image
                           style={styles.portofolioImg}
                           source={{uri: portofolio}}
