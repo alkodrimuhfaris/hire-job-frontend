@@ -91,7 +91,6 @@ export default function EditProfileRecruiter({navigation}) {
 
   // updatenya
   function change(value) {
-    // console.log(value);
     const {
       companyName,
       companyField,
