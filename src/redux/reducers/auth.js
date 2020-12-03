@@ -43,6 +43,9 @@ export default (state = initialState, action) => {
         alertMsg: '',
       };
     }
+    case 'LOGOUT': {
+      return initialState;
+    }
     default: {
       return state;
     }

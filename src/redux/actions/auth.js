@@ -9,4 +9,7 @@ export default {
   clearAlert: () => ({
     type: 'CLEAR_ALERT',
   }),
+  logout: () => ({
+    type: 'LOGOUT',
+  }),
 };
