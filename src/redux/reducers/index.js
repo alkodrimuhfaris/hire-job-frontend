@@ -7,6 +7,7 @@ import profileRecruiter from './profileRecruiter';
 import profileWorker from './profileWorker';
 import searchCompany from './searchCompany';
 import searchWorker from './searchWorker';
+import skill from './skill';
 import home from './home';
 import portfolio from './portfolio';
 import updateProfileRecruiter from './updateProfileRecruiter';
@@ -22,6 +23,7 @@ export default combineReducers({
   profileWorker,
   searchCompany,
   searchWorker,
+  skill,
   home,
   portfolio,
   myCompany,

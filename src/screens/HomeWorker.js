@@ -8,6 +8,7 @@ import sectionConditioner from '../helpers/sectionConditioner';
 
 // import actions
 import profileWorkerAction from '../redux/actions/profileWorker';
+import skillAction from '../redux/actions/skill';
 import homeAction from '../redux/actions/home';
 
 import Card from '../components/HomeCardWorker';
@@ -21,11 +22,13 @@ export default function HomeWorker({navigation}) {
 
   useEffect(() => {
     dispatch(profileWorkerAction.getProfile(auth.token));
+    dispatch(skillAction.listSkill(auth.token));
     dispatch(homeAction.getHome(auth.token));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
 
-  function getRecruiterDetail() {
+  async function getRecruiterDetail(id) {
+    await dispatch(homeAction.getDetailsUser(auth.token, id));
     navigation.navigate('DetailRecruiter');
   }
 
@@ -63,7 +66,8 @@ export default function HomeWorker({navigation}) {
                       data={item.data}
                       keyExtractor={(item, index) => index.toString()}
                       renderItem={({item}) => (
-                        <TouchableOpacity onPress={getRecruiterDetail}>
+                        <TouchableOpacity
+                          onPress={() => getRecruiterDetail(item.id)}>
                           <Card item={item} />
                         </TouchableOpacity>
                       )}
