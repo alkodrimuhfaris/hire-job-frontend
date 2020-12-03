@@ -11,6 +11,7 @@ import homeAction from '../redux/actions/home';
 import messageAction from '../redux/actions/message';
 import profileRecruiterAction from '../redux/actions/profileRecruiter';
 import profileWorkerAction from '../redux/actions/profileWorker';
+import portfolioAction from '../redux/actions/portfolio';
 
 import profile from '../assets/img/profile.png';
 
@@ -37,6 +38,7 @@ const ProfileWorker = ({navigation}) => {
     dispatch(messageAction.destroy());
     dispatch(profileRecruiterAction.destroy());
     dispatch(profileWorkerAction.destroy());
+    dispatch(portfolioAction.destroy());
   }
 
   return (
