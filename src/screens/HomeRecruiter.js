@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {FlatList, StyleSheet, View, TouchableOpacity} from 'react-native';
 import {Text, Container, Content} from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome5';
@@ -8,6 +8,10 @@ import {useSelector, useDispatch} from 'react-redux';
 import io from 'socket.io-client';
 import {API_URL} from '@env';
 import messageAction from '../redux/actions/message';
+import dayjs from 'dayjs';
+
+// import actions
+import profileRecruiterAction from '../redux/actions/profileRecruiter';
 
 import Card from '../components/HomeCardRecruiter';
 
@@ -15,6 +19,7 @@ export default function HomeRecruiter({navigation}) {
   // realtime
   const dispatch = useDispatch();
   const {id: selfId, token} = useSelector((state) => state.auth);
+
   React.useEffect(() => {
     const socket = io(API_URL);
     const readEvent = 'read ' + selfId;
@@ -34,6 +39,14 @@ export default function HomeRecruiter({navigation}) {
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const auth = useSelector((state) => state.auth);
+  const profileRecruiter = useSelector((state) => state.profileRecruiter);
+
+  useEffect(() => {
+    dispatch(profileRecruiterAction.getProfile(auth.token));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch]);
 
   //dummy data
   const DATA = [
@@ -57,16 +70,23 @@ export default function HomeRecruiter({navigation}) {
 
   return (
     <Container style={styles.parent}>
-      <View style={[styles.header, styles.padding]}>
-        <View>
-          <Text style={styles.date}>Sen, 21 April 2020</Text>
-          <Text style={styles.user}>Hai, Mohammad!</Text>
-        </View>
-        <TouchableOpacity
-          onPress={() => navigation.navigate('NotificationRecruiter')}>
-          <Icon name="bell" size={24} color="#ffff" />
-        </TouchableOpacity>
-      </View>
+      {profileRecruiter.profileData.length > 0 &&
+        profileRecruiter.profileData.map((user) => {
+          return (
+            <View style={[styles.header, styles.padding]} key={user.id}>
+              <View>
+                <Text style={styles.date}>
+                  {dayjs().format('ddd, D MMMM YYYY')}
+                </Text>
+                <Text style={styles.user}>Hai, {user.name}!</Text>
+              </View>
+              <TouchableOpacity
+                onPress={() => navigation.navigate('NotificationRecruiter')}>
+                <Icon name="bell" size={24} color="#ffff" />
+              </TouchableOpacity>
+            </View>
+          );
+        })}
       <Content style={styles.padding}>
         <View>
           <Text style={styles.jobPosition}>Web developer</Text>

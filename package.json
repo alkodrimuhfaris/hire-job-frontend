@@ -16,6 +16,7 @@
     "@react-navigation/native": "^5.8.10",
     "@react-navigation/stack": "^5.12.8",
     "axios": "^0.21.0",
+    "dayjs": "^1.9.6",
     "formik": "^2.2.5",
     "jwt-decode": "^3.1.2",
     "moment": "^2.29.1",
