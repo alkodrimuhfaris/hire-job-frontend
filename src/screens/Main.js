@@ -27,7 +27,7 @@ import HomeWorker from './HomeWorker';
 import DetailRecruiter from './DetailRecruiter';
 import NotificationWorker from './NotificationWorker';
 import SearchRecruiter from './SearchRecruiter';
-import ResultSearchRecruiter from './ResultSearchRecruiter';
+import ResultSearchRecruiter from './ResultSearchCompany';
 import ProfileWorker from './ProfileWorker';
 import EditProfileWorker from './EditProfileWorker';
 
