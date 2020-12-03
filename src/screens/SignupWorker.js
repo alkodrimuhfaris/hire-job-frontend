@@ -8,8 +8,12 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import {Button, Text, Container, Title, Form, Label} from 'native-base';
+import {useNavigation} from '@react-navigation/native';
+import {useDispatch} from 'react-redux';
 import {Formik} from 'formik';
 import * as yup from 'yup';
+
+import {registerWorker} from '../redux/actions/auth';
 
 import Logo from '../assets/img/logo-purple.png';
 
@@ -31,9 +35,16 @@ const registerValidationSchema = yup.object().shape({
     .string()
     .min(8, ({min}) => `Password must be at least ${min} characters`)
     .required('Password dibutuhkan'),
+  confirmPassword: yup
+    .string()
+    .oneOf([yup.ref('password'), null], "Password doesn't match")
+    .required('Confirm password field is required'),
 });
 
 const SignupWorker = () => {
+  const navigation = useNavigation();
+  const dispatch = useDispatch();
+
   return (
     <Container>
       <ScrollView>
@@ -43,12 +54,20 @@ const SignupWorker = () => {
           <Text note>Cari pekerjaan yang sesuai impianmu</Text>
           <Formik
             validationSchema={registerValidationSchema}
-            initialValues={{name: '', email: '', phone: '', password: ''}}
+            initialValues={{
+              name: '',
+              email: '',
+              phone: '',
+              password: '',
+              confirmPassword: '',
+            }}
             onSubmit={(values) =>
-              this.props.registerAction(
+              console.log(
                 values.name,
                 values.email,
+                values.phone,
                 values.password,
+                values.confirmPassword,
               )
             }>
             {({
@@ -116,13 +135,15 @@ const SignupWorker = () => {
                     name="password"
                     placeholder="Konfirmasi kata sandi"
                     style={styles.textInput}
-                    onChangeText={handleChange('password')}
-                    onBlur={handleBlur('password')}
-                    value={values.password}
+                    onChangeText={handleChange('confirmPassword')}
+                    onBlur={handleBlur('confirmPassword')}
+                    value={values.confirmPassword}
                     secureTextEntry
                   />
-                  {errors.password && (
-                    <Text style={styles.textError}>{errors.password}</Text>
+                  {errors.confirmPassword && (
+                    <Text style={styles.textError}>
+                      {errors.confirmPassword}
+                    </Text>
                   )}
                   <Button
                     style={styles.btnSignup}

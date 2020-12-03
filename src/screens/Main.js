@@ -63,7 +63,7 @@ const MainAppRecruiter = () => {
 };
 
 export default function Main() {
-  const isLogin = true;
+  const isLogin = false;
   const isWorker = true;
 
   return (
