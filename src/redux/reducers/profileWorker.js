@@ -54,6 +54,30 @@ export default (state = initialState, action) => {
         profileAlertMsg: 'add experience worker succcess',
       };
     }
+    // add portofolio
+    case 'ADD_PORTOFOLIO_PENDING': {
+      return {
+        ...state,
+        profileIsLoading: true,
+      };
+    }
+    case 'ADD_PORTOFOLIO_REJECTED': {
+      return {
+        ...state,
+        profileIsError: true,
+        profileIsLoading: false,
+        profileAlertMsg: 'add portofolio denied',
+      };
+    }
+    case 'ADD_PORTOFOLIO_FULFILLED': {
+      return {
+        ...state,
+        experienceIsAdded: true,
+        profileIsError: false,
+        profileIsLoading: false,
+        profileAlertMsg: 'portofolio added',
+      };
+    }
     default: {
       return state;
     }

@@ -12,7 +12,6 @@ import RadioForm from 'react-native-simple-radio-button';
 import {Text, Button, Card, Title, Form, Label, Textarea} from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import ImagePicker from 'react-native-image-picker';
-import {useNavigation} from '@react-navigation/native';
 import {useDispatch, useSelector} from 'react-redux';
 import {Formik} from 'formik';
 import * as yup from 'yup';
@@ -27,8 +26,8 @@ const options = {
 };
 
 var radio_props = [
-  {label: 'Aplikasi Mobile            ', data: 0},
-  {label: 'Aplikasi Web', data: 1},
+  {label: 'Aplikasi Mobile            ', value: 0},
+  {label: 'Aplikasi Web', value: 1},
 ];
 
 const registerValidationSchema = yup.object().shape({
@@ -64,10 +63,34 @@ const schemaExperience = yup.object().shape({
     .required('deskripsi dibutuhkan'),
 });
 
+const schemaPortofolio = yup.object().shape({
+  name: yup.string().required('Nama Aplikasi dibutuhkan '),
+  publicLink: yup
+    .string()
+    .matches(
+      /((https?):\/\/)?(www.)?[a-z0-9]+(\.[a-z]{2,}){1,3}(#?\/?[a-zA-Z0-9#]+)*\/?(\?[a-zA-Z0-9-_]+=[a-zA-Z0-9-%]+&?)?$/,
+      'Enter correct url!',
+    )
+    .required('Please enter website'),
+  repoLink: yup
+    .string()
+    .matches(
+      /((https?):\/\/)?(www.)?[a-z0-9]+(\.[a-z]{2,}){1,3}(#?\/?[a-zA-Z0-9#]+)*\/?(\?[a-zA-Z0-9-_]+=[a-zA-Z0-9-%]+&?)?$/,
+      'Enter correct url!',
+    )
+    .required('Please enter website'),
+  description: yup
+    .string()
+    .max(255, 'cannot more 255 character')
+    .required('deskripsi dibutuhkan'),
+  company: yup.string().required('Nama tempat kerja terkait '),
+});
+
 const EditProfile = ({navigation}) => {
   const dispatch = useDispatch();
   const [data, setData] = React.useState(0);
   const [AvatarSource, setAvatarSource] = React.useState('');
+  const [dataImage, setDataImage] = React.useState();
   const [portofolio, setPortofolio] = React.useState('');
   const profileWorker = useSelector((state) => state.profileWorker);
   const token = useSelector((state) => state.auth.token);
@@ -89,9 +112,9 @@ const EditProfile = ({navigation}) => {
       }
     });
   };
-  // Open Image Library:
+  // Open Image Library fro portofolio
   const pickPortofolio = () => {
-    ImagePicker.launchImageLibrary(options, (response) => {
+    ImagePicker.launchImageLibrary(options, async (response) => {
       if (response.didCancel) {
         console.log('User cancelled image picker');
       } else if (response.error) {
@@ -104,20 +127,30 @@ const EditProfile = ({navigation}) => {
           name: response.fileName,
           type: response.type,
         });
+        await setDataImage(form);
       }
     });
   };
 
-  function addExperienceWorker(data) {
-    dispatch(profileAction.addExperience(token, data));
-    navigation.navigate('LoginWorker');
-  }
-
   React.useEffect(() => {
+    console.log(dataImage);
+  });
+
+  async function addExperienceWorker(dataExperience) {
+    await dispatch(profileAction.addExperience(token, dataExperience));
     if (profileWorker.experienceIsAdded) {
       Alert.alert(profileWorker.profileAlertMsg);
     }
-  });
+    navigation.navigate('MainAppWorker');
+  }
+
+  async function addPortofolioWorker(dataPortofolio) {
+    await dispatch(profileAction.addPortofolio(token, dataPortofolio));
+    if (profileWorker.experienceIsAdded) {
+      Alert.alert(profileWorker.profileAlertMsg);
+    }
+    navigation.navigate('MainAppWorker');
+  }
 
   return (
     <>
@@ -398,16 +431,25 @@ const EditProfile = ({navigation}) => {
           <View style={styles.padding}>
             <Title style={styles.title}>Portofolio</Title>
             <Formik
-              validationSchema={registerValidationSchema}
-              initialValues={{name: '', email: '', phone: '', password: ''}}
-              onSubmit={(values) => console.log(values)}>
+              validationSchema={schemaPortofolio}
+              initialValues={{
+                name: '',
+                description: '',
+                publicLink: '',
+                repoLink: '',
+                company: '',
+                type: data,
+              }}
+              onSubmit={(values) =>
+                addPortofolioWorker(token, values, dataImage)
+              }>
               {({
                 handleChange,
                 handleBlur,
                 handleSubmit,
                 values,
                 errors,
-                isValid,
+                touched,
               }) => (
                 <View>
                   <Form>
@@ -420,7 +462,7 @@ const EditProfile = ({navigation}) => {
                       onBlur={handleBlur('name')}
                       value={values.name}
                     />
-                    {errors.name && (
+                    {touched.name && errors.name && (
                       <Text style={styles.textError}>{errors.name}</Text>
                     )}
                     <Label style={styles.label}>Masukkan deskripsi</Label>
@@ -432,44 +474,44 @@ const EditProfile = ({navigation}) => {
                       onBlur={handleBlur('description')}
                       value={values.description}
                     />
-                    {errors.description && (
+                    {touched.description && errors.description && (
                       <Text style={styles.textError}>{errors.description}</Text>
                     )}
                     <Label style={styles.label}>Link Publikasi</Label>
                     <TextInput
-                      name="link"
+                      name="publicLink"
                       placeholder="Masukkan Link Publikasi"
                       style={styles.textInput}
-                      onChangeText={handleChange('link')}
-                      onBlur={handleBlur('link')}
-                      value={values.link}
+                      onChangeText={handleChange('publicLink')}
+                      onBlur={handleBlur('publicLink')}
+                      value={values.publicLink}
                     />
-                    {errors.link && (
-                      <Text style={styles.textError}>{errors.link}</Text>
+                    {touched.publicLink && errors.publicLink && (
+                      <Text style={styles.textError}>{errors.publicLink}</Text>
                     )}
                     <Label style={styles.label}>Link Repo</Label>
                     <TextInput
-                      name="link"
+                      name="repoLink"
                       placeholder="Masukkan Link Repo"
                       style={styles.textInput}
-                      onChangeText={handleChange('link')}
-                      onBlur={handleBlur('link')}
-                      value={values.link}
+                      onChangeText={handleChange('repoLink')}
+                      onBlur={handleBlur('repoLink')}
+                      value={values.repoLink}
                     />
-                    {errors.link && (
-                      <Text style={styles.textError}>{errors.link}</Text>
+                    {touched.repoLink && errors.repoLink && (
+                      <Text style={styles.textError}>{errors.repoLink}</Text>
                     )}
                     <Label style={styles.label}>Tempat Kerja</Label>
                     <TextInput
-                      name="TempatKerja"
+                      name="company"
                       placeholder="Tempat Kerja Terkait"
                       style={styles.textInput}
-                      onChangeText={handleChange('TempatKerja')}
-                      onBlur={handleBlur('TempatKerja')}
-                      value={values.TempatKerja}
+                      onChangeText={handleChange('company')}
+                      onBlur={handleBlur('company')}
+                      value={values.company}
                     />
-                    {errors.TempatKerja && (
-                      <Text style={styles.textError}>{errors.TempatKerja}</Text>
+                    {errors.company && (
+                      <Text style={styles.textError}>{errors.company}</Text>
                     )}
                     <Label style={styles.label}>Jenis Portofolio</Label>
                     <RadioForm
@@ -479,9 +521,7 @@ const EditProfile = ({navigation}) => {
                       selectedButtonColor={'#5E50A1'}
                       buttonColor={'#5E50A1'}
                       formHorizontal={true}
-                      onPress={(value) => {
-                        setData({data: data});
-                      }}
+                      onPress={() => setData({data: data})}
                     />
                     <Label style={styles.label}>Upload Gambar</Label>
                     {portofolio === '' ? (
@@ -492,12 +532,18 @@ const EditProfile = ({navigation}) => {
                         </View>
                       </TouchableOpacity>
                     ) : (
-                      <Image
-                        style={styles.portofolioImg}
-                        source={{uri: portofolio}}
-                      />
+                      <TouchableOpacity onPress={pickPortofolio}>
+                        <Image
+                          style={styles.portofolioImg}
+                          source={{uri: portofolio}}
+                        />
+                      </TouchableOpacity>
                     )}
-                    <Button block style={styles.addExperience} transparent>
+                    <Button
+                      block
+                      style={styles.addExperience}
+                      transparent
+                      onPress={handleSubmit}>
                       <Text style={styles.experience}>Tambah Portofolio</Text>
                     </Button>
                   </Form>
