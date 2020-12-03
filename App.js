@@ -8,13 +8,13 @@ import store from './src/redux/store';
 
 const App = () => {
   return (
-    // <Provider store={store().store}>
-    //   <PersistGate loading={null} persistor={store().persistore}>
-    <SafeAreaView style={styles.parent}>
-      <Main />
-    </SafeAreaView>
-    //   </PersistGate>
-    // </Provider>
+    <Provider store={store().store}>
+      <PersistGate loading={null} persistor={store().persistore}>
+        <SafeAreaView style={styles.parent}>
+          <Main />
+        </SafeAreaView>
+      </PersistGate>
+    </Provider>
   );
 };
 
