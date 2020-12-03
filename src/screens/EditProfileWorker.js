@@ -6,15 +6,19 @@ import {
   Image,
   TextInput,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
 import RadioForm from 'react-native-simple-radio-button';
 import {Text, Button, Card, Title, Form, Label, Textarea} from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import ImagePicker from 'react-native-image-picker';
+import {useNavigation} from '@react-navigation/native';
+import {useDispatch, useSelector} from 'react-redux';
 import {Formik} from 'formik';
 import * as yup from 'yup';
 
 import profile from '../assets/img/profile.png';
+import profileAction from '../redux/actions/profileWorker';
 
 const options = {
   title: 'my picture',
@@ -46,12 +50,26 @@ const registerValidationSchema = yup.object().shape({
     )
     .required('Please enter website'),
   dueTime: yup.date(),
+  position: yup.string().required('Position field is required'),
+});
+
+const schemaExperience = yup.object().shape({
+  position: yup.string().required('posisi dibutuhkan '),
+  companyName: yup.string().required('Nama perusahaan dibutuhkan '),
+  finishAt: yup.date().required('YYYY-MM-DD'),
+  description: yup
+    .string()
+    .max(255, 'cannot more 255 character')
+    .required('deskripsi dibutuhkan'),
 });
 
 const EditProfile = ({navigation}) => {
+  const dispatch = useDispatch();
   const [data, setData] = React.useState(0);
   const [AvatarSource, setAvatarSource] = React.useState('');
   const [portofolio, setPortofolio] = React.useState('');
+  const profileWorker = useSelector((state) => state.profileWorker);
+  const token = useSelector((state) => state.auth.token);
 
   const takePictures = () => {
     ImagePicker.showImagePicker(options, (response) => {
@@ -88,6 +106,17 @@ const EditProfile = ({navigation}) => {
       }
     });
   };
+
+  function addExperienceWorker(data) {
+    dispatch(profileAction.addExperience(token, data));
+    navigation.navigate('LoginWorker');
+  }
+
+  React.useEffect(() => {
+    if (profileWorker.experienceIsAdded) {
+      Alert.alert(profileWorker.profileAlertMsg);
+    }
+  });
 
   return (
     <>
@@ -267,20 +296,14 @@ const EditProfile = ({navigation}) => {
           <View style={styles.padding}>
             <Title style={styles.title}>Pengalaman Kerja</Title>
             <Formik
-              validationSchema={registerValidationSchema}
+              validationSchema={schemaExperience}
               initialValues={{
-                posisi: '',
-                perusahaan: '',
-                bulan: '',
-                descrption: '',
+                position: '',
+                companyName: '',
+                finishAt: '',
+                description: '',
               }}
-              onSubmit={(values) =>
-                this.props.registerAction(
-                  values.name,
-                  values.email,
-                  values.password,
-                )
-              }>
+              onSubmit={(values) => addExperienceWorker(values)}>
               {({
                 handleChange,
                 handleBlur,
@@ -288,44 +311,45 @@ const EditProfile = ({navigation}) => {
                 values,
                 errors,
                 isValid,
+                touched,
               }) => (
                 <View>
                   <Form>
-                    <Label style={styles.label}>Nama</Label>
+                    <Label style={styles.label}>Position</Label>
                     <TextInput
-                      name="name"
+                      name="position"
                       placeholder="Masukkan Posisi"
                       style={styles.textInput}
-                      onChangeText={handleChange('name')}
-                      onBlur={handleBlur('name')}
-                      value={values.name}
+                      onChangeText={handleChange('position')}
+                      onBlur={handleBlur('position')}
+                      value={values.position}
                     />
-                    {errors.name && (
-                      <Text style={styles.textError}>{errors.name}</Text>
+                    {touched.position && errors.position && (
+                      <Text style={styles.textError}>{errors.position}</Text>
                     )}
                     <Label style={styles.label}>Masukkan Nama Perusahaan</Label>
                     <TextInput
-                      name="name"
+                      name="companyName"
                       placeholder="PT Example"
                       style={styles.textInput}
-                      onChangeText={handleChange('name')}
-                      onBlur={handleBlur('name')}
-                      value={values.name}
+                      onChangeText={handleChange('companyName')}
+                      onBlur={handleBlur('companyName')}
+                      value={values.companyName}
                     />
-                    {errors.name && (
-                      <Text style={styles.textError}>{errors.name}</Text>
+                    {touched.companyName && errors.companyName && (
+                      <Text style={styles.textError}>{errors.companyName}</Text>
                     )}
                     <Label style={styles.label}>Bulan/ Tahun</Label>
                     <TextInput
-                      name="dueTime"
-                      placeholder="January 2020"
+                      name="finishAt"
+                      placeholder="2000-1-1"
                       style={styles.textInput}
-                      onChangeText={handleChange('dueTime')}
-                      onBlur={handleBlur('dueTime')}
-                      value={values.dueTime}
+                      onChangeText={handleChange('finishAt')}
+                      onBlur={handleBlur('finishAt')}
+                      value={values.finishAt}
                     />
-                    {errors.dueTime && (
-                      <Text style={styles.textError}>{errors.dueTime}</Text>
+                    {touched.finishAt && errors.finishAt && (
+                      <Text style={styles.textError}>{errors.finishAt}</Text>
                     )}
                     <Label style={styles.label}>Masukkan deskripsi</Label>
                     <Textarea
@@ -336,10 +360,15 @@ const EditProfile = ({navigation}) => {
                       onBlur={handleBlur('description')}
                       value={values.description}
                     />
-                    {errors.description && (
+                    {touched.c && errors.description && (
                       <Text style={styles.textError}>{errors.description}</Text>
                     )}
-                    <Button block style={styles.addExperience} transparent>
+                    <Button
+                      style={styles.addExperience}
+                      onPress={handleSubmit}
+                      disabled={!isValid}
+                      block
+                      transparent>
                       <Text style={styles.experience}>
                         Tambah Pengalaman Kerja
                       </Text>
