@@ -28,9 +28,7 @@ const ProfileRecruiter = ({navigation}) => {
     (state) => state.profileRecruiter.profileData,
   );
   const companyState = useSelector((state) => state.myCompany);
-  // const {companyData} = companyState;
   const companyData = useSelector((state) => state.myCompany.companyData);
-  // console.log(companyData);
 
   const updateProfileState = useSelector(
     (state) => state.updateProfileRecruiter,
