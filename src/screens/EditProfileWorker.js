@@ -113,23 +113,6 @@ const EditProfile = ({navigation}) => {
       }
     });
   };
-  // Open Image Library fro portofolio
-  // const pickPortofolio = () => {
-  //   ImagePicker.launchImageLibrary(options, async (response) => {
-  //     if (response.didCancel) {
-  //       console.log('User cancelled image picker');
-  //     } else {
-  //       setPortofolio(response.uri);
-  //       const form = new FormData();
-  //       form.append('pictures', {
-  //         uri: response.uri,
-  //         name: response.fileName,
-  //         type: response.type,
-  //       });
-  //       dispatch(profileAction.addPortofolioImg(token, form));
-  //     }
-  //   });
-  // };
 
   async function addExperienceWorker(dataExperience) {
     await dispatch(profileAction.addExperience(token, dataExperience));
@@ -139,10 +122,12 @@ const EditProfile = ({navigation}) => {
     navigation.navigate('MainAppWorker');
   }
 
-  async function addPortofolioWorker(FormData) {
-    const dataPorto = FormData;
+  async function addPortofolioWorker(dataPortofolio) {
+    const formData = new FormData();
+    formData.append('data', qs.stringify(dataPortofolio));
+    console.log(formData);
     await dispatch(profileAction.addPortofolio(token, dataImage));
-    await dispatch(profileAction.addPortofolioData(token, dataPorto));
+    await dispatch(profileAction.addPortofolioData(token, formData));
     if (profileWorker.experienceIsAdded) {
       Alert.alert(profileWorker.profileAlertMsg);
     }

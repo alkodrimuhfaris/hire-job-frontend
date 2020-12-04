@@ -20,10 +20,10 @@ export default {
     };
   },
   addPortofolioData: (token, data) => {
-    console.log(qs.stringify(data));
+    console.log(data._parts[0][1]);
     return {
       type: 'ADD_PORTOFOLIO',
-      payload: http(token).post('worker/portofolio', qs.stringify(data)),
+      payload: http(token).post('worker/portofolio', data._parts[0][1]),
     };
   },
   destroy: () => ({
