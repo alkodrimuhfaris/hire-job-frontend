@@ -46,6 +46,12 @@ export default {
       payload: http(token).get('/worker/experience'),
     };
   },
+  getWorkerExpById: (token, id) => {
+    return {
+      type: 'GET_EXP',
+      payload: http(token).get(`/worker/experience/${id}`),
+    };
+  },
   destroy: () => ({
     type: 'DESTROY',
   }),

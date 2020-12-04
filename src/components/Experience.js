@@ -15,7 +15,7 @@ class Item extends React.Component {
           <Text style={styles.position}>{this.props.position}</Text>
           <Text style={styles.company}>{this.props.company}</Text>
           <Text style={styles.dueTime}>
-            {this.props.start} - {this.props.finish}
+            {this.props.start} s/d {this.props.finish}
           </Text>
           <Text style={styles.jobdesk}>{this.props.desc}</Text>
         </View>
@@ -27,25 +27,47 @@ class Item extends React.Component {
 const SecondRoute = () => {
   const dispatch = useDispatch();
   const token = useSelector((state) => state.auth.token);
-  const profileData = useSelector((state) => state.profileWorker.profileData);
+  const profileDataWorker = useSelector(
+    (state) => state.profileWorker.profileData,
+  );
+  const profileDataForRecruiter = useSelector(
+    (state) => state.home.userDetailsData.WorkExperiences,
+  );
   useEffect(() => {
     dispatch(profileAction.getWorkerExp(token));
-  }, [dispatch, token]);
+    console.log(profileDataWorker);
+  }, [dispatch, token, profileDataWorker]);
   return (
     <>
-      <FlatList
-        data={profileData}
-        keyExtractor={(item, index) => index.toString()}
-        renderItem={({item}) => (
-          <Item
-            position={item.position}
-            company={item.Company.name}
-            start={item.startAt}
-            finish={item.finishAt}
-            desc={item.description}
-          />
-        )}
-      />
+      {profileDataForRecruiter ? (
+        <FlatList
+          data={profileDataForRecruiter}
+          keyExtractor={(item, index) => index.toString()}
+          renderItem={({item}) => (
+            <Item
+              position={item.position}
+              company={item.Company.name}
+              start={item.startAt}
+              finish={item.finishAt}
+              desc={item.description}
+            />
+          )}
+        />
+      ) : (
+        <FlatList
+          data={profileDataWorker}
+          keyExtractor={(item, index) => index.toString()}
+          renderItem={({item}) => (
+            <Item
+              position={item.position}
+              company={item.Company.name}
+              start={item.startAt}
+              finish={item.finishAt}
+              desc={item.description}
+            />
+          )}
+        />
+      )}
     </>
   );
 };
