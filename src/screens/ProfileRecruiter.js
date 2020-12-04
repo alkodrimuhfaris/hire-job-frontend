@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import * as React from 'react';
 import {StyleSheet, View, ScrollView, Image} from 'react-native';
 import {Text, Button, Card} from 'native-base';
@@ -39,12 +38,8 @@ const ProfileRecruiter = ({navigation}) => {
 
   React.useEffect(() => {
     dispatch(companyAction.getMyCompany(auth.token));
-  }, [profileData, updateProfileState, updateCompanyState]);
-
-  React.useEffect(() => {
-    dispatch(companyAction.getMyCompany(auth.token));
-    console.log(companyData);
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch]);
 
   function logout() {
     dispatch(authAction.logout());
@@ -68,7 +63,9 @@ const ProfileRecruiter = ({navigation}) => {
               }
               style={styles.avatar}
             />
-            <Text style={styles.name}>{profileData[0].company}</Text>
+            <Text style={styles.name}>
+              {profileData.length && profileData[0].company}
+            </Text>
 
             {/* ambil dari table company yang field */}
             <Text style={styles.field}>
