@@ -6,6 +6,7 @@ import sectionConditioner from '../helpers/sectionConditioner';
 import {useDispatch, useSelector} from 'react-redux';
 import searchWorkerAction from '../redux/actions/searchWorker';
 import SearchWorkerCard from '../components/SearchWorkerCard';
+import homeAction from '../redux/actions/home';
 
 export default function ResultSearch({navigation}) {
   const dispatch = useDispatch();
@@ -40,9 +41,10 @@ export default function ResultSearch({navigation}) {
     setLoading(false);
   };
 
-  const getWorkerDetail = () => {
+  async function getWorkerDetail(id) {
+    await dispatch(homeAction.getDetailsUser(token, id));
     navigation.navigate('DetailWorker');
-  };
+  }
 
   const nextPage = () => {
     if (pageInfo.pages > pageInfo.currentPage) {
@@ -81,7 +83,7 @@ export default function ResultSearch({navigation}) {
                 renderItem={({item}) => {
                   return (
                     <TouchableOpacity
-                      onPress={getWorkerDetail}
+                      onPress={() => getWorkerDetail(item.id)}
                       style={styles.cardWrapper}>
                       <SearchWorkerCard item={item} />
                     </TouchableOpacity>
@@ -111,7 +113,7 @@ export default function ResultSearch({navigation}) {
                         renderItem={({item: itemDetail}) => {
                           return (
                             <TouchableOpacity
-                              onPress={getWorkerDetail}
+                              onPress={() => getWorkerDetail(itemDetail.id)}
                               style={styles.cardWrapper}>
                               <SearchWorkerCard item={itemDetail} />
                             </TouchableOpacity>

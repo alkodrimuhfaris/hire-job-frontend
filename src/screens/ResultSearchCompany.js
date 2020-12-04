@@ -6,6 +6,7 @@ import sectionConditioner from '../helpers/sectionConditioner';
 import {useDispatch, useSelector} from 'react-redux';
 import searchCompanyAction from '../redux/actions/searchCompany';
 import SearchCompanyCard from '../components/SearchCompanyCard';
+import homeAction from '../redux/actions/home';
 
 export default function ResultSearch({navigation}) {
   const dispatch = useDispatch();
@@ -52,9 +53,10 @@ export default function ResultSearch({navigation}) {
     }
   };
 
-  const getRecruiterDetail = () => {
+  async function getRecruiterDetail(id) {
+    await dispatch(homeAction.getDetailsUser(token, id));
     navigation.navigate('DetailRecruiter');
-  };
+  }
 
   return (
     <Container style={styles.parent}>
@@ -81,7 +83,7 @@ export default function ResultSearch({navigation}) {
                 renderItem={({item}) => {
                   return (
                     <TouchableOpacity
-                      onPress={getRecruiterDetail}
+                      onPress={() => getRecruiterDetail(item.id)}
                       style={styles.cardWrapper}>
                       <SearchCompanyCard item={item} />
                     </TouchableOpacity>
@@ -111,7 +113,7 @@ export default function ResultSearch({navigation}) {
                         renderItem={({item: itemDetail}) => {
                           return (
                             <TouchableOpacity
-                              onPress={getRecruiterDetail}
+                              onPress={() => getRecruiterDetail(itemDetail.id)}
                               style={styles.cardWrapper}>
                               <SearchCompanyCard item={itemDetail} />
                             </TouchableOpacity>
