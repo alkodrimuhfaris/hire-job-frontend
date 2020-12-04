@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, {useEffect} from 'react';
 import {
   StyleSheet,
   View,
@@ -19,6 +19,8 @@ import * as yup from 'yup';
 import profile from '../assets/img/profile.png';
 import {API_URL} from '@env';
 
+// import actions
+import portfolioAction from '../redux/actions/portfolio';
 import skillAction from '../redux/actions/skill';
 import profileAction from '../redux/actions/profileWorker';
 
@@ -120,20 +122,14 @@ const EditProfile = ({navigation}) => {
         console.log('ImagePicker Error: ', response.error);
       } else {
         setPortofolio(response.uri);
-        const form = new FormData();
-        form.append('pictures', {
+        await setDataImage({
           uri: response.uri,
           name: response.fileName,
           type: response.type,
         });
-        await setDataImage(form);
       }
     });
   };
-
-  React.useEffect(() => {
-    console.log(dataImage);
-  });
 
   async function addExperienceWorker(dataExperience) {
     await dispatch(profileAction.addExperience(token, dataExperience));
@@ -143,13 +139,26 @@ const EditProfile = ({navigation}) => {
     navigation.navigate('MainAppWorker');
   }
 
-  async function addPortofolioWorker(dataPortofolio) {
-    await dispatch(profileAction.addPortofolio(token, dataPortofolio));
-    if (profileWorker.experienceIsAdded) {
-      Alert.alert(profileWorker.profileAlertMsg);
-    }
-    navigation.navigate('MainAppWorker');
+  async function addPortofolioWorker(values, img, type) {
+    const form = new FormData();
+    form.append('name', values.name);
+    form.append('type', type === 0 ? false : true);
+    form.append('description', values.description);
+    form.append('publicLink', values.publicLink);
+    form.append('repoLink', values.repoLink);
+    form.append('company', values.company);
+    form.append('photo', img);
+    await dispatch(profileAction.addPortofolio(token, form));
   }
+
+  useEffect(() => {
+    if (profileWorker.portfolioIsAdded) {
+      dispatch(profileAction.clearAlert());
+      dispatch(portfolioAction.getPortfolioList(token));
+      navigation.navigate('ProfileWorker');
+      Alert.alert('Success add new portfolio.');
+    }
+  });
 
   return (
     <>
@@ -482,10 +491,10 @@ const EditProfile = ({navigation}) => {
                 publicLink: '',
                 repoLink: '',
                 company: '',
-                type: data,
+                // type: data,
               }}
               onSubmit={(values) =>
-                addPortofolioWorker(token, values, dataImage)
+                addPortofolioWorker(values, dataImage, data)
               }>
               {({
                 handleChange,
@@ -565,7 +574,7 @@ const EditProfile = ({navigation}) => {
                       selectedButtonColor={'#5E50A1'}
                       buttonColor={'#5E50A1'}
                       formHorizontal={true}
-                      onPress={() => setData({data: data})}
+                      onPress={(value) => setData(value)}
                     />
                     <Label style={styles.label}>Upload Gambar</Label>
                     {portofolio === '' ? (
