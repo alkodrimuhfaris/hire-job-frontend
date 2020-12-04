@@ -8,7 +8,6 @@ import {
   TouchableOpacity,
   Alert,
 } from 'react-native';
-import qs from 'querystring';
 import RadioForm from 'react-native-simple-radio-button';
 import {Text, Button, Card, Title, Form, Label, Textarea} from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -37,8 +36,8 @@ var radio_props = [
 ];
 
 const schemaExperience = yup.object().shape({
-  position: yup.string().required('posisi dibutuhkan '),
-  companyName: yup.string().required('Nama perusahaan dibutuhkan '),
+  position: yup.string().required('posisi akhir dibutuhkan '),
+  companyName: yup.string().required('Nama perusahaan akhir dibutuhkan '),
   startAt: yup.date().required('YYYY-MM-DD'),
   finishAt: yup.date().required('YYYY-MM-DD'),
   description: yup
@@ -55,17 +54,17 @@ const schemaPortofolio = yup.object().shape({
       /((https?):\/\/)?(www.)?[a-z0-9]+(\.[a-z]{2,}){1,3}(#?\/?[a-zA-Z0-9#]+)*\/?(\?[a-zA-Z0-9-_]+=[a-zA-Z0-9-%]+&?)?$/,
       'Enter correct url!',
     )
-    .required('Please enter website'),
+    .required('Masukkan alamat publikasi'),
   repoLink: yup
     .string()
     .matches(
       /((https?):\/\/)?(www.)?[a-z0-9]+(\.[a-z]{2,}){1,3}(#?\/?[a-zA-Z0-9#]+)*\/?(\?[a-zA-Z0-9-_]+=[a-zA-Z0-9-%]+&?)?$/,
       'Enter correct url!',
     )
-    .required('Please enter website'),
+    .required('Masukkan alamat repositori'),
   description: yup
     .string()
-    .max(255, 'cannot more 255 character')
+    .max(255, 'Tidak Lebih dari 255 karakter')
     .required('deskripsi dibutuhkan'),
   company: yup.string().required('Nama tempat kerja terkait '),
 });
@@ -75,25 +74,20 @@ const skillValidation = yup.object().shape({
 });
 
 const profileValidation = yup.object().shape({
-  name: yup
-    .string()
-    .matches(/(\w.+\s).+/, 'Masukkan Lebih dari 2 nama')
-    .required(),
-  job: yup.string().required(),
-  domisili: yup.string().required(),
-  TempatKerja: yup.string().required(),
-  description: yup.string().max(255, 'cannot more 255 character').required(),
+  name: yup.string().matches(/(\w.+\s).+/, 'Masukkan Lebih dari 2 nama'),
+  job: yup.string(),
+  domisili: yup.string(),
+  TempatKerja: yup.string(),
+  description: yup.string().max(255, 'tidak lebih dari 255 character'),
 });
 
 const EditProfile = ({navigation}) => {
   const dispatch = useDispatch();
   const [data, setData] = React.useState(0);
-  const [AvatarSource, setAvatarSource] = React.useState('');
   const [dataImage, setDataImage] = React.useState('');
   const [portofolio, setPortofolio] = React.useState('');
   const profileWorker = useSelector((state) => state.profileWorker);
   const token = useSelector((state) => state.auth.token);
-  const skill = useSelector((state) => state.skill);
 
   const takePictures = () => {
     ImagePicker.showImagePicker(options, async (response) => {
@@ -111,23 +105,6 @@ const EditProfile = ({navigation}) => {
         });
         await dispatch(profileAction.updateImageProfile(token, form));
         return dispatch(profileAction.getProfile(token));
-      }
-    });
-  };
-  // Open Image Library fro portofolio
-  const pickPortofolio = () => {
-    ImagePicker.launchImageLibrary(options, async (response) => {
-      if (response.didCancel) {
-        console.log('User cancelled image picker');
-      } else if (response.error) {
-        console.log('ImagePicker Error: ', response.error);
-      } else {
-        setPortofolio(response.uri);
-        await setDataImage({
-          uri: response.uri,
-          name: response.fileName,
-          type: response.type,
-        });
       }
     });
   };
