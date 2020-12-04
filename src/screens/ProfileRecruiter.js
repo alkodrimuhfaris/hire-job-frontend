@@ -62,7 +62,7 @@ const ProfileRecruiter = ({navigation}) => {
           <View style={styles.parent}>
             <Image
               source={
-                profileData[0].photo !== null
+                profileData.length && profileData[0].photo !== null
                   ? {uri: `${API_URL_IMAGE}${profileData[0].photo}`}
                   : profile
               }
@@ -80,13 +80,15 @@ const ProfileRecruiter = ({navigation}) => {
             <View style={styles.location}>
               <Icon name="map-marker" size={24} color="#8e8e8e" />
               <Text style={styles.map}>
-                {profileData[0].address !== null
+                {profileData.length && profileData[0].address !== null
                   ? profileData[0].address
                   : 'City'}
               </Text>
             </View>
             <Text style={styles.desc}>
-              {profileData[0].bio !== null ? profileData[0].bio : 'Bio'}
+              {profileData.length && profileData[0].bio !== null
+                ? profileData[0].bio
+                : 'Bio'}
             </Text>
             <Button
               block
@@ -98,19 +100,27 @@ const ProfileRecruiter = ({navigation}) => {
           <View style={styles.div}>
             <View style={styles.sosmed}>
               <Icon name="envelope-o" size={20} color="#8e8e8e" />
-              <Text style={styles.email}>{profileData[0].email}</Text>
+              <Text style={styles.email}>
+                {profileData.length && profileData[0].email}
+              </Text>
             </View>
             <View style={styles.sosmed}>
               <Icon name="instagram" size={24} color="#8e8e8e" />
-              <Text style={styles.email}>{profileData[0].instagram}</Text>
+              <Text style={styles.email}>
+                {profileData.length && profileData[0].instagram}
+              </Text>
             </View>
             <View style={styles.sosmed}>
               <Icon name="github" size={24} color="#8e8e8e" />
-              <Text style={styles.email}>{profileData[0].github}</Text>
+              <Text style={styles.email}>
+                {profileData.length && profileData[0].github}
+              </Text>
             </View>
             <View style={styles.sosmed}>
               <Icon name="gitlab" size={20} color="#8e8e8e" />
-              <Text style={styles.email}>{profileData[0].linkedin}</Text>
+              <Text style={styles.email}>
+                {profileData.length && profileData[0].linkedin}
+              </Text>
             </View>
           </View>
         </Card>
