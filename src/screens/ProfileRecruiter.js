@@ -22,7 +22,6 @@ const ProfileRecruiter = ({navigation}) => {
   const dispatch = useDispatch();
   const auth = useSelector((state) => state.auth);
   const profileState = useSelector((state) => state.profileRecruiter);
-  // const {profileData} = profileState;
   const profileData = useSelector(
     (state) => state.profileRecruiter.profileData,
   );
