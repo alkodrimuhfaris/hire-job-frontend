@@ -7,6 +7,7 @@ const initialState = {
   updateProfileIsError: false,
   updateProfileAlertMsg: '',
   experienceIsAdded: false,
+  portfolioIsAdded: false,
 };
 
 export default (state = initialState, action) => {
@@ -96,7 +97,7 @@ export default (state = initialState, action) => {
     case 'ADD_PORTOFOLIO_FULFILLED': {
       return {
         ...state,
-        experienceIsAdded: true,
+        portfolioIsAdded: true,
         profileIsError: false,
         profileIsLoading: false,
         profileAlertMsg: 'portofolio added',
@@ -123,6 +124,17 @@ export default (state = initialState, action) => {
         profileIsLoading: false,
         profileIsError: false,
         profileData: action.payload.data.results,
+      };
+    }
+    case 'CLEAR_ALERT': {
+      return {
+        ...state,
+        profileIsError: false,
+        profileAlertMsg: '',
+        updateProfileIsError: false,
+        updateProfileAlertMsg: '',
+        experienceIsAdded: false,
+        portfolioIsAdded: false,
       };
     }
     case 'DESTROY': {
