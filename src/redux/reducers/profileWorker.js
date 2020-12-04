@@ -1,5 +1,6 @@
 const initialState = {
   profileData: {},
+  profileExperience: {},
   profileIsLoading: false,
   profileIsError: false,
   profileAlertMsg: '',
@@ -123,7 +124,7 @@ export default (state = initialState, action) => {
         ...state,
         profileIsLoading: false,
         profileIsError: false,
-        profileData: action.payload.data.results,
+        profileExperience: action.payload.data.results,
       };
     }
     case 'CLEAR_ALERT': {

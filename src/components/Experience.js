@@ -28,14 +28,14 @@ const SecondRoute = () => {
   const dispatch = useDispatch();
   const token = useSelector((state) => state.auth.token);
   const profileDataWorker = useSelector(
-    (state) => state.profileWorker.profileData,
+    (state) => state.profileWorker.profileExperience,
   );
   const profileDataForRecruiter = useSelector(
     (state) => state.home.userDetailsData.WorkExperiences,
   );
   useEffect(() => {
     dispatch(profileAction.getWorkerExp(token));
-  }, [dispatch]);
+  }, [dispatch, token]);
   return (
     <>
       {profileDataForRecruiter ? (
