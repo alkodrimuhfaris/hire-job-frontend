@@ -19,6 +19,7 @@ import portfolioAction from '../redux/actions/portfolio';
 const FirstRoute = ({token}) => {
   const dispatch = useDispatch();
   const {portfolioData} = useSelector((state) => state.portfolio);
+  const {userDetailsData} = useSelector((state) => state.home);
   const [modalVisible, setModalVisible] = useState(false);
   const [img, setImg] = useState('');
   const [name, setName] = useState('');
@@ -50,7 +51,7 @@ const FirstRoute = ({token}) => {
     <>
       <View style={styles.portofolioContainer}>
         <FlatList
-          data={portfolioData}
+          data={token ? portfolioData : userDetailsData.Portofolios}
           keyExtractor={(item, index) => index.toString()}
           renderItem={({item}) => (
             <TouchableOpacity
