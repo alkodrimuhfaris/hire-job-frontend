@@ -18,6 +18,9 @@ import {Formik} from 'formik';
 import * as yup from 'yup';
 
 import profile from '../assets/img/profile.png';
+import {API_URL} from '@env';
+
+import skillAction from '../redux/actions/skill';
 import profileAction from '../redux/actions/profileWorker';
 
 const options = {
@@ -30,28 +33,6 @@ var radio_props = [
   {label: 'Aplikasi Mobile            ', value: 0},
   {label: 'Aplikasi Web', value: 1},
 ];
-
-const registerValidationSchema = yup.object().shape({
-  name: yup.string().matches(/(\w.+\s).+/, 'Masukkan Lebih dari 2 nama'),
-  job: yup.string(),
-  domisili: yup.string(),
-  TempatKerja: yup.string(),
-  description: yup
-    .string()
-    .max(255, 'cannot more 255 character')
-    .required('deskripsi dibutuhkan'),
-  skill: yup.string().matches(/(\w.+\s).+/, 'Masukkan Lebih dari 2 skill'),
-  Time: yup.string().required('Waktu dibutuhkan'),
-  link: yup
-    .string()
-    .matches(
-      /((https?):\/\/)?(www.)?[a-z0-9]+(\.[a-z]{2,}){1,3}(#?\/?[a-zA-Z0-9#]+)*\/?(\?[a-zA-Z0-9-_]+=[a-zA-Z0-9-%]+&?)?$/,
-      'Enter correct url!',
-    )
-    .required('Please enter website'),
-  dueTime: yup.date(),
-  position: yup.string().required('Position field is required'),
-});
 
 const schemaExperience = yup.object().shape({
   position: yup.string().required('posisi dibutuhkan '),
@@ -87,6 +68,21 @@ const schemaPortofolio = yup.object().shape({
   company: yup.string().required('Nama tempat kerja terkait '),
 });
 
+const skillValidation = yup.object().shape({
+  skill: yup.string(),
+});
+
+const profileValidation = yup.object().shape({
+  name: yup
+    .string()
+    .matches(/(\w.+\s).+/, 'Masukkan Lebih dari 2 nama')
+    .required(),
+  job: yup.string().required(),
+  domisili: yup.string().required(),
+  TempatKerja: yup.string().required(),
+  description: yup.string().max(255, 'cannot more 255 character').required(),
+});
+
 const EditProfile = ({navigation}) => {
   const dispatch = useDispatch();
   const [data, setData] = React.useState(0);
@@ -95,21 +91,24 @@ const EditProfile = ({navigation}) => {
   const [portofolio, setPortofolio] = React.useState('');
   const profileWorker = useSelector((state) => state.profileWorker);
   const token = useSelector((state) => state.auth.token);
+  const skill = useSelector((state) => state.skill);
 
   const takePictures = () => {
-    ImagePicker.showImagePicker(options, (response) => {
+    ImagePicker.showImagePicker(options, async (response) => {
       if (response.didCancel) {
         console.log('User cancelled image picker');
       } else if (response.error) {
         console.log('ImagePicker Error: ', response.error);
       } else {
-        setAvatarSource(response.uri);
         const form = new FormData();
-        form.append('pictures', {
+        form.append('photo', {
           uri: response.uri,
-          name: response.fileName,
           type: response.type,
+          name: response.fileName,
+          path: response.path,
         });
+        await dispatch(profileAction.updateImageProfile(token, form));
+        return dispatch(profileAction.getProfile(token));
       }
     });
   };
@@ -141,7 +140,11 @@ const EditProfile = ({navigation}) => {
         <Card style={styles.cardUp} transparent>
           <View style={styles.parent}>
             <Image
-              source={AvatarSource ? {uri: AvatarSource} : profile}
+              source={
+                profileWorker.profileData.photo
+                  ? {uri: API_URL + profileWorker.profileData.photo}
+                  : profile
+              }
               style={styles.avatar}
             />
             <TouchableOpacity onPress={takePictures} style={styles.edit}>
@@ -150,20 +153,40 @@ const EditProfile = ({navigation}) => {
             </TouchableOpacity>
           </View>
           <View style={styles.identity}>
-            <Text style={styles.name}>Louis Tamlison</Text>
-            <Text>Web developer</Text>
+            <Text style={styles.name}>{profileWorker.profileData.name}</Text>
+            <Text>{profileWorker.profileData.jobTitle || 'Title'}</Text>
             <View style={styles.location}>
               <Icon name="map-marker" size={20} color="#8e8e8e" />
-              <Text style={styles.map}>Purwokerto, Jawa Tengah</Text>
+              <Text style={styles.map}>
+                {profileWorker.profileData.address || 'Location'}
+              </Text>
             </View>
-            <Text style={styles.frelencer}>Freelancer</Text>
+            {/* <Text style={styles.frelencer}>Freelancer</Text> */}
           </View>
         </Card>
         {/*Card for Data Diri*/}
         <Formik
-          validationSchema={registerValidationSchema}
-          initialValues={{name: '', job: '', domisili: '', TempatKerja: ''}}
-          onSubmit={(values) => console.log(values)}>
+          validationSchema={profileValidation}
+          initialValues={{
+            name: profileWorker.profileData.name,
+            job: profileWorker.profileData.jobTitle,
+            domisili: profileWorker.profileData.address,
+            TempatKerja: profileWorker.profileData.company,
+            description: profileWorker.profileData.bio,
+          }}
+          onSubmit={async (values) => {
+            console.log(values);
+            const dataDiri = {
+              name: values.name,
+              jobTitle: values.job,
+              address: values.domisili,
+              company: values.TempatKerja,
+              bio: values.description,
+            };
+            await dispatch(profileAction.updateProfile(token, dataDiri));
+            await dispatch(profileAction.getProfile(token));
+            navigation.goBack();
+          }}>
           {({
             handleChange,
             handleBlur,
@@ -271,9 +294,16 @@ const EditProfile = ({navigation}) => {
           <View style={styles.padding}>
             <Title style={styles.title}>Skill</Title>
             <Formik
-              validationSchema={registerValidationSchema}
+              validationSchema={skillValidation}
               initialValues={{skill: ''}}
-              onSubmit={(values) => this.props.registerAction(values.skill)}>
+              onSubmit={(values, {resetForm}) => {
+                const dataSkill = {
+                  name: values.skill,
+                };
+                dispatch(skillAction.postSkill(token, dataSkill));
+                dispatch(skillAction.listSkill(token));
+                resetForm('');
+              }}>
               {({
                 handleChange,
                 handleBlur,
@@ -289,6 +319,9 @@ const EditProfile = ({navigation}) => {
                       placeholder="Masukkan skill"
                       style={styles.inputSkill}
                       onChangeText={handleChange('skill')}
+                      onChange={(text) =>
+                        dispatch(skillAction.getSkill(token, text))
+                      }
                       onBlur={handleBlur('skill')}
                       value={values.skill}
                     />
@@ -305,6 +338,17 @@ const EditProfile = ({navigation}) => {
                 </View>
               )}
             </Formik>
+            {/* <View style={styles.skillsContainer}>
+              {!skill.skillIsLoading &&
+                !skill.skillIsError &&
+                skill.skillData.length &&
+                skill.skillData.map((item) => (
+                  <View style={styles.skill}>
+                    <Text style={styles.skillText}>{item.name}</Text>
+                  </View>
+                ))}
+              <Text>&nbsp;</Text>
+            </View> */}
           </View>
         </Card>
         {/*Card for Experience*/}
@@ -733,5 +777,24 @@ const styles = StyleSheet.create({
     height: 175,
     marginTop: 10,
     borderRadius: 10,
+  },
+  skillsContainer: {
+    marginBottom: 10,
+    marginTop: 20,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+  },
+  skill: {
+    backgroundColor: '#FBB017',
+    marginRight: 10,
+    marginBottom: 20,
+    paddingVertical: 4,
+    paddingHorizontal: 14,
+    borderRadius: 4,
+  },
+  skillText: {
+    color: '#ffffff',
+    fontSize: 12,
+    fontWeight: '600',
   },
 });

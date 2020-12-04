@@ -4,6 +4,8 @@ import {Text, Button, Card} from 'native-base';
 import {useNavigation} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {TabView, SceneMap, TabBar} from 'react-native-tab-view';
+import {useDispatch, useSelector} from 'react-redux';
+import {API_URL} from '@env';
 
 import profile from '../assets/img/profile.png';
 
@@ -17,6 +19,7 @@ const DetailWorker = () => {
     {key: 'first', title: 'Portofolio'},
     {key: 'second', title: 'Pengalaman kerja'},
   ]);
+  const home = useSelector((state) => state.home);
 
   const renderScene = SceneMap({
     indicatorStyle: {backgroundColor: 'pink'},
@@ -29,60 +32,67 @@ const DetailWorker = () => {
       <ScrollView>
         <Card style={styles.cardUp} transparent>
           <View style={styles.parent}>
-            <Image source={profile} style={styles.avatar} />
-            <Text style={styles.name}>Louis Tamlison</Text>
-            <Text style={styles.field}>Web developer</Text>
+            <Image
+              source={
+                home.userDetailsData.photo
+                  ? {uri: API_URL + home.userDetailsData.photo}
+                  : profile
+              }
+              style={styles.avatar}
+            />
+            <Text style={styles.name}>{home.userDetailsData.name || ''}</Text>
+            <Text style={styles.field}>
+              {home.userDetailsData.jobTitle || ''}
+            </Text>
             <View style={styles.location}>
               <Icon name="map-marker" size={24} color="#8e8e8e" />
-              <Text style={styles.map}>Purwokerto, Jawa Tengah</Text>
+              <Text style={styles.map}>
+                {home.userDetailsData.address || ''}
+              </Text>
             </View>
-            <Text style={styles.map}>Freelancer</Text>
-            <Text style={styles.desc}>
-              You asked, Font Awesome delivers with 41 shiny new icons in
-              version 4.7. Want to request new icons? Here's how. Need vectors
-              or want to use on the desktop? Check the cheatsheet.
-            </Text>
+            {/* <Text style={styles.map}>Freelancer</Text> */}
+            <Text style={styles.desc}>{home.userDetailsData.bio || ''}</Text>
             <Button
               block
               style={styles.btnHire}
-              onPress={() => navigation.navigate('ChatRoom')}>
+              onPress={() =>
+                navigation.navigate('ChatRoom', {
+                  id: home.userDetailsData.id,
+                  message:
+                    'Selamat, anda kami pilih untuk menjadi salah satu kandidat pekerja di perusahaan kami, apabila anda bersedia mengikuti tahapan tes dari perusahaan kami balas pesan ini dengan YA',
+                })
+              }>
               <Text style={styles.textBtn}>Hire</Text>
             </Button>
           </View>
           <View style={styles.div}>
             <Text style={styles.tag}>Skill</Text>
             <View style={styles.skillContainer}>
-              <View style={styles.skill}>
-                <Text style={styles.skillText}>Python</Text>
-              </View>
-              <View style={styles.skill}>
-                <Text style={styles.skillText}>Laravel</Text>
-              </View>
-              <View style={styles.skill}>
-                <Text style={styles.skillText}>Golang</Text>
-              </View>
-              <View style={styles.skill}>
-                <Text style={styles.skillText}>Javascript</Text>
-              </View>
-              <View style={styles.skill}>
-                <Text style={styles.skillText}>HTML</Text>
-              </View>
+              {!home.userDetailsIsLoading &&
+              !home.userDetailsIsError &&
+              home.userDetailsData.WorkerSkills.length
+                ? home.userDetailsData.WorkerSkills.map((item) => (
+                    <View style={styles.skill}>
+                      <Text style={styles.skillText}>{item.Skill.name}</Text>
+                    </View>
+                  ))
+                : null}
             </View>
             <View style={styles.sosmed}>
               <Icon name="envelope-o" size={20} color="#8e8e8e" />
-              <Text style={styles.email}>LouisVutton@mail.com</Text>
+              <Text style={styles.email}>{home.userDetailsData.email}</Text>
             </View>
             <View style={styles.sosmed}>
               <Icon name="instagram" size={24} color="#8e8e8e" />
-              <Text style={styles.email}>@Louis91</Text>
+              <Text style={styles.email}>{home.userDetailsData.instagram}</Text>
             </View>
             <View style={styles.sosmed}>
               <Icon name="github" size={24} color="#8e8e8e" />
-              <Text style={styles.email}>@LouisVutton21</Text>
+              <Text style={styles.email}>{home.userDetailsData.github}</Text>
             </View>
             <View style={styles.sosmed}>
               <Icon name="gitlab" size={20} color="#8e8e8e" />
-              <Text style={styles.email}>@Vutton21</Text>
+              <Text style={styles.email}>{home.userDetailsData.linkedin}</Text>
             </View>
           </View>
         </Card>

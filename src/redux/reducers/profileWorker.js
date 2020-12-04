@@ -1,8 +1,11 @@
 const initialState = {
-  profileData: [],
+  profileData: {},
   profileIsLoading: false,
   profileIsError: false,
   profileAlertMsg: '',
+  updateProfileIsLoading: false,
+  updateProfileIsError: false,
+  updateProfileAlertMsg: '',
   experienceIsAdded: false,
 };
 
@@ -28,6 +31,27 @@ export default (state = initialState, action) => {
         profileIsLoading: false,
         profileIsError: false,
         profileData: action.payload.data.results,
+      };
+    }
+    case 'UPDATE_PROFILE_PENDING': {
+      return {
+        ...state,
+        updateProfileIsLoading: true,
+      };
+    }
+    case 'UPDATE_PROFILE_REJECTED': {
+      return {
+        ...state,
+        updateProfileIsLoading: false,
+        updateProfileIsError: true,
+        updateProfileAlertMsg: action.payload.response.data.message,
+      };
+    }
+    case 'UPDATE_PROFILE_FULFILLED': {
+      return {
+        ...state,
+        updateProfileIsLoading: false,
+        updateProfileIsError: false,
       };
     }
     // add experience

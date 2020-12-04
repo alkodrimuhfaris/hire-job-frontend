@@ -1,16 +1,59 @@
 import React, {useState} from 'react';
 
-import {StyleSheet, TouchableOpacity, Text, View, Modal} from 'react-native';
+import {
+  StyleSheet,
+  TouchableOpacity,
+  Text,
+  View,
+  Modal,
+  ActivityIndicator,
+} from 'react-native';
+import ModalLoading from '../components/ModalLoading';
+import ModalCenter from '../components/ModalCenter';
 import {Container, Content, Form, Item, Input} from 'native-base';
 import SearchIcon from '../assets/img/search.svg';
 import ListIcon from '../assets/img/list.svg';
+import {useDispatch, useSelector} from 'react-redux';
+import searchCompanyAction from '../redux/actions/searchCompany';
 
 const Search = ({navigation}) => {
+  const dispatch = useDispatch();
+  const sortBy = useSelector((state) => state.searchCompany.sortBy);
+  const token = useSelector((state) => state.auth.token);
+  const isLoading = useSelector((state) => state.searchCompany.isLoading);
+  const isError = useSelector((state) => state.searchCompany.isError);
+  const isSuccess = useSelector((state) => state.searchCompany.isSuccess);
   const [modalVisible, setModalVisible] = useState(false);
   const [search, setSearch] = useState('');
+  const [modalError, setModalError] = useState(false);
+  const [load, setLoad] = useState(false);
 
   const submitSearch = () => {
-    navigation.navigate('ResultSearchRecruiter');
+    dispatch(searchCompanyAction.addSearch(search));
+    dispatch(searchCompanyAction.search(token, search));
+  };
+
+  React.useEffect(() => {
+    if (isSuccess) {
+      navigation.navigate('ResultSearchRecruiter');
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isSuccess]);
+
+  React.useEffect(() => {
+    if (isError) {
+      setModalError(true);
+    }
+  }, [isError]);
+
+  React.useEffect(() => {
+    setLoad(isLoading);
+    console.log(isLoading);
+  }, [isLoading]);
+
+  const changeSort = (n) => {
+    setModalVisible(false);
+    dispatch(searchCompanyAction.sortBy(n));
   };
 
   return (
@@ -25,30 +68,55 @@ const Search = ({navigation}) => {
             <View style={styles.child}>
               <TouchableOpacity
                 onPress={() => {
-                  setModalVisible(!modalVisible);
+                  changeSort(1);
                 }}>
-                <Text>Sortir berdasarkan nama</Text>
+                <Text style={sortBy === 1 ? styles.choosen : null}>
+                  Sortir berdasarkan nama
+                </Text>
               </TouchableOpacity>
             </View>
             <View style={styles.child}>
               <TouchableOpacity
                 onPress={() => {
-                  setModalVisible(!modalVisible);
+                  changeSort(2);
                 }}>
-                <Text>Sortir berdasarkan bidang</Text>
+                <Text style={sortBy === 2 ? styles.choosen : null}>
+                  Sortir berdasarkan bidang
+                </Text>
               </TouchableOpacity>
             </View>
             <View style={styles.child}>
               <TouchableOpacity
                 onPress={() => {
-                  setModalVisible(!modalVisible);
+                  changeSort(3);
                 }}>
-                <Text>Sortir berdasarkan lokasi</Text>
+                <Text style={sortBy === 3 ? styles.choosen : null}>
+                  Sortir berdasarkan lokasi
+                </Text>
               </TouchableOpacity>
             </View>
           </View>
         </View>
       </Modal>
+
+      {/* modal loading */}
+      <ModalLoading
+        modalOpen={load}
+        modalContent={
+          <ActivityIndicator visible={load} size="large" color="#5E50A1" />
+        }
+      />
+
+      {/* modal center */}
+      <ModalCenter
+        modalOpen={modalError}
+        setModalOpen={setModalError}
+        modalContent={
+          <View style={styles.contentError}>
+            <Text style={styles.txtContentErr}>Search Not Found</Text>
+          </View>
+        }
+      />
 
       <Container style={styles.parent}>
         <Content style={styles.padding}>
@@ -104,6 +172,16 @@ const styles = StyleSheet.create({
     color: '#9EA0A5',
     fontSize: 14,
   },
+  contentError: {
+    padding: 28,
+    backgroundColor: 'white',
+    borderRadius: 8,
+  },
+  txtContentErr: {
+    color: '#5E50A1',
+    fontWeight: 'bold',
+    fontSize: 16,
+  },
   filter: {
     width: '20%',
     height: 50,
@@ -136,6 +214,10 @@ const styles = StyleSheet.create({
     paddingLeft: 25,
     paddingTop: 20,
     paddingBottom: 20,
+  },
+  choosen: {
+    color: '#5E50A1',
+    fontWeight: 'bold',
   },
   padding: {
     paddingHorizontal: 16,
