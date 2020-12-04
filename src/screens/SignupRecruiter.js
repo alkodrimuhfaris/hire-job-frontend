@@ -31,7 +31,7 @@ export default function SignupRecruiter({navigation}) {
       .required('Confirm password field is required'),
   });
 
-  function doRegister(data) {
+  function doRegisterRecruiter(data) {
     dispatch(authAction.registerRecruiter(data));
     if (register.isError) {
       Alert.alert(register.message);
@@ -56,7 +56,7 @@ export default function SignupRecruiter({navigation}) {
           confirmPassword: '',
         }}
         validationSchema={schema}
-        onSubmit={(values) => doRegister(values)}>
+        onSubmit={(values) => doRegisterRecruiter(values)}>
         {({
           handleChange,
           handleBlur,
