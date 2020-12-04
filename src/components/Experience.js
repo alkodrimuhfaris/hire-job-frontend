@@ -1,9 +1,7 @@
-import React, {useState, useEffect} from 'react';
-import {StyleSheet, View, Image, FlatList} from 'react-native';
+import React, {useEffect} from 'react';
+import {StyleSheet, View, FlatList, ScrollView} from 'react-native';
 import {Text} from 'native-base';
 import {useDispatch, useSelector} from 'react-redux';
-
-import company from '../assets/img/tokopedia.png';
 
 import profileAction from '../redux/actions/profileWorker';
 
@@ -27,6 +25,9 @@ class Item extends React.Component {
 const SecondRoute = () => {
   const dispatch = useDispatch();
   const token = useSelector((state) => state.auth.token);
+  const dataExperience = useSelector(
+    (state) => state.profileWorker.dataExperienceWorker,
+  );
   const profileDataWorker = useSelector(
     (state) => state.profileWorker.profileExperience,
   );
@@ -36,37 +37,55 @@ const SecondRoute = () => {
   useEffect(() => {
     dispatch(profileAction.getWorkerExp(token));
   }, [dispatch, token]);
+
+  const nextPage = async () => {
+    if (dataExperience.pageInfo.pages > dataExperience.pageInfo.currentPage) {
+      dispatch(
+        profileAction.getWorkerExp(
+          token,
+          dataExperience.pageInfo.currentPage + 1,
+        ),
+      );
+    }
+  };
+
   return (
     <>
-      {profileDataForRecruiter ? (
-        <FlatList
-          data={profileDataForRecruiter}
-          keyExtractor={(item, index) => index.toString()}
-          renderItem={({item}) => (
-            <Item
-              position={item.position}
-              company={item.Company.name}
-              start={item.startAt}
-              finish={item.finishAt}
-              desc={item.description}
-            />
-          )}
-        />
-      ) : (
-        <FlatList
-          data={profileDataWorker}
-          keyExtractor={(item, index) => index.toString()}
-          renderItem={({item}) => (
-            <Item
-              position={item.position}
-              company={item.Company.name}
-              start={item.startAt}
-              finish={item.finishAt}
-              desc={item.description}
-            />
-          )}
-        />
-      )}
+      <ScrollView>
+        {profileDataForRecruiter ? (
+          <FlatList
+            data={profileDataForRecruiter}
+            keyExtractor={(item, index) => index.toString()}
+            renderItem={({item}) => (
+              <Item
+                position={item.position}
+                company={item.Company.name}
+                start={item.startAt}
+                finish={item.finishAt}
+                desc={item.description}
+              />
+            )}
+            onEndReached={nextPage}
+            onEndReachedThreshold={0.5}
+          />
+        ) : (
+          <FlatList
+            data={profileDataWorker}
+            keyExtractor={(item, index) => index.toString()}
+            renderItem={({item}) => (
+              <Item
+                position={item.position}
+                company={item.Company.name}
+                start={item.startAt}
+                finish={item.finishAt}
+                desc={item.description}
+              />
+            )}
+            onEndReached={nextPage}
+            onEndReachedThreshold={0.5}
+          />
+        )}
+      </ScrollView>
     </>
   );
 };

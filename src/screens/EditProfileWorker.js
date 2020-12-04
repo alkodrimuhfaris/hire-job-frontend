@@ -75,7 +75,7 @@ const skillValidation = yup.object().shape({
 
 const profileValidation = yup.object().shape({
   name: yup.string().matches(/(\w.+\s).+/, 'Masukkan Lebih dari 2 nama'),
-  job: yup.string(),
+  job: yup.string('dalam bentuk string'),
   domisili: yup.string(),
   TempatKerja: yup.string(),
   description: yup.string().max(255, 'tidak lebih dari 255 character'),

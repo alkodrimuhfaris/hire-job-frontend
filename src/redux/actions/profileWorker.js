@@ -33,10 +33,10 @@ export default {
       payload: http(token).get('/worker/experience'),
     };
   },
-  getWorkerExpById: (token, id) => {
+  getExperiencScroll: (token, page) => {
     return {
-      type: 'GET_EXP',
-      payload: http(token).get(`/worker/experience/${id}`),
+      type: 'EXPERIENCE_SCROLL',
+      payload: http(token).get('/worker/experience?' + qs.stringify({page})),
     };
   },
   addPortofolio: (token, form) => {
