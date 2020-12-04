@@ -3,7 +3,7 @@ import {StyleSheet, View, ScrollView, Image} from 'react-native';
 import {Text, Card} from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {useSelector} from 'react-redux';
-import {API_URL} from '@env';
+import {API_URL_IMAGE} from '@env';
 
 import profile from '../assets/img/profile.png';
 
@@ -17,7 +17,7 @@ const DetailRecruiter = () => {
             <Image
               source={
                 home.userDetailsData.photo
-                  ? {uri: API_URL + home.userDetailsData.photo}
+                  ? {uri: API_URL_IMAGE + home.userDetailsData.photo}
                   : profile
               }
               style={styles.avatar}

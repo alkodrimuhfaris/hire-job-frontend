@@ -3,7 +3,7 @@ import {Image, StyleSheet, View} from 'react-native';
 import {Text} from 'native-base';
 
 import Avatar from '../assets/img/profile.png';
-import {API_URL_IMAGE} from '@env';
+import {API_URL} from '@env';
 
 export default function HomeCardRecruiter({item}) {
   let skillArr = item.WorkerSkills;
@@ -11,7 +11,7 @@ export default function HomeCardRecruiter({item}) {
   return (
     <View style={styles.card}>
       <Image
-        source={item.photo ? {uri: API_URL_IMAGE + item.photo} : Avatar}
+        source={item.photo ? {uri: API_URL + item.photo} : Avatar}
         style={styles.avatar}
       />
       <Text numberOfLines={1} ellipsizeMode="tail" style={styles.name}>
