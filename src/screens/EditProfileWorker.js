@@ -86,6 +86,7 @@ const EditProfile = ({navigation}) => {
   const [data, setData] = React.useState(0);
   const [dataImage, setDataImage] = React.useState('');
   const [portofolio, setPortofolio] = React.useState('');
+  const [avatar, setAvatar] = React.useState(profile);
   const profileWorker = useSelector((state) => state.profileWorker);
   const token = useSelector((state) => state.auth.token);
 
@@ -96,6 +97,7 @@ const EditProfile = ({navigation}) => {
       } else if (response.error) {
         console.log('ImagePicker Error: ', response.error);
       } else {
+        setAvatar({uri: response.uri});
         const form = new FormData();
         form.append('photo', {
           uri: response.uri,
@@ -148,7 +150,7 @@ const EditProfile = ({navigation}) => {
               source={
                 profileWorker.profileData.photo
                   ? {uri: API_URL + profileWorker.profileData.photo}
-                  : profile
+                  : avatar
               }
               style={styles.avatar}
             />
