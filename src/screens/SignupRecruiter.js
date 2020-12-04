@@ -34,9 +34,14 @@ export default function SignupRecruiter({navigation}) {
   function doRegister(data) {
     dispatch(authAction.registerRecruiter(data));
     navigation.navigate('LoginRecruiter');
-    Alert.alert(regiter.message);
-    dispatch(authAction.clearAlert());
   }
+
+  useEffect(() => {
+    if (regiter.isError) {
+      Alert.alert(regiter.message);
+      dispatch(authAction.clearAlert());
+    }
+  });
 
   return (
     <Container style={styles.parent}>
