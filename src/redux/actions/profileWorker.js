@@ -40,6 +40,12 @@ export default {
       payload: http(token).post('worker/portofolio', data._parts[0][1]),
     };
   },
+  getWorkerExp: (token) => {
+    return {
+      type: 'GET_EXP',
+      payload: http(token).get('/worker/experience'),
+    };
+  },
   destroy: () => ({
     type: 'DESTROY',
   }),

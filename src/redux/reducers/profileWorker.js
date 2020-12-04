@@ -102,6 +102,29 @@ export default (state = initialState, action) => {
         profileAlertMsg: 'portofolio added',
       };
     }
+    // get experience
+    case 'GET_EXP_PENDING': {
+      return {
+        ...state,
+        profileIsLoading: true,
+      };
+    }
+    case 'GET_EXP_REJECTED': {
+      return {
+        ...state,
+        profileIsLoading: false,
+        profileIsError: true,
+        profileAlertMsg: action.payload.response.data.message,
+      };
+    }
+    case 'GET_EXP_FULFILLED': {
+      return {
+        ...state,
+        profileIsLoading: false,
+        profileIsError: false,
+        profileData: action.payload.data.results,
+      };
+    }
     case 'DESTROY': {
       return initialState;
     }
