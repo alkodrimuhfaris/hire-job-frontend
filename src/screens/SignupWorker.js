@@ -49,15 +49,15 @@ const SignupWorker = () => {
 
   function doRegister(data) {
     dispatch(authAction.registerWorker(data));
-    navigation.navigate('LoginWorker');
-  }
-
-  useEffect(() => {
     if (regiter.isError) {
       Alert.alert(regiter.message);
       dispatch(authAction.clearAlert());
+    } else {
+      Alert.alert(regiter.message);
+      dispatch(authAction.clearAlert());
+      navigation.navigate('LoginWorker');
     }
-  });
+  }
 
   return (
     <Container>

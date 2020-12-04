@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, {useEffect} from 'react';
 import {
   StyleSheet,
   View,
@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   Alert,
 } from 'react-native';
+import qs from 'querystring';
 import RadioForm from 'react-native-simple-radio-button';
 import {Text, Button, Card, Title, Form, Label, Textarea} from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -19,6 +20,8 @@ import * as yup from 'yup';
 import profile from '../assets/img/profile.png';
 import {API_URL} from '@env';
 
+// import actions
+import portfolioAction from '../redux/actions/portfolio';
 import skillAction from '../redux/actions/skill';
 import profileAction from '../redux/actions/profileWorker';
 
@@ -86,7 +89,7 @@ const EditProfile = ({navigation}) => {
   const dispatch = useDispatch();
   const [data, setData] = React.useState(0);
   const [AvatarSource, setAvatarSource] = React.useState('');
-  const [dataImage, setDataImage] = React.useState();
+  const [dataImage, setDataImage] = React.useState('');
   const [portofolio, setPortofolio] = React.useState('');
   const profileWorker = useSelector((state) => state.profileWorker);
   const token = useSelector((state) => state.auth.token);
@@ -120,20 +123,14 @@ const EditProfile = ({navigation}) => {
         console.log('ImagePicker Error: ', response.error);
       } else {
         setPortofolio(response.uri);
-        const form = new FormData();
-        form.append('pictures', {
+        await setDataImage({
           uri: response.uri,
           name: response.fileName,
           type: response.type,
         });
-        await setDataImage(form);
       }
     });
   };
-
-  React.useEffect(() => {
-    console.log(dataImage);
-  });
 
   async function addExperienceWorker(dataExperience) {
     await dispatch(profileAction.addExperience(token, dataExperience));
@@ -143,13 +140,26 @@ const EditProfile = ({navigation}) => {
     navigation.navigate('MainAppWorker');
   }
 
-  async function addPortofolioWorker(dataPortofolio) {
-    await dispatch(profileAction.addPortofolio(token, dataPortofolio));
-    if (profileWorker.experienceIsAdded) {
-      Alert.alert(profileWorker.profileAlertMsg);
-    }
-    navigation.navigate('MainAppWorker');
+  async function addPortofolioWorker(values, img, type) {
+    const form = new FormData();
+    form.append('name', values.name);
+    form.append('type', type === 0 ? false : true);
+    form.append('description', values.description);
+    form.append('publicLink', values.publicLink);
+    form.append('repoLink', values.repoLink);
+    form.append('company', values.company);
+    form.append('photo', img);
+    await dispatch(profileAction.addPortofolio(token, form));
   }
+
+  useEffect(() => {
+    if (profileWorker.portfolioIsAdded) {
+      dispatch(profileAction.clearAlert());
+      dispatch(portfolioAction.getPortfolioList(token));
+      navigation.navigate('ProfileWorker');
+      Alert.alert('Success add new portfolio.');
+    }
+  });
 
   return (
     <>
@@ -478,14 +488,13 @@ const EditProfile = ({navigation}) => {
               validationSchema={schemaPortofolio}
               initialValues={{
                 name: '',
-                description: '',
                 publicLink: '',
                 repoLink: '',
                 company: '',
-                type: data,
+                // type: data,
               }}
               onSubmit={(values) =>
-                addPortofolioWorker(token, values, dataImage)
+                addPortofolioWorker(values, dataImage, data)
               }>
               {({
                 handleChange,
@@ -554,7 +563,7 @@ const EditProfile = ({navigation}) => {
                       onBlur={handleBlur('company')}
                       value={values.company}
                     />
-                    {errors.company && (
+                    {touched.company && errors.company && (
                       <Text style={styles.textError}>{errors.company}</Text>
                     )}
                     <Label style={styles.label}>Jenis Portofolio</Label>
@@ -565,18 +574,56 @@ const EditProfile = ({navigation}) => {
                       selectedButtonColor={'#5E50A1'}
                       buttonColor={'#5E50A1'}
                       formHorizontal={true}
-                      onPress={() => setData({data: data})}
+                      onPress={(value) => setData(value)}
                     />
                     <Label style={styles.label}>Upload Gambar</Label>
                     {portofolio === '' ? (
-                      <TouchableOpacity onPress={pickPortofolio}>
+                      <TouchableOpacity
+                        onPress={() =>
+                          ImagePicker.launchImageLibrary(
+                            options,
+                            async (response) => {
+                              if (response.didCancel) {
+                                console.log('User cancelled image picker');
+                              } else {
+                                setPortofolio(response.uri);
+                                const form = new FormData();
+                                form.append('photo', {
+                                  uri: response.uri,
+                                  name: response.fileName,
+                                  type: response.type,
+                                });
+                                setDataImage(form);
+                              }
+                            },
+                          )
+                        }>
                         <View style={styles.InputImage}>
                           <Icon name="cloud-upload" size={50} color="#8e8e8e" />
                           <Text note>upload file dari penyimpanan</Text>
                         </View>
                       </TouchableOpacity>
                     ) : (
-                      <TouchableOpacity onPress={pickPortofolio}>
+                      <TouchableOpacity
+                        onPress={() =>
+                          ImagePicker.launchImageLibrary(
+                            options,
+                            async (response) => {
+                              if (response.didCancel) {
+                                console.log('User cancelled image picker');
+                              } else {
+                                setPortofolio(response.uri);
+                                const form = new FormData();
+                                form.append('photo', {
+                                  uri: response.uri,
+                                  name: response.fileName,
+                                  type: response.type,
+                                });
+                                setDataImage(form);
+                              }
+                            },
+                          )
+                        }>
                         <Image
                           style={styles.portofolioImg}
                           source={{uri: portofolio}}

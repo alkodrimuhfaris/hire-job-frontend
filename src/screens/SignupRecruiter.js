@@ -10,7 +10,7 @@ import Logo from '../assets/img/logo-purple.png';
 
 export default function SignupRecruiter({navigation}) {
   const dispatch = useDispatch();
-  const regiter = useSelector((state) => state.register);
+  const register = useSelector((state) => state.register);
 
   const schema = Yup.object().shape({
     name: Yup.string().required('Name field is required'),
@@ -31,16 +31,17 @@ export default function SignupRecruiter({navigation}) {
       .required('Confirm password field is required'),
   });
 
-  function doRegister(data) {
+  function doRegisterRecruiter(data) {
     dispatch(authAction.registerRecruiter(data));
-  }
-
-  useEffect(() => {
-    if (regiter.isError) {
-      Alert.alert(regiter.message);
+    if (register.isError) {
+      Alert.alert(register.message);
       dispatch(authAction.clearAlert());
+    } else {
+      Alert.alert(register.message);
+      dispatch(authAction.clearAlert());
+      navigation.navigate('LoginRecruiter');
     }
-  });
+  }
 
   return (
     <Container style={styles.parent}>
@@ -55,7 +56,7 @@ export default function SignupRecruiter({navigation}) {
           confirmPassword: '',
         }}
         validationSchema={schema}
-        onSubmit={(values) => doRegister(values)}>
+        onSubmit={(values) => doRegisterRecruiter(values)}>
         {({
           handleChange,
           handleBlur,
