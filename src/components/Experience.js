@@ -35,8 +35,7 @@ const SecondRoute = () => {
   );
   useEffect(() => {
     dispatch(profileAction.getWorkerExp(token));
-    console.log(profileDataWorker);
-  }, [dispatch, token, profileDataWorker]);
+  }, [dispatch]);
   return (
     <>
       {profileDataForRecruiter ? (
