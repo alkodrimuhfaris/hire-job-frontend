@@ -10,7 +10,7 @@ import Logo from '../assets/img/logo-purple.png';
 
 export default function SignupRecruiter({navigation}) {
   const dispatch = useDispatch();
-  const regiter = useSelector((state) => state.register);
+  const register = useSelector((state) => state.register);
 
   const schema = Yup.object().shape({
     name: Yup.string().required('Name field is required'),
@@ -33,15 +33,15 @@ export default function SignupRecruiter({navigation}) {
 
   function doRegister(data) {
     dispatch(authAction.registerRecruiter(data));
-    navigation.navigate('LoginRecruiter');
-  }
-
-  useEffect(() => {
-    if (regiter.isError) {
-      Alert.alert(regiter.message);
+    if (register.isError) {
+      Alert.alert(register.message);
       dispatch(authAction.clearAlert());
+    } else {
+      Alert.alert(register.message);
+      dispatch(authAction.clearAlert());
+      navigation.navigate('LoginRecruiter');
     }
-  });
+  }
 
   return (
     <Container style={styles.parent}>
