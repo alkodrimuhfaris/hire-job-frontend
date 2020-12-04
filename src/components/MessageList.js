@@ -5,10 +5,12 @@ import moment from 'moment';
 
 // import assets
 import avatar from '../assets/img/profile.png';
-import {API_URL_IMAGE} from '@env';
+import {API_URL_IMAGE, API_URL} from '@env';
 
 export default function RenderItem({item, navigation}) {
   const selfId = useSelector((state) => state.auth.id);
+  const isWorker = useSelector((state) => state.auth.isWorker);
+  const urlImage = isWorker ? API_URL_IMAGE : API_URL;
   const data = item;
   console.log(data);
   let {RecipientDetails, SenderDetails, sender, unread, createdAt} = data;
@@ -16,7 +18,8 @@ export default function RenderItem({item, navigation}) {
   const colluctorProfile =
     selfId === SenderDetails.id ? RecipientDetails : SenderDetails;
 
-  const {id, name, photo} = colluctorProfile;
+  const {id, name, photo, company} = colluctorProfile;
+  const displayName = !isWorker ? name : company;
 
   const goToRoomChat = () => {
     console.log(id);
@@ -42,13 +45,13 @@ export default function RenderItem({item, navigation}) {
     <TouchableOpacity onPress={() => goToRoomChat()}>
       <View style={styles.imgParent}>
         <Image
-          source={photo ? {uri: API_URL_IMAGE + photo} : avatar}
+          source={photo ? {uri: urlImage + photo} : avatar}
           style={styles.image}
         />
         <View style={styles.parentList}>
           <View style={styles.list}>
             <Text style={[styles.listName, unreadChat ? styles.unread : null]}>
-              {name}
+              {displayName}
             </Text>
             <Text style={styles.listTime}>{time}</Text>
           </View>
