@@ -85,6 +85,13 @@ const profileValidation = yup.object().shape({
   description: yup.string().max(255, 'cannot more 255 character').required(),
 });
 
+const schemaSosialMedia = yup.object().shape({
+  email: yup.string().email().required(),
+  instagram: yup.string(),
+  github: yup.string(),
+  linkedin: yup.string(),
+});
+
 const EditProfile = ({navigation}) => {
   const dispatch = useDispatch();
   const [data, setData] = React.useState(0);
@@ -638,6 +645,121 @@ const EditProfile = ({navigation}) => {
                       <Text style={styles.experience}>Tambah Portofolio</Text>
                     </Button>
                   </Form>
+                </View>
+              )}
+            </Formik>
+          </View>
+        </Card>
+        {/* Card for sosmed */}
+        <Card style={styles.cardUp} transparent>
+          <View style={styles.padding}>
+            <Title style={styles.title}>Sosial Media</Title>
+            <Formik
+              validationSchema={schemaSosialMedia}
+              initialValues={{
+                email: profileWorker.profileData.email,
+                instagram: profileWorker.profileData.instagram
+                  ? profileWorker.profileData.instagram
+                      .slice(26, profileWorker.profileData.instagram.length)
+                      .slice(0, -1)
+                  : '',
+                github: profileWorker.profileData.github
+                  ? profileWorker.profileData.github.slice(
+                      19,
+                      profileWorker.profileData.github.length,
+                    )
+                  : '',
+                linkedin: profileWorker.profileData.linkedin
+                  ? profileWorker.profileData.linkedin
+                      .slice(28, profileWorker.profileData.linkedin.length)
+                      .slice(0, -1)
+                  : '',
+              }}
+              onSubmit={async (values) => {
+                const dataSosmed = {
+                  email: values.email,
+                  instagram: `https://www.instagram.com/${values.instagram}/`,
+                  github: `https://github.com/${values.github}`,
+                  linkedin: `https://www.linkedin.com/in/${values.linkedin}/`,
+                };
+                console.log(dataSosmed);
+                await dispatch(profileAction.updateProfile(token, dataSosmed));
+                await dispatch(profileAction.getProfile(token));
+                Alert.alert(
+                  'Berhasil',
+                  'Akun sosial media berhasil di edit!',
+                  [{text: 'OK', onPress: () => console.log('OK Pressed')}],
+                  {cancelable: false},
+                );
+              }}>
+              {({
+                handleChange,
+                handleBlur,
+                handleSubmit,
+                values,
+                errors,
+                isValid,
+                touched,
+              }) => (
+                <View>
+                  <Form>
+                    <Label style={styles.label}>Email</Label>
+                    <TextInput
+                      name="email"
+                      placeholder="Email"
+                      style={styles.textInput}
+                      onChangeText={handleChange('email')}
+                      onBlur={handleBlur('email')}
+                      value={values.email}
+                    />
+                    {touched.email && errors.email && (
+                      <Text style={styles.textError}>{errors.email}</Text>
+                    )}
+                    <Label style={styles.label}>Instagram</Label>
+                    <TextInput
+                      name="instagram"
+                      placeholder="Instagram"
+                      style={styles.textInput}
+                      onChangeText={handleChange('instagram')}
+                      onBlur={handleBlur('instagram')}
+                      value={values.instagram}
+                    />
+                    {touched.instagram && errors.instagram && (
+                      <Text style={styles.textError}>{errors.instagram}</Text>
+                    )}
+                    <Label style={styles.label}>Github</Label>
+                    <TextInput
+                      name="github"
+                      placeholder="Github"
+                      style={styles.textInput}
+                      onChangeText={handleChange('github')}
+                      onBlur={handleBlur('github')}
+                      value={values.github}
+                    />
+                    {touched.github && errors.github && (
+                      <Text style={styles.textError}>{errors.github}</Text>
+                    )}
+                    <Label style={styles.label}>Linkedin</Label>
+                    <TextInput
+                      name="linkedin"
+                      placeholder="Linkedin"
+                      style={styles.textInput}
+                      onChangeText={handleChange('linkedin')}
+                      onBlur={handleBlur('linkedin')}
+                      value={values.linkedin}
+                    />
+                    {touched.linkedin && errors.linkedin && (
+                      <Text style={styles.textError}>{errors.linkedin}</Text>
+                    )}
+                  </Form>
+                  <Button
+                    style={styles.addExperience}
+                    onPress={handleSubmit}
+                    disabled={!isValid}
+                    block
+                    transparent>
+                    <Text style={styles.experience}>Tambah Sosial Media</Text>
+                  </Button>
                 </View>
               )}
             </Formik>
