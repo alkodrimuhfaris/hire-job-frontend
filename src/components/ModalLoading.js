@@ -5,6 +5,7 @@ import {
   StyleSheet,
   Modal,
   TouchableWithoutFeedback,
+  ActivityIndicator,
 } from 'react-native';
 
 export default function ModalCenter({
@@ -15,7 +16,7 @@ export default function ModalCenter({
     <Modal animationType="fade" transparent={true} visible={modalOpen}>
       <TouchableOpacity style={modalStyle.parent}>
         <TouchableWithoutFeedback style={modalStyle.content}>
-          {modalContent}
+          <ActivityIndicator visible={modalOpen} size="large" color="#5E50A1" />
         </TouchableWithoutFeedback>
       </TouchableOpacity>
     </Modal>

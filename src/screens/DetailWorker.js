@@ -1,5 +1,11 @@
 import * as React from 'react';
-import {StyleSheet, View, ScrollView, Image} from 'react-native';
+import {
+  StyleSheet,
+  View,
+  ScrollView,
+  Image,
+  ActivityIndicator,
+} from 'react-native';
 import {Text, Button, Card} from 'native-base';
 import {useNavigation} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -44,12 +50,15 @@ const DetailWorker = () => {
             <Text style={styles.field}>
               {home.userDetailsData.jobTitle || ''}
             </Text>
-            <View style={styles.location}>
-              <Icon name="map-marker" size={24} color="#8e8e8e" />
-              <Text style={styles.map}>
-                {home.userDetailsData.address || ''}
-              </Text>
-            </View>
+            {Object.keys(home.userDetailsData).length &&
+            home.userDetailsData.address ? (
+              <View style={styles.location}>
+                <Icon name="map-marker" size={24} color="#8e8e8e" />
+                <Text style={styles.map}>
+                  {home.userDetailsData.address || ''}
+                </Text>
+              </View>
+            ) : null}
             {/* <Text style={styles.map}>Freelancer</Text> */}
             <Text style={styles.desc}>{home.userDetailsData.bio || ''}</Text>
             <Button
@@ -68,51 +77,75 @@ const DetailWorker = () => {
           <View style={styles.div}>
             <Text style={styles.tag}>Skill</Text>
             <View style={styles.skillContainer}>
-              {!home.userDetailsIsLoading &&
-              !home.userDetailsIsError &&
-              home.userDetailsData.WorkerSkills.length
-                ? home.userDetailsData.WorkerSkills.map((item) => (
+              {!home.userDetailsIsLoading ? (
+                home.userDetailsData.WorkerSkills.length ? (
+                  home.userDetailsData.WorkerSkills.map((item) => (
                     <View style={styles.skill}>
                       <Text style={styles.skillText}>{item.Skill.name}</Text>
                     </View>
                   ))
-                : null}
+                ) : (
+                  <Text style={styles.noskill}>
+                    This user has not add sklls yet
+                  </Text>
+                )
+              ) : !home.userDetailsIsError ? (
+                <ActivityIndicator
+                  visible={home.userDetailsIsLoading}
+                  size="small"
+                  color="#5E50A1"
+                />
+              ) : (
+                <Text style={styles.noskill}>Error getting skills data</Text>
+              )}
             </View>
-            <View style={styles.sosmed}>
-              <Icon name="envelope-o" size={20} color="#8e8e8e" />
-              <Text style={styles.email}>{home.userDetailsData.email}</Text>
-            </View>
-            <View style={styles.sosmed}>
-              <Icon name="instagram" size={24} color="#8e8e8e" />
-              <Text style={styles.email}>
-                {home.userDetailsData.instagram
-                  ? home.userDetailsData.instagram
-                      .slice(26, home.userDetailsData.instagram.length)
-                      .slice(0, -1)
-                  : ''}
-              </Text>
-            </View>
-            <View style={styles.sosmed}>
-              <Icon name="github" size={24} color="#8e8e8e" />
-              <Text style={styles.email}>
-                {home.userDetailsData.github
-                  ? home.userDetailsData.github.slice(
-                      19,
-                      home.userDetailsData.github.length,
-                    )
-                  : ''}
-              </Text>
-            </View>
-            <View style={styles.sosmed}>
-              <Icon name="gitlab" size={20} color="#8e8e8e" />
-              <Text style={styles.email}>
-                {home.userDetailsData.linkedin
-                  ? home.userDetailsData.linkedin
-                      .slice(28, home.userDetailsData.linkedin.length)
-                      .slice(0, -1)
-                  : ''}
-              </Text>
-            </View>
+            {Object.keys(home.userDetailsData).length &&
+            home.userDetailsData.email ? (
+              <View style={styles.sosmed}>
+                <Icon name="envelope-o" size={20} color="#8e8e8e" />
+                <Text style={styles.email}>{home.userDetailsData.email}</Text>
+              </View>
+            ) : null}
+            {Object.keys(home.userDetailsData).length &&
+            home.userDetailsData.instagram ? (
+              <View style={styles.sosmed}>
+                <Icon name="instagram" size={24} color="#8e8e8e" />
+                <Text style={styles.email}>
+                  {home.userDetailsData.instagram
+                    ? home.userDetailsData.instagram
+                        .slice(26, home.userDetailsData.instagram.length)
+                        .slice(0, -1)
+                    : ''}
+                </Text>
+              </View>
+            ) : null}
+            {Object.keys(home.userDetailsData).length &&
+            home.userDetailsData.github ? (
+              <View style={styles.sosmed}>
+                <Icon name="github" size={24} color="#8e8e8e" />
+                <Text style={styles.email}>
+                  {home.userDetailsData.github
+                    ? home.userDetailsData.github.slice(
+                        19,
+                        home.userDetailsData.github.length,
+                      )
+                    : ''}
+                </Text>
+              </View>
+            ) : null}
+            {Object.keys(home.userDetailsData).length &&
+            home.userDetailsData.linkedin ? (
+              <View style={styles.sosmed}>
+                <Icon name="linkedin" size={20} color="#8e8e8e" />
+                <Text style={styles.email}>
+                  {home.userDetailsData.linkedin
+                    ? home.userDetailsData.linkedin
+                        .slice(28, home.userDetailsData.linkedin.length)
+                        .slice(0, -1)
+                    : ''}
+                </Text>
+              </View>
+            ) : null}
           </View>
         </Card>
         <Card style={styles.cardBottom} transparent>
@@ -222,6 +255,11 @@ const styles = StyleSheet.create({
     color: '#ffffff',
     fontSize: 12,
     fontWeight: '600',
+  },
+  noskill: {
+    color: '#bbb',
+    fontSize: 11,
+    marginLeft: 10,
   },
   sosmed: {
     flexDirection: 'row',

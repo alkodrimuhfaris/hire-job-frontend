@@ -50,7 +50,7 @@ const DetailRecruiter = () => {
               <Text style={styles.email}>{home.userDetailsData.github}</Text>
             </View>
             <View style={styles.sosmed}>
-              <Icon name="gitlab" size={20} color="#8e8e8e" />
+              <Icon name="linkedin" size={20} color="#8e8e8e" />
               <Text style={styles.email}>{home.userDetailsData.linkedin}</Text>
             </View>
           </View>
