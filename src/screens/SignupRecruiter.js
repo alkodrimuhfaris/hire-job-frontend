@@ -34,10 +34,17 @@ export default function SignupRecruiter({navigation}) {
   function doRegisterRecruiter(data) {
     dispatch(authAction.registerRecruiter(data));
     if (register.isError) {
-      Alert.alert(register.message);
+      Alert.alert('Gagal', 'Register gagal', [
+        {text: 'OK', onPress: () => console.log('OK press')},
+      ]);
       dispatch(authAction.clearAlert());
     } else {
-      Alert.alert(register.message);
+      Alert.alert(
+        'Sukses',
+        'Register sukses',
+        [{text: 'OK', onPress: () => console.log('OK press')}],
+        {cancelable: false},
+      );
       dispatch(authAction.clearAlert());
       navigation.navigate('LoginRecruiter');
     }
