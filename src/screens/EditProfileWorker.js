@@ -208,7 +208,6 @@ const EditProfile = ({navigation}) => {
             description: profileWorker.profileData.bio,
           }}
           onSubmit={async (values) => {
-            console.log(values);
             const dataDiri = {
               name: values.name,
               jobTitle: values.job,
@@ -642,9 +641,9 @@ const EditProfile = ({navigation}) => {
                   github: `https://github.com/${values.github}`,
                   linkedin: `https://www.linkedin.com/in/${values.linkedin}/`,
                 };
-                console.log(dataSosmed);
                 await dispatch(profileAction.updateProfile(token, dataSosmed));
                 await dispatch(profileAction.getProfile(token));
+                navigation.navigate('ProfileWorker');
                 Alert.alert(
                   'Berhasil',
                   'Akun sosial media berhasil di edit!',
