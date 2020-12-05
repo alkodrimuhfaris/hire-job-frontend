@@ -90,9 +90,9 @@ class bubbleChat extends React.Component {
             </View>
           ) : (
             <View style={styles.timeSelf}>
-              {this.props.unread ? (
+              {this.props.unread ? null : (
                 <Text style={[styles.txtTimeSelf, styles.read]}>R</Text>
-              ) : null}
+              )}
               <Text style={styles.txtTimeSelf}>
                 {moment(this.props.time).format('hh.mm A')}
               </Text>
