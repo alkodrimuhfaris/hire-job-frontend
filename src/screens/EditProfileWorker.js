@@ -614,7 +614,11 @@ const EditProfile = ({navigation}) => {
                       style={styles.addExperience}
                       transparent
                       onPress={handleSubmit}>
-                      <Text style={styles.experience}>Tambah Portofolio</Text>
+                      {profileWorker.addPortofolioIsLoading === false ? (
+                        <Text style={styles.experience}>Tambah Portofolio</Text>
+                      ) : (
+                        <ModalLoading />
+                      )}
                     </Button>
                   </Form>
                 </View>
