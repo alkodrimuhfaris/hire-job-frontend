@@ -17,7 +17,7 @@ import {Formik} from 'formik';
 import * as yup from 'yup';
 
 import profile from '../assets/img/profile.png';
-import {API_URL} from '@env';
+import {API_URL_IMAGE} from '@env';
 
 // import actions
 import portfolioAction from '../redux/actions/portfolio';
@@ -175,7 +175,7 @@ const EditProfile = ({navigation}) => {
             <Image
               source={
                 profileWorker.profileData.photo
-                  ? {uri: API_URL + profileWorker.profileData.photo}
+                  ? {uri: API_URL_IMAGE + profileWorker.profileData.photo}
                   : avatar
               }
               style={styles.avatar}

@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, {useState} from 'react';
+import React from 'react';
 import {
   StyleSheet,
   View,
@@ -12,11 +12,12 @@ import {Button, Card, Body, Header, Right, Text, Textarea} from 'native-base';
 import {useNavigation} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {useSelector, useDispatch} from 'react-redux';
-import {API_URL_IMAGE, API_URL} from '@env';
+import {API_URL_IMAGE} from '@env';
 import Null from '../assets/img/bgChatNull.svg';
 
 import MessageBubble from '../components/bubbleChat';
-import photoPlaceholder from '../assets/img/profile.png';
+import worker from '../assets/img/profile.png';
+import recruiter from '../assets/img/company.png';
 import messageAction from '../redux/actions/message';
 
 const ChatRoom = ({route}) => {
@@ -30,7 +31,7 @@ const ChatRoom = ({route}) => {
   const isLoading = useSelector((state) => state.message.isLoading);
   const [name, setName] = React.useState('');
   const [loading, setLoading] = React.useState(false);
-  const urlImage = isWorker ? API_URL_IMAGE : API_URL;
+  const photoPlaceholder = isWorker ? recruiter : worker;
 
   React.useEffect(() => {
     if (Object.keys(profile).length) {
@@ -85,7 +86,9 @@ const ChatRoom = ({route}) => {
           <Image
             style={styles.avatar}
             source={
-              profile.photo ? {uri: urlImage + profile.photo} : photoPlaceholder
+              profile.photo
+                ? {uri: API_URL_IMAGE + profile.photo}
+                : photoPlaceholder
             }
           />
           <View style={styles.identitiy}>

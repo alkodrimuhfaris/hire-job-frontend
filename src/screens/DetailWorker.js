@@ -5,7 +5,7 @@ import {useNavigation} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {TabView, SceneMap, TabBar} from 'react-native-tab-view';
 import {useSelector} from 'react-redux';
-import {API_URL} from '@env';
+import {API_URL_IMAGE} from '@env';
 
 import profile from '../assets/img/profile.png';
 
@@ -35,7 +35,7 @@ const DetailWorker = () => {
             <Image
               source={
                 home.userDetailsData.photo
-                  ? {uri: API_URL + home.userDetailsData.photo}
+                  ? {uri: API_URL_IMAGE + home.userDetailsData.photo}
                   : profile
               }
               style={styles.avatar}
