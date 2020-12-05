@@ -18,7 +18,10 @@ import Null from '../assets/img/bgChatNull.svg';
 import MessageBubble from '../components/bubbleChat';
 import worker from '../assets/img/profile.png';
 import recruiter from '../assets/img/company.png';
+
+// import actions
 import messageAction from '../redux/actions/message';
+import homeAction from '../redux/actions/home';
 
 const ChatRoom = ({route}) => {
   const dispatch = useDispatch();
@@ -75,9 +78,18 @@ const ChatRoom = ({route}) => {
     setTextMessage('');
   };
 
+  async function getUserDetail() {
+    await dispatch(homeAction.getDetailsUser(token, id));
+    if (isWorker) {
+      navigation.navigate('DetailRecruiter');
+    } else {
+      navigation.navigate('DetailWorker');
+    }
+  }
+
   return (
     <>
-      <TouchableOpacity onPress={() => navigation.navigate('DetailWorker')}>
+      <TouchableOpacity onPress={getUserDetail}>
         <Header style={styles.header} transparent>
           <StatusBar backgroundColor={'#5E50A1'} />
           <Button transparent onPress={() => navigation.goBack()}>
