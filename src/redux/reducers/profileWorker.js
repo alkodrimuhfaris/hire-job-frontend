@@ -1,6 +1,7 @@
 const initialState = {
   profileData: {},
   profileExperience: {},
+  dataWorker: {},
   profileIsLoading: false,
   profileIsError: false,
   profileAlertMsg: '',
@@ -125,6 +126,31 @@ export default (state = initialState, action) => {
         profileIsLoading: false,
         profileIsError: false,
         profileExperience: action.payload.data.results,
+        dataExperienceWorker: action.payload.data,
+      };
+    }
+    // get pagination experience
+    case 'EXPERIENCE_SCROLL_PENDING': {
+      return {
+        ...state,
+        profileIsLoading: true,
+      };
+    }
+    case 'EXPERIENCE_SCROLL_REJECTED': {
+      return {
+        ...state,
+        profileIsLoading: false,
+        profileIsError: true,
+        profileAlertMsg: action.payload.response.data.message,
+      };
+    }
+    case 'EXPERIENCE_SCROLL_FULFILLED': {
+      return {
+        ...state,
+        profileIsLoading: false,
+        profileIsError: false,
+        profileExperience: action.payload.data.results,
+        dataExperienceWorker: action.payload.data,
       };
     }
     case 'CLEAR_ALERT': {
