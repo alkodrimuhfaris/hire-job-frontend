@@ -36,7 +36,8 @@ const SecondRoute = () => {
   );
   useEffect(() => {
     dispatch(profileAction.getWorkerExp(token));
-  }, [dispatch, token]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch]);
 
   const nextPage = async () => {
     if (dataExperience.pageInfo.pages > dataExperience.pageInfo.currentPage) {

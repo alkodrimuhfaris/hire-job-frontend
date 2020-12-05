@@ -1,7 +1,7 @@
 import React from 'react';
 import {Image, StyleSheet, View} from 'react-native';
 import {Text} from 'native-base';
-import {API_URL} from '@env';
+import {API_URL_IMAGE} from '@env';
 
 import Avatar from '../assets/img/profile.png';
 
@@ -9,7 +9,7 @@ export default function HomeCardRecruiter({item}) {
   return (
     <View style={styles.card}>
       <Image
-        source={item.photo ? {uri: `${API_URL}${item.photo}`} : Avatar}
+        source={item.photo ? {uri: `${API_URL_IMAGE}${item.photo}`} : Avatar}
         style={styles.avatar}
       />
       <Text numberOfLines={1} ellipsizeMode="tail" style={styles.name}>

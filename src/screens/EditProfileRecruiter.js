@@ -12,7 +12,7 @@ import {Formik} from 'formik';
 import * as Yup from 'yup';
 import ImagePicker from 'react-native-image-picker';
 
-import Avatar from '../assets/img/profile.png';
+import Avatar from '../assets/img/company.png';
 
 import {useSelector, useDispatch} from 'react-redux';
 
@@ -43,18 +43,18 @@ export default function EditProfileRecruiter({navigation}) {
   }, [updateCompanyState, updateProfileState]);
 
   const schema = Yup.object().shape({
-    companyName: Yup.string().required('Company name field is required'),
-    companyField: Yup.string().required('Company field is required'),
-    city: Yup.string().required('City field is required'),
-    description: Yup.string().required('Description field is required'),
+    companyName: Yup.string().required('Nama perusahaan dibutuhkan'),
+    companyField: Yup.string().required('Bidang perusahaan dibutuhkan'),
+    city: Yup.string().required('Kota perusahaan dibutuhkan'),
+    description: Yup.string().required('Deskripsi perusahaan dibutuhkan'),
     email: Yup.string()
-      .email('Email is invalid')
-      .required('Email field is required'),
+      .email('Masukkan alamat email dengan benar')
+      .required('Email dibutuhkan'),
     instagram: Yup.string(),
     phoneNumber: Yup.string()
-      .min(10, 'Phone number required minimal 10 chars')
-      .max(12, 'Phone number required maximal 12 chars')
-      .required('Phone number field is required'),
+      .min(10, 'Minimal karakter no handphone adalah 10')
+      .max(12, 'Maksimal karakter no handphone adalah 12')
+      .required('No handphone dibutuhkan'),
     linkedin: Yup.string(),
   });
 

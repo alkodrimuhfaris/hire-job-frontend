@@ -4,8 +4,8 @@ import {Text, Button, Card} from 'native-base';
 import {useNavigation} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {TabView, SceneMap, TabBar} from 'react-native-tab-view';
-import {useDispatch, useSelector} from 'react-redux';
-import {API_URL} from '@env';
+import {useSelector} from 'react-redux';
+import {API_URL_IMAGE} from '@env';
 
 import profile from '../assets/img/profile.png';
 
@@ -35,7 +35,7 @@ const DetailWorker = () => {
             <Image
               source={
                 home.userDetailsData.photo
-                  ? {uri: API_URL + home.userDetailsData.photo}
+                  ? {uri: API_URL_IMAGE + home.userDetailsData.photo}
                   : profile
               }
               style={styles.avatar}
@@ -84,15 +84,34 @@ const DetailWorker = () => {
             </View>
             <View style={styles.sosmed}>
               <Icon name="instagram" size={24} color="#8e8e8e" />
-              <Text style={styles.email}>{home.userDetailsData.instagram}</Text>
+              <Text style={styles.email}>
+                {home.userDetailsData.instagram
+                  ? home.userDetailsData.instagram
+                      .slice(26, home.userDetailsData.instagram.length)
+                      .slice(0, -1)
+                  : ''}
+              </Text>
             </View>
             <View style={styles.sosmed}>
               <Icon name="github" size={24} color="#8e8e8e" />
-              <Text style={styles.email}>{home.userDetailsData.github}</Text>
+              <Text style={styles.email}>
+                {home.userDetailsData.github
+                  ? home.userDetailsData.github.slice(
+                      19,
+                      home.userDetailsData.github.length,
+                    )
+                  : ''}
+              </Text>
             </View>
             <View style={styles.sosmed}>
               <Icon name="gitlab" size={20} color="#8e8e8e" />
-              <Text style={styles.email}>{home.userDetailsData.linkedin}</Text>
+              <Text style={styles.email}>
+                {home.userDetailsData.linkedin
+                  ? home.userDetailsData.linkedin
+                      .slice(28, home.userDetailsData.linkedin.length)
+                      .slice(0, -1)
+                  : ''}
+              </Text>
             </View>
           </View>
         </Card>
