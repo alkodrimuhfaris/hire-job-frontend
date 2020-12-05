@@ -11,7 +11,7 @@ import {
 import {Text, Button} from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {useDispatch, useSelector} from 'react-redux';
-import {API_URL} from '@env';
+import {API_URL_IMAGE} from '@env';
 
 // import actions
 import portfolioAction from '../redux/actions/portfolio';
@@ -68,7 +68,7 @@ const FirstRoute = ({token}) => {
                 )
               }>
               <Image
-                source={{uri: `${API_URL}${item.photo}`}}
+                source={{uri: `${API_URL_IMAGE}${item.photo}`}}
                 style={styles.portofolio}
               />
             </TouchableOpacity>
@@ -84,7 +84,7 @@ const FirstRoute = ({token}) => {
         <ScrollView contentContainerStyle={styles.centeredView}>
           <View style={styles.modalView}>
             <Image
-              source={{uri: `${API_URL}${img}`}}
+              source={{uri: `${API_URL_IMAGE}${img}`}}
               style={styles.portofolio}
             />
             <Text style={styles.name}>{name}</Text>
