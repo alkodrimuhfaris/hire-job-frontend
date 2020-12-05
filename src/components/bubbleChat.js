@@ -90,6 +90,9 @@ class bubbleChat extends React.Component {
             </View>
           ) : (
             <View style={styles.timeSelf}>
+              {this.props.unread ? (
+                <Text style={[styles.txtTimeSelf, styles.read]}>R</Text>
+              ) : null}
               <Text style={styles.txtTimeSelf}>
                 {moment(this.props.time).format('hh.mm A')}
               </Text>
@@ -104,6 +107,9 @@ class bubbleChat extends React.Component {
 export default bubbleChat;
 
 const styles = StyleSheet.create({
+  read: {
+    marginLeft: 5,
+  },
   timeSelf: {
     flexDirection: 'row',
     justifyContent: 'flex-start',
