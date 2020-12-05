@@ -82,7 +82,7 @@ const profileValidation = yup.object().shape({
 });
 
 const schemaSosialMedia = yup.object().shape({
-  email: yup.string().email().required(),
+  email: yup.string().email(),
   instagram: yup.string(),
   github: yup.string(),
   linkedin: yup.string(),
