@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import {
+  Alert,
   StyleSheet,
   View,
   ScrollView,
@@ -71,8 +72,8 @@ export default function EditProfileRecruiter({navigation}) {
 
     ImagePicker.showImagePicker(options, (response) => {
       if (response.didCancel) {
-      } else if (response.error) {
-        console.log('ImagePicker Error: ', response.error);
+      } else if (response.fileSize > 2 * 1024 * 1024) {
+        Alert.alert('Gagal pilih gambar!', 'File gambar harus kurang dari 2MB');
       } else {
         const source = {
           uri: response.uri,
