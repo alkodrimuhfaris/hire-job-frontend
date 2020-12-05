@@ -3,6 +3,7 @@ import React from 'react';
 import {StyleSheet, Text, View, Image} from 'react-native';
 import Svg, {Path} from 'react-native-svg';
 import {moderateScale} from 'react-native-size-matters';
+import moment from 'moment';
 
 class bubbleChat extends React.Component {
   render() {
@@ -81,6 +82,19 @@ class bubbleChat extends React.Component {
               />
             </Svg>
           </View>
+          {this.props.sender !== this.props.selfId ? (
+            <View style={styles.timeNotSelf}>
+              <Text style={styles.txtTimeNotSelf}>
+                {moment(this.props.time).format('hh.mm A')}
+              </Text>
+            </View>
+          ) : (
+            <View style={styles.timeSelf}>
+              <Text style={styles.txtTimeSelf}>
+                {moment(this.props.time).format('hh.mm A')}
+              </Text>
+            </View>
+          )}
         </View>
       </View>
     );
@@ -90,6 +104,23 @@ class bubbleChat extends React.Component {
 export default bubbleChat;
 
 const styles = StyleSheet.create({
+  timeSelf: {
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    width: '100%',
+  },
+  timeNotSelf: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    width: '100%',
+  },
+  txtTimeSelf: {
+    fontSize: 11,
+    color: 'white',
+  },
+  txtTimeNotSelf: {
+    fontSize: 11,
+  },
   message: {
     flexDirection: 'row',
     marginVertical: moderateScale(7, 2),

@@ -109,6 +109,8 @@ const ChatRoom = ({route}) => {
                 sender={item.sender}
                 selfId={selfId}
                 text={item.message}
+                time={item.createdAt}
+                unread={item.unread}
               />
             )}
             inverted
