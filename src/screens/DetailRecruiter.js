@@ -5,7 +5,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import {useSelector} from 'react-redux';
 import {API_URL_IMAGE} from '@env';
 
-import profile from '../assets/img/profile.png';
+import profile from '../assets/img/company.png';
 
 const DetailRecruiter = () => {
   const home = useSelector((state) => state.home);

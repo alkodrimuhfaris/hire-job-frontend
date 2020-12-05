@@ -12,7 +12,7 @@ import {Formik} from 'formik';
 import * as Yup from 'yup';
 import ImagePicker from 'react-native-image-picker';
 
-import Avatar from '../assets/img/profile.png';
+import Avatar from '../assets/img/company.png';
 
 import {useSelector, useDispatch} from 'react-redux';
 

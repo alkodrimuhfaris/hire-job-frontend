@@ -13,7 +13,7 @@ import profileWorkerAction from '../redux/actions/profileWorker';
 import portfolioAction from '../redux/actions/portfolio';
 import companyAction from '../redux/actions/profileRecruiter';
 
-import profile from '../assets/img/profile.png';
+import profile from '../assets/img/company.png';
 
 import {API_URL_IMAGE} from '@env';
 
