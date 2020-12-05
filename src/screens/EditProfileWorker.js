@@ -19,6 +19,9 @@ import * as yup from 'yup';
 import profile from '../assets/img/profile.png';
 import {API_URL_IMAGE} from '@env';
 
+// import component
+import ModalLoading from '../components/ModalLoading';
+
 // import actions
 import portfolioAction from '../redux/actions/portfolio';
 import skillAction from '../redux/actions/skill';
@@ -236,7 +239,11 @@ const EditProfile = ({navigation}) => {
                 disabled={!isValid}
                 block
                 transparent>
-                <Text style={styles.save}>Simpan</Text>
+                {profileWorker.updateProfileIsLoading === false ? (
+                  <Text style={styles.save}>Simpan</Text>
+                ) : (
+                  <ModalLoading />
+                )}
               </Button>
               <Button
                 block

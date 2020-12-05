@@ -6,6 +6,7 @@ const initialState = {
   profileIsError: false,
   profileAlertMsg: '',
   updateProfileIsLoading: false,
+  addExperienceIsLoading: false,
   updateProfileIsError: false,
   updateProfileAlertMsg: '',
   experienceIsAdded: false,
@@ -61,14 +62,14 @@ export default (state = initialState, action) => {
     case 'ADD_EXPERIENCE_PENDING': {
       return {
         ...state,
-        profileIsLoading: true,
+        addExperienceIsLoading: true,
       };
     }
     case 'ADD_EXPERIENCE_REJECTED': {
       return {
         ...state,
         profileIsError: true,
-        profileIsLoading: false,
+        addExperienceIsLoading: false,
         profileAlertMsg: 'add experience worker denied',
       };
     }
@@ -77,7 +78,7 @@ export default (state = initialState, action) => {
         ...state,
         experienceIsAdded: true,
         profileIsError: false,
-        profileIsLoading: false,
+        addExperienceIsLoading: false,
         profileAlertMsg: 'add experience worker succcess',
       };
     }
