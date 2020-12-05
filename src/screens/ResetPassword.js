@@ -17,11 +17,11 @@ export default function ResetPassword({navigation, route}) {
 
   const schema = Yup.object().shape({
     password: Yup.string()
-      .min(6, 'Password required minimal 6 characters')
-      .required('Password field is required'),
+      .min(8, 'Password setidaknya terdiri dari 8 karakter')
+      .required('Password dibutuhkan'),
     confirmPassword: Yup.string()
-      .oneOf([Yup.ref('password'), null], "Password doesn't match")
-      .required('Confirm password field is required'),
+      .oneOf([Yup.ref('password'), null], 'Password tidak cocok')
+      .required('Konfirmasi password dibutuhkan'),
   });
 
   function doResetPassword(values) {
