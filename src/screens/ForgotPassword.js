@@ -16,8 +16,8 @@ export default function ForgotPassword({navigation}) {
 
   const schema = Yup.object().shape({
     email: Yup.string()
-      .email('Email is invalid')
-      .required('Email field is required'),
+      .email('Masukkan alamat email dengan benar')
+      .required('Email dibutuhkan'),
   });
 
   function isEmailValid(data) {
