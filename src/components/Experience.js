@@ -1,27 +1,75 @@
-import * as React from 'react';
-import {StyleSheet, View, Image} from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {StyleSheet, View, Image, FlatList} from 'react-native';
 import {Text} from 'native-base';
+import {useDispatch, useSelector} from 'react-redux';
 
 import company from '../assets/img/tokopedia.png';
 
-const SecondRoute = () => (
-  <>
-    <View style={styles.card}>
-      <Image source={company} style={styles.profile} />
-      <View style={styles.desc}>
-        <Text style={styles.position}>Engginer</Text>
-        <Text style={styles.company}>TokoPedia</Text>
-        <Text style={styles.dueTime}>July 19 - January 20</Text>
-        <Text style={styles.totalTime}>6 Mounth</Text>
-        <Text style={styles.jobdesk}>
-          Material design themed tab bar. To customize the tab bar, you'd need
-          to use the renderTabBar prop of TabView to render the TabBar and pass
-          additional props. For example, to customize the{' '}
-        </Text>
+import profileAction from '../redux/actions/profileWorker';
+
+class Item extends React.Component {
+  render() {
+    return (
+      <View style={styles.card}>
+        <View style={styles.desc}>
+          <Text style={styles.position}>{this.props.position}</Text>
+          <Text style={styles.company}>{this.props.company}</Text>
+          <Text style={styles.dueTime}>
+            {this.props.start} s/d {this.props.finish}
+          </Text>
+          <Text style={styles.jobdesk}>{this.props.desc}</Text>
+        </View>
       </View>
-    </View>
-  </>
-);
+    );
+  }
+}
+
+const SecondRoute = () => {
+  const dispatch = useDispatch();
+  const token = useSelector((state) => state.auth.token);
+  const profileDataWorker = useSelector(
+    (state) => state.profileWorker.profileExperience,
+  );
+  const profileDataForRecruiter = useSelector(
+    (state) => state.home.userDetailsData.WorkExperiences,
+  );
+  useEffect(() => {
+    dispatch(profileAction.getWorkerExp(token));
+  }, [dispatch, token]);
+  return (
+    <>
+      {profileDataForRecruiter ? (
+        <FlatList
+          data={profileDataForRecruiter}
+          keyExtractor={(item, index) => index.toString()}
+          renderItem={({item}) => (
+            <Item
+              position={item.position}
+              company={item.Company.name}
+              start={item.startAt}
+              finish={item.finishAt}
+              desc={item.description}
+            />
+          )}
+        />
+      ) : (
+        <FlatList
+          data={profileDataWorker}
+          keyExtractor={(item, index) => index.toString()}
+          renderItem={({item}) => (
+            <Item
+              position={item.position}
+              company={item.Company.name}
+              start={item.startAt}
+              finish={item.finishAt}
+              desc={item.description}
+            />
+          )}
+        />
+      )}
+    </>
+  );
+};
 
 export default SecondRoute;
 

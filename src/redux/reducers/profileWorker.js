@@ -1,5 +1,6 @@
 const initialState = {
   profileData: {},
+  profileExperience: {},
   profileIsLoading: false,
   profileIsError: false,
   profileAlertMsg: '',
@@ -7,6 +8,7 @@ const initialState = {
   updateProfileIsError: false,
   updateProfileAlertMsg: '',
   experienceIsAdded: false,
+  portfolioIsAdded: false,
 };
 
 export default (state = initialState, action) => {
@@ -96,10 +98,44 @@ export default (state = initialState, action) => {
     case 'ADD_PORTOFOLIO_FULFILLED': {
       return {
         ...state,
-        experienceIsAdded: true,
+        portfolioIsAdded: true,
         profileIsError: false,
         profileIsLoading: false,
         profileAlertMsg: 'portofolio added',
+      };
+    }
+    // get experience
+    case 'GET_EXP_PENDING': {
+      return {
+        ...state,
+        profileIsLoading: true,
+      };
+    }
+    case 'GET_EXP_REJECTED': {
+      return {
+        ...state,
+        profileIsLoading: false,
+        profileIsError: true,
+        profileAlertMsg: action.payload.response.data.message,
+      };
+    }
+    case 'GET_EXP_FULFILLED': {
+      return {
+        ...state,
+        profileIsLoading: false,
+        profileIsError: false,
+        profileExperience: action.payload.data.results,
+      };
+    }
+    case 'CLEAR_ALERT': {
+      return {
+        ...state,
+        profileIsError: false,
+        profileAlertMsg: '',
+        updateProfileIsError: false,
+        updateProfileAlertMsg: '',
+        experienceIsAdded: false,
+        portfolioIsAdded: false,
       };
     }
     case 'DESTROY': {

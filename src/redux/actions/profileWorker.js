@@ -27,12 +27,27 @@ export default {
     type: 'ADD_EXPERIENCE',
     payload: http(token).post('worker/experience', qs.stringify(data)),
   }),
-  addPortofolio: (token, data, photo) => {
+  getWorkerExp: (token) => {
     return {
-      type: 'ADD_PORTOFOLIO',
-      payload: http(token).post('worker/portofolio', qs.stringify(data, photo)),
+      type: 'GET_EXP',
+      payload: http(token).get('/worker/experience'),
     };
   },
+  getWorkerExpById: (token, id) => {
+    return {
+      type: 'GET_EXP',
+      payload: http(token).get(`/worker/experience/${id}`),
+    };
+  },
+  addPortofolio: (token, form) => {
+    return {
+      type: 'ADD_PORTOFOLIO',
+      payload: http(token).post('worker/portofolio', form),
+    };
+  },
+  clearAlert: () => ({
+    type: 'CLEAR_ALERT',
+  }),
   destroy: () => ({
     type: 'DESTROY',
   }),

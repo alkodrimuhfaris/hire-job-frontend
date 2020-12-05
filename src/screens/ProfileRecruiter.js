@@ -22,14 +22,11 @@ const ProfileRecruiter = ({navigation}) => {
   const dispatch = useDispatch();
   const auth = useSelector((state) => state.auth);
   const profileState = useSelector((state) => state.profileRecruiter);
-  // const {profileData} = profileState;
   const profileData = useSelector(
     (state) => state.profileRecruiter.profileData,
   );
   const companyState = useSelector((state) => state.myCompany);
-  // const {companyData} = companyState;
   const companyData = useSelector((state) => state.myCompany.companyData);
-  // console.log(companyData);
 
   const updateProfileState = useSelector(
     (state) => state.updateProfileRecruiter,

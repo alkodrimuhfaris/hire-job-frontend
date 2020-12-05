@@ -106,19 +106,32 @@ const ProfileWorker = ({navigation}) => {
             <View style={styles.sosmed}>
               <Icon name="instagram" size={24} color="#8e8e8e" />
               <Text style={styles.email}>
-                {profileWorker.profileData.instagram}
+                {profileWorker.profileData.instagram
+                  ? profileWorker.profileData.instagram
+                      .slice(26, profileWorker.profileData.instagram.length)
+                      .slice(0, -1)
+                  : ''}
               </Text>
             </View>
             <View style={styles.sosmed}>
               <Icon name="github" size={24} color="#8e8e8e" />
               <Text style={styles.email}>
-                {profileWorker.profileData.github}
+                {profileWorker.profileData.github
+                  ? profileWorker.profileData.github.slice(
+                      19,
+                      profileWorker.profileData.github.length,
+                    )
+                  : ''}
               </Text>
             </View>
             <View style={styles.sosmed}>
               <Icon name="gitlab" size={20} color="#8e8e8e" />
               <Text style={styles.email}>
-                {profileWorker.profileData.linkedin}
+                {profileWorker.profileData.linkedin
+                  ? profileWorker.profileData.linkedin
+                      .slice(28, profileWorker.profileData.linkedin.length)
+                      .slice(0, -1)
+                  : ''}
               </Text>
             </View>
           </View>

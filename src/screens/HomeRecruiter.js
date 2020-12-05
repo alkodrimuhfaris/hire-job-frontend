@@ -55,7 +55,7 @@ export default function HomeRecruiter({navigation}) {
 
   async function getWorkerDetail(id) {
     await dispatch(homeAction.getDetailsUser(auth.token, id));
-    navigation.navigate('DetailWorker');
+    navigation.navigate('DetailWorker', id);
   }
 
   return (
