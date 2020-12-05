@@ -43,18 +43,18 @@ export default function EditProfileRecruiter({navigation}) {
   }, [updateCompanyState, updateProfileState]);
 
   const schema = Yup.object().shape({
-    companyName: Yup.string().required('Company name field is required'),
-    companyField: Yup.string().required('Company field is required'),
-    city: Yup.string().required('City field is required'),
-    description: Yup.string().required('Description field is required'),
+    companyName: Yup.string().required('Nama perusahaan tidak boleh kosong'),
+    companyField: Yup.string().required('Bidang perusahaan tidak boleh kosong'),
+    city: Yup.string().required('Kota tidak boleh kosong'),
+    description: Yup.string().required('Deskripsi tidak boleh kosong'),
     email: Yup.string()
-      .email('Email is invalid')
-      .required('Email field is required'),
+      .email('Email tidak sesai')
+      .required('Email tidak boleh kosong'),
     instagram: Yup.string(),
     phoneNumber: Yup.string()
-      .min(10, 'Phone number required minimal 10 chars')
-      .max(12, 'Phone number required maximal 12 chars')
-      .required('Phone number field is required'),
+      .min(10, 'Nomor telepon minimal 10 karakter')
+      .max(12, 'Nomor telepon maksimal 12 karakter')
+      .required('Nomor telepon tidak boleh kosong'),
     linkedin: Yup.string(),
   });
 

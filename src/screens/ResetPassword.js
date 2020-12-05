@@ -34,7 +34,7 @@ export default function ResetPassword({navigation, route}) {
 
   useEffect(() => {
     if (auth.isReset) {
-      Alert.alert('Reset password berhasil, harap login untuk melanjutkan.');
+      Alert.alert('Reset password berhasil', 'Harap login...');
       navigation.navigate('Welcome');
       dispatch(authAction.clearAlert());
     }

@@ -36,36 +36,38 @@ var radio_props = [
 ];
 
 const schemaExperience = yup.object().shape({
-  position: yup.string().required('posisi akhir dibutuhkan '),
-  companyName: yup.string().required('Nama perusahaan akhir dibutuhkan '),
+  position: yup.string().required('Posisi akhir tidak boleh kosong '),
+  companyName: yup
+    .string()
+    .required('Nama perusahaan akhir tidak boleh kosong '),
   startAt: yup.date().required('YYYY-MM-DD'),
   finishAt: yup.date().required('YYYY-MM-DD'),
   description: yup
     .string()
-    .max(255, 'cannot more 255 character')
-    .required('deskripsi dibutuhkan'),
+    .max(255, 'Maksimal 255 karakter')
+    .required('Deskripsi tidak boleh kosong'),
 });
 
 const schemaPortofolio = yup.object().shape({
-  name: yup.string().required('Nama Aplikasi dibutuhkan '),
+  name: yup.string().required('Nama Aplikasi tidak boleh kosong '),
   publicLink: yup
     .string()
     .matches(
       /((https?):\/\/)?(www.)?[a-z0-9]+(\.[a-z]{2,}){1,3}(#?\/?[a-zA-Z0-9#]+)*\/?(\?[a-zA-Z0-9-_]+=[a-zA-Z0-9-%]+&?)?$/,
-      'Enter correct url!',
+      'Masukkan url dengan benar!',
     )
     .required('Masukkan alamat publikasi'),
   repoLink: yup
     .string()
     .matches(
       /((https?):\/\/)?(www.)?[a-z0-9]+(\.[a-z]{2,}){1,3}(#?\/?[a-zA-Z0-9#]+)*\/?(\?[a-zA-Z0-9-_]+=[a-zA-Z0-9-%]+&?)?$/,
-      'Enter correct url!',
+      'Masukkan url dengan benar!',
     )
     .required('Masukkan alamat repositori'),
   description: yup
     .string()
-    .max(255, 'Tidak Lebih dari 255 karakter')
-    .required('deskripsi dibutuhkan'),
+    .max(255, 'Maksimal255 karakter')
+    .required('Deskripsi tidak boleh kosong'),
   company: yup.string().required('Nama tempat kerja terkait '),
 });
 
@@ -75,14 +77,14 @@ const skillValidation = yup.object().shape({
 
 const profileValidation = yup.object().shape({
   name: yup.string().matches(/(\w.+\s).+/, 'Masukkan Lebih dari 2 nama'),
-  job: yup.string('dalam bentuk string'),
+  job: yup.string('Dalam bentuk string'),
   domisili: yup.string(),
   TempatKerja: yup.string(),
-  description: yup.string().max(255, 'tidak lebih dari 255 character'),
+  description: yup.string().max(255, 'Maksimal 255 karakter'),
 });
 
 const schemaSosialMedia = yup.object().shape({
-  email: yup.string().email(),
+  email: yup.string().email('Email tidak sesauai'),
   instagram: yup.string(),
   github: yup.string(),
   linkedin: yup.string(),
@@ -121,9 +123,11 @@ const EditProfile = ({navigation}) => {
   async function addExperienceWorker(dataExperience) {
     await dispatch(profileAction.addExperience(token, dataExperience));
     if (profileWorker.experienceIsAdded) {
-      Alert.alert(profileWorker.profileAlertMsg);
+      Alert.alert('Behasil', 'Berhasil menambahkan pengalaman kerja');
+      navigation.navigate('MainAppWorker');
+    } else {
+      Alert.alert('Gagal', 'Harap masukkan data dengan benar');
     }
-    navigation.navigate('MainAppWorker');
   }
 
   async function addPortofolioWorker(values, img, type) {
@@ -143,7 +147,7 @@ const EditProfile = ({navigation}) => {
       dispatch(profileAction.clearAlert());
       dispatch(portfolioAction.getPortfolioList(token));
       navigation.navigate('ProfileWorker');
-      Alert.alert('Success add new portfolio.');
+      Alert.alert('Sukses', 'Berahsil menambahkan portofoli');
     }
   });
 
