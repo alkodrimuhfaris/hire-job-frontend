@@ -73,6 +73,7 @@ export default function LoginWorker({navigation}) {
                     onChangeText={handleChange('email')}
                     onBlur={handleBlur('email')}
                     value={values.email}
+                    keyboardType="email-address"
                   />
                 </Item>
                 {touched.email && errors.email && (

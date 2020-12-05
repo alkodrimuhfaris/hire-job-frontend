@@ -1,5 +1,12 @@
 import React from 'react';
-import {Image, TouchableOpacity, StyleSheet, View, Alert} from 'react-native';
+import {
+  Image,
+  TouchableOpacity,
+  StyleSheet,
+  View,
+  Alert,
+  ActivityIndicator,
+} from 'react-native';
 import {Button, Text, Container, Content, Item, Input} from 'native-base';
 import {useDispatch, useSelector} from 'react-redux';
 import {Formik} from 'formik';
@@ -11,6 +18,7 @@ import Logo from '../assets/img/logo-purple.png';
 export default function SignupRecruiter({navigation}) {
   const dispatch = useDispatch();
   const register = useSelector((state) => state.register);
+  const isLoading = useSelector((state) => state.register.isLoading);
 
   const schema = Yup.object().shape({
     name: Yup.string().required('Nama lengkap dibutuhkan'),
@@ -45,153 +53,164 @@ export default function SignupRecruiter({navigation}) {
 
   return (
     <Container style={styles.parent}>
-      <Formik
-        initialValues={{
-          name: '',
-          email: '',
-          company: '',
-          jobTitle: '',
-          phoneNumber: '',
-          password: '',
-          confirmPassword: '',
-        }}
-        validationSchema={schema}
-        onSubmit={(values) => doRegisterRecruiter(values)}>
-        {({
-          handleChange,
-          handleBlur,
-          handleSubmit,
-          values,
-          touched,
-          errors,
-        }) => (
-          <Content style={styles.padding}>
-            <Image source={Logo} style={styles.logo} />
-            <Text style={styles.header}>Signup</Text>
-            <View>
-              <Text style={styles.label}>Nama</Text>
-              <Item regular style={styles.fieldColor}>
-                <Input
-                  placeholder="Masukkan nama panjang"
-                  style={styles.input}
-                  onChangeText={handleChange('name')}
-                  onBlur={handleBlur('name')}
-                  value={values.name}
-                />
-              </Item>
-              {touched.name && errors.name && (
-                <Text style={styles.error}>{errors.name}</Text>
-              )}
-            </View>
-            <View style={styles.fieldMargin}>
-              <Text style={styles.label}>Email</Text>
-              <Item regular style={styles.fieldColor}>
-                <Input
-                  placeholder="Masukkan alamat email"
-                  style={styles.input}
-                  onChangeText={handleChange('email')}
-                  onBlur={handleBlur('email')}
-                  value={values.email}
-                  keyboardType="email-address"
-                />
-              </Item>
-              {touched.email && errors.email && (
-                <Text style={styles.error}>{errors.email}</Text>
-              )}
-            </View>
-            <View style={styles.fieldMargin}>
-              <Text style={styles.label}>Perusahaan</Text>
-              <Item regular style={styles.fieldColor}>
-                <Input
-                  placeholder="Masukkan nama perusahaan"
-                  style={styles.input}
-                  onChangeText={handleChange('company')}
-                  onBlur={handleBlur('company')}
-                  value={values.company}
-                />
-              </Item>
-              {touched.company && errors.company && (
-                <Text style={styles.error}>{errors.company}</Text>
-              )}
-            </View>
-            <View style={styles.fieldMargin}>
-              <Text style={styles.label}>Jabatan</Text>
-              <Item regular style={styles.fieldColor}>
-                <Input
-                  placeholder="Posisi di perusahaan anda"
-                  style={styles.input}
-                  onChangeText={handleChange('jobTitle')}
-                  onBlur={handleBlur('jobTitle')}
-                  value={values.jobTitle}
-                />
-              </Item>
-              {touched.jobTitle && errors.jobTitle && (
-                <Text style={styles.error}>{errors.jobTitle}</Text>
-              )}
-            </View>
-            <View style={styles.fieldMargin}>
-              <Text style={styles.label}>No handphone</Text>
-              <Item regular style={styles.fieldColor}>
-                <Input
-                  placeholder="Masukkan no handphone"
-                  style={styles.input}
-                  keyboardType={'phone-pad'}
-                  onChangeText={handleChange('phoneNumber')}
-                  onBlur={handleBlur('phoneNumber')}
-                  value={values.phoneNumber}
-                />
-              </Item>
-              {touched.phoneNumber && errors.phoneNumber && (
-                <Text style={styles.error}>{errors.phoneNumber}</Text>
-              )}
-            </View>
-            <View style={styles.fieldMargin}>
-              <Text style={styles.label}>Kata Sandi</Text>
-              <Item regular style={styles.fieldColor}>
-                <Input
-                  placeholder="Masukkan kata sandi"
-                  style={styles.input}
-                  secureTextEntry
-                  onChangeText={handleChange('password')}
-                  onBlur={handleBlur('password')}
-                  value={values.password}
-                />
-              </Item>
-              {touched.password && errors.password && (
-                <Text style={styles.error}>{errors.password}</Text>
-              )}
-            </View>
-            <View style={styles.fieldMargin}>
-              <Text style={styles.label}>Konfirmasi kata Sandi</Text>
-              <Item regular style={styles.fieldColor}>
-                <Input
-                  placeholder="Masukkan konfirmasi kata sandi"
-                  style={styles.input}
-                  secureTextEntry
-                  onChangeText={handleChange('confirmPassword')}
-                  onBlur={handleBlur('confirmPassword')}
-                  value={values.confirmPassword}
-                />
-              </Item>
-              {touched.confirmPassword && errors.confirmPassword && (
-                <Text style={styles.error}>{errors.confirmPassword}</Text>
-              )}
-            </View>
-            <Button block style={styles.btnPrimary} onPress={handleSubmit}>
-              <Text style={styles.textBtnPrimary}>Daftar</Text>
-            </Button>
-            <View style={styles.register}>
-              <Text style={styles.registerText}>Anda sudah punya akun? </Text>
-              <TouchableOpacity
-                onPress={() => navigation.navigate('LoginRecruiter')}>
-                <Text style={[styles.registerText, styles.registerLink]}>
-                  Masuk disini
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </Content>
-        )}
-      </Formik>
+      {isLoading === false ? (
+        <Formik
+          initialValues={{
+            name: '',
+            email: '',
+            company: '',
+            jobTitle: '',
+            phoneNumber: '',
+            password: '',
+            confirmPassword: '',
+          }}
+          validationSchema={schema}
+          onSubmit={(values) => doRegisterRecruiter(values)}>
+          {({
+            handleChange,
+            handleBlur,
+            handleSubmit,
+            values,
+            touched,
+            errors,
+          }) => (
+            <Content style={styles.padding}>
+              <Image source={Logo} style={styles.logo} />
+              <Text style={styles.header}>Signup</Text>
+              <View>
+                <Text style={styles.label}>Nama</Text>
+                <Item regular style={styles.fieldColor}>
+                  <Input
+                    placeholder="Masukkan nama panjang"
+                    style={styles.input}
+                    onChangeText={handleChange('name')}
+                    onBlur={handleBlur('name')}
+                    value={values.name}
+                  />
+                </Item>
+                {touched.name && errors.name && (
+                  <Text style={styles.error}>{errors.name}</Text>
+                )}
+              </View>
+              <View style={styles.fieldMargin}>
+                <Text style={styles.label}>Email</Text>
+                <Item regular style={styles.fieldColor}>
+                  <Input
+                    placeholder="Masukkan alamat email"
+                    style={styles.input}
+                    onChangeText={handleChange('email')}
+                    onBlur={handleBlur('email')}
+                    value={values.email}
+                    keyboardType="email-address"
+                  />
+                </Item>
+                {touched.email && errors.email && (
+                  <Text style={styles.error}>{errors.email}</Text>
+                )}
+              </View>
+              <View style={styles.fieldMargin}>
+                <Text style={styles.label}>Perusahaan</Text>
+                <Item regular style={styles.fieldColor}>
+                  <Input
+                    placeholder="Masukkan nama perusahaan"
+                    style={styles.input}
+                    onChangeText={handleChange('company')}
+                    onBlur={handleBlur('company')}
+                    value={values.company}
+                  />
+                </Item>
+                {touched.company && errors.company && (
+                  <Text style={styles.error}>{errors.company}</Text>
+                )}
+              </View>
+              <View style={styles.fieldMargin}>
+                <Text style={styles.label}>Jabatan</Text>
+                <Item regular style={styles.fieldColor}>
+                  <Input
+                    placeholder="Posisi di perusahaan anda"
+                    style={styles.input}
+                    onChangeText={handleChange('jobTitle')}
+                    onBlur={handleBlur('jobTitle')}
+                    value={values.jobTitle}
+                  />
+                </Item>
+                {touched.jobTitle && errors.jobTitle && (
+                  <Text style={styles.error}>{errors.jobTitle}</Text>
+                )}
+              </View>
+              <View style={styles.fieldMargin}>
+                <Text style={styles.label}>No handphone</Text>
+                <Item regular style={styles.fieldColor}>
+                  <Input
+                    placeholder="Masukkan no handphone"
+                    style={styles.input}
+                    keyboardType={'phone-pad'}
+                    onChangeText={handleChange('phoneNumber')}
+                    onBlur={handleBlur('phoneNumber')}
+                    value={values.phoneNumber}
+                  />
+                </Item>
+                {touched.phoneNumber && errors.phoneNumber && (
+                  <Text style={styles.error}>{errors.phoneNumber}</Text>
+                )}
+              </View>
+              <View style={styles.fieldMargin}>
+                <Text style={styles.label}>Kata Sandi</Text>
+                <Item regular style={styles.fieldColor}>
+                  <Input
+                    placeholder="Masukkan kata sandi"
+                    style={styles.input}
+                    secureTextEntry
+                    onChangeText={handleChange('password')}
+                    onBlur={handleBlur('password')}
+                    value={values.password}
+                  />
+                </Item>
+                {touched.password && errors.password && (
+                  <Text style={styles.error}>{errors.password}</Text>
+                )}
+              </View>
+              <View style={styles.fieldMargin}>
+                <Text style={styles.label}>Konfirmasi kata Sandi</Text>
+                <Item regular style={styles.fieldColor}>
+                  <Input
+                    placeholder="Masukkan konfirmasi kata sandi"
+                    style={styles.input}
+                    secureTextEntry
+                    onChangeText={handleChange('confirmPassword')}
+                    onBlur={handleBlur('confirmPassword')}
+                    value={values.confirmPassword}
+                  />
+                </Item>
+                {touched.confirmPassword && errors.confirmPassword && (
+                  <Text style={styles.error}>{errors.confirmPassword}</Text>
+                )}
+              </View>
+              <Button block style={styles.btnPrimary} onPress={handleSubmit}>
+                <Text style={styles.textBtnPrimary}>Daftar</Text>
+              </Button>
+              <View style={styles.register}>
+                <Text style={styles.registerText}>Anda sudah punya akun? </Text>
+                <TouchableOpacity
+                  onPress={() => navigation.navigate('LoginRecruiter')}>
+                  <Text style={[styles.registerText, styles.registerLink]}>
+                    Masuk disini
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </Content>
+          )}
+        </Formik>
+      ) : (
+        <View style={styles.parentsLoading}>
+          <ActivityIndicator
+            size="large"
+            color="#5E50A1"
+            animating={isLoading}
+            style={styles.indicator}
+          />
+        </View>
+      )}
     </Container>
   );
 }
@@ -264,5 +283,10 @@ const styles = StyleSheet.create({
   error: {
     fontSize: 12,
     color: 'red',
+  },
+  parentsLoading: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
