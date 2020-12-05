@@ -5,7 +5,7 @@ import {Text} from 'native-base';
 import Avatar from '../assets/img/profile.png';
 import {API_URL_IMAGE} from '@env';
 
-export default function HomeCardRecruiter({item}) {
+export default function SearchWorkerCard({item}) {
   let skillArr = item.WorkerSkills;
   skillArr = skillArr.length > 2 ? skillArr.slice(0, 3) : skillArr;
   return (
