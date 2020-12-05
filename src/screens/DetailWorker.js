@@ -72,7 +72,7 @@ const DetailWorker = () => {
               !home.userDetailsIsError &&
               home.userDetailsData.WorkerSkills.length
                 ? home.userDetailsData.WorkerSkills.map((item) => (
-                    <View style={styles.skill}>
+                    <View style={styles.skill} key={item.id}>
                       <Text style={styles.skillText}>{item.Skill.name}</Text>
                     </View>
                   ))
