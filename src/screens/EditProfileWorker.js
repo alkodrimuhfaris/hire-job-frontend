@@ -118,6 +118,23 @@ const EditProfile = ({navigation}) => {
     });
   };
 
+  const pickPortofolio = () => {
+    ImagePicker.launchImageLibrary(options, async (response) => {
+      if (response.didCancel) {
+        console.log('User cancelled image picker');
+      } else if (response.error) {
+        console.log('ImagePicker Error: ', response.error);
+      } else {
+        setPortofolio(response.uri);
+        await setDataImage({
+          uri: response.uri,
+          name: response.fileName,
+          type: response.type,
+        });
+      }
+    });
+  };
+
   async function addExperienceWorker(dataExperience) {
     await dispatch(profileAction.addExperience(token, dataExperience));
     if (profileWorker.experienceIsAdded) {
@@ -477,7 +494,7 @@ const EditProfile = ({navigation}) => {
                 publicLink: '',
                 repoLink: '',
                 company: '',
-                // type: data,
+                description: '',
               }}
               onSubmit={(values) =>
                 addPortofolioWorker(values, dataImage, data)
@@ -564,52 +581,14 @@ const EditProfile = ({navigation}) => {
                     />
                     <Label style={styles.label}>Upload Gambar</Label>
                     {portofolio === '' ? (
-                      <TouchableOpacity
-                        onPress={() =>
-                          ImagePicker.launchImageLibrary(
-                            options,
-                            async (response) => {
-                              if (response.didCancel) {
-                                console.log('User cancelled image picker');
-                              } else {
-                                setPortofolio(response.uri);
-                                const form = new FormData();
-                                form.append('photo', {
-                                  uri: response.uri,
-                                  name: response.fileName,
-                                  type: response.type,
-                                });
-                                setDataImage(form);
-                              }
-                            },
-                          )
-                        }>
+                      <TouchableOpacity onPress={pickPortofolio}>
                         <View style={styles.InputImage}>
                           <Icon name="cloud-upload" size={50} color="#8e8e8e" />
                           <Text note>upload file dari penyimpanan</Text>
                         </View>
                       </TouchableOpacity>
                     ) : (
-                      <TouchableOpacity
-                        onPress={() =>
-                          ImagePicker.launchImageLibrary(
-                            options,
-                            async (response) => {
-                              if (response.didCancel) {
-                                console.log('User cancelled image picker');
-                              } else {
-                                setPortofolio(response.uri);
-                                const form = new FormData();
-                                form.append('photo', {
-                                  uri: response.uri,
-                                  name: response.fileName,
-                                  type: response.type,
-                                });
-                                setDataImage(form);
-                              }
-                            },
-                          )
-                        }>
+                      <TouchableOpacity onPress={pickPortofolio}>
                         <Image
                           style={styles.portofolioImg}
                           source={{uri: portofolio}}
