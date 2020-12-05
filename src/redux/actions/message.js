@@ -38,4 +38,7 @@ export default {
   destroy: () => ({
     type: 'DESTROY',
   }),
+  clearMsg: () => ({
+    type: 'CLEAR_MESSAGE',
+  }),
 };
