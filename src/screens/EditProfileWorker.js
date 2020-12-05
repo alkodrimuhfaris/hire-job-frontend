@@ -483,9 +483,13 @@ const EditProfile = ({navigation}) => {
                       disabled={!isValid}
                       block
                       transparent>
-                      <Text style={styles.experience}>
-                        Tambah Pengalaman Kerja
-                      </Text>
+                      {profileWorker.addExperienceIsLoading === false ? (
+                        <Text style={styles.experience}>
+                          Tambah Pengalaman Kerja
+                        </Text>
+                      ) : (
+                        <ModalLoading />
+                      )}
                     </Button>
                   </Form>
                 </View>
