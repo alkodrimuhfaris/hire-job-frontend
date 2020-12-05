@@ -21,25 +21,25 @@ import Logo from '../assets/img/logo-purple.png';
 const registerValidationSchema = yup.object().shape({
   name: yup
     .string()
-    .matches(/(\w.+\s).+/, 'Enter at least 2 names')
-    .required('Name dibutuhkan'),
+    .matches(/(\w.+\s).+/, 'Masukkan nama lengkap')
+    .required('Name tidak boleh kosong'),
   email: yup
     .string()
-    .email('Please enter valid email')
-    .required('Alamat email dibutuhkan'),
+    .email('Email tidak sesaui')
+    .required('Alamat email tidak boleh kosong'),
   phoneNumber: yup
     .string()
-    .min(10, 'Phone number required minimal 10 chars')
-    .max(12, 'Phone number required maximal 12 chars')
-    .required('Phone number field is required'),
+    .min(10, 'Nomor telepon minimal 10 karakter')
+    .max(12, 'Nomor telepon maksimal 12 karakter')
+    .required('Nomor telepon tidak boleh kosong'),
   password: yup
     .string()
-    .min(8, ({min}) => `Password must be at least ${min} characters`)
-    .required('Password dibutuhkan'),
+    .min(8, ({min}) => `Password minimal ${min} karakter`)
+    .required('Password tidak boleh kosong'),
   confirmPassword: yup
     .string()
-    .oneOf([yup.ref('password'), null], "Password doesn't match")
-    .required('Confirm password field is required'),
+    .oneOf([yup.ref('password'), null], 'Password tidak cocok')
+    .required('Konfrimasi password tidak boleh kosong'),
 });
 
 const SignupWorker = () => {

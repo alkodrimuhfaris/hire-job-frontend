@@ -16,11 +16,11 @@ export default function LoginWorker({navigation}) {
 
   const schema = Yup.object().shape({
     email: Yup.string()
-      .email('Email is invalid')
-      .required('Email field is required'),
+      .email('Email tidak sesuai')
+      .required('Email tidak boleh kosong'),
     password: Yup.string()
-      .min(6, 'Password required minimal 6 characters')
-      .required('Password field is required'),
+      .min(6, 'Password minimal 6 karakter')
+      .required('Password tidak boleh kosong'),
   });
 
   function doLogin(data) {

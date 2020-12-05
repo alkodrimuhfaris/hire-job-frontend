@@ -13,22 +13,22 @@ export default function SignupRecruiter({navigation}) {
   const register = useSelector((state) => state.register);
 
   const schema = Yup.object().shape({
-    name: Yup.string().required('Name field is required'),
+    name: Yup.string().required('Name tidak boleh kosong'),
     email: Yup.string()
-      .email('Email is invalid')
-      .required('Email field is required'),
-    company: Yup.string().required('Company field is required'),
-    jobTitle: Yup.string().required('Position field is required'),
+      .email('Email tidak sesuai')
+      .required('Email tidak boleh kosong'),
+    company: Yup.string().required('Perusahaan tidak boleh kosong'),
+    jobTitle: Yup.string().required('Posisi tidak boleh kosong'),
     phoneNumber: Yup.string()
-      .min(10, 'Phone number required minimal 10 chars')
-      .max(12, 'Phone number required maximal 12 chars')
-      .required('Phone number field is required'),
+      .min(10, 'Nomor telepon minimal 10 karakter')
+      .max(12, 'Nomor telepon maksimal 12 karakter')
+      .required('Nomor telepon tidak boleh kosong'),
     password: Yup.string()
-      .min(8, 'Password required minimal 8 characters')
-      .required('Password field is required'),
+      .min(8, 'Password minimal 8 characters')
+      .required('Password tidak boleh kosong'),
     confirmPassword: Yup.string()
-      .oneOf([Yup.ref('password'), null], "Password doesn't match")
-      .required('Confirm password field is required'),
+      .oneOf([Yup.ref('password'), null], 'Password tidak cocok')
+      .required('Confirmasi password tidak boleh kosong'),
   });
 
   function doRegisterRecruiter(data) {
