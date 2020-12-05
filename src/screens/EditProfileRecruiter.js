@@ -21,6 +21,10 @@ import profileAction from '../redux/actions/profileRecruiter';
 
 import {API_URL_IMAGE} from '@env';
 
+import ModalLoading from '../components/ModalLoading';
+
+import ModalAlert from '../components/ModalAlert';
+
 export default function EditProfileRecruiter({navigation}) {
   const dispatch = useDispatch();
   const auth = useSelector((state) => state.auth);
@@ -30,6 +34,20 @@ export default function EditProfileRecruiter({navigation}) {
     (state) => state.updateProfileRecruiter,
   );
   const updateCompanyState = useSelector((state) => state.updateCompany);
+  const companyUpdateSuccess = useSelector(
+    (state) => state.updateCompany.companyUpdateSuccess,
+  );
+
+  // oversize image alert
+  const [tooLarge, setTooLarge] = React.useState(false);
+
+  // for loading indicator
+  const profileIsLoading = useSelector(
+    (state) => state.profileRecruiter.profileIsLoading,
+  );
+  const companyIsLoading = useSelector(
+    (state) => state.updateCompany.companyIsLoading,
+  );
 
   // state untuk companynya, mksd aku ini nnt buat ambil photo companynya
   const companyState = useSelector((state) => state.myCompany);
@@ -57,6 +75,7 @@ export default function EditProfileRecruiter({navigation}) {
       .max(12, 'Maksimal karakter no handphone adalah 12')
       .required('No handphone dibutuhkan'),
     linkedin: Yup.string(),
+    github: Yup.string(),
   });
 
   function selectImage() {
@@ -75,17 +94,21 @@ export default function EditProfileRecruiter({navigation}) {
       } else if (response.fileSize > 2 * 1024 * 1024) {
         Alert.alert('Gagal pilih gambar!', 'File gambar harus kurang dari 2MB');
       } else {
-        const source = {
-          uri: response.uri,
-          name: response.fileName,
-          type: response.type,
-        };
-
-        setPhoto(source.uri);
-        const form = new FormData();
-        form.append('photo', source);
-        dispatch(profileAction.updatePhotoCompany(auth.token, form));
-        dispatch(profileAction.updatePhotoRecruiter(auth.token, form));
+        const fileSize = response.fileSize;
+        if (fileSize > 2000 * 1024) {
+          setTooLarge(true);
+        } else {
+          const source = {
+            uri: response.uri,
+            name: response.fileName,
+            type: response.type,
+          };
+          setPhoto(source.uri);
+          const form = new FormData();
+          form.append('photo', source);
+          dispatch(profileAction.updatePhotoCompany(auth.token, form));
+          dispatch(profileAction.updatePhotoRecruiter(auth.token, form));
+        }
       }
     });
   }
@@ -101,6 +124,7 @@ export default function EditProfileRecruiter({navigation}) {
       linkedin,
       description,
       phoneNumber,
+      github,
     } = value;
     const dataRecruiter = {
       email,
@@ -111,6 +135,7 @@ export default function EditProfileRecruiter({navigation}) {
       instagram,
       bio: description,
       linkedin,
+      github,
     };
     const dataCompany = {
       name: companyName,
@@ -119,18 +144,35 @@ export default function EditProfileRecruiter({navigation}) {
     };
     dispatch(profileAction.updateProfile(auth.token, dataRecruiter));
     dispatch(profileAction.updateCompany(auth.token, dataCompany));
-    navigation.goBack();
   }
+
+  React.useEffect(() => {
+    if (companyUpdateSuccess) {
+      navigation.goBack();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [companyUpdateSuccess]);
 
   return (
     <>
+      {/* indicator for loading */}
+      <ModalLoading modalOpen={profileIsLoading || companyIsLoading} />
+
+      {/* indicator for oversize file */}
+      <ModalAlert
+        modalOpen={tooLarge}
+        setModalOpen={setTooLarge}
+        content={'Your file is too large max size is 2 MB!'}
+        useOneBtn={true}
+      />
+
       <ScrollView>
         <Card style={styles.cardUp} transparent>
           <View style={styles.parent}>
             <TouchableOpacity onPress={selectImage}>
               <Image
                 source={
-                  profileData[0].photo !== null
+                  photo !== null
                     ? {uri: `${API_URL_IMAGE}${profileData[0].photo}`}
                     : Avatar
                 }
@@ -159,6 +201,7 @@ export default function EditProfileRecruiter({navigation}) {
             instagram: profileData.length ? profileData[0].instagram : '',
             phoneNumber: profileData.length ? profileData[0].phoneNumber : '',
             linkedin: profileData.length ? profileData[0].linkedin : '',
+            github: profileData.length ? profileData[0].github : '',
           }}
           validationSchema={schema}
           onSubmit={(values) => change(values)}>
@@ -307,6 +350,21 @@ export default function EditProfileRecruiter({navigation}) {
                   </Item>
                   {touched.linkedin && errors.linkedin && (
                     <Text style={styles.error}>{errors.linkedin}</Text>
+                  )}
+                </View>
+                <View style={styles.fieldMargin}>
+                  <Text style={styles.label}>Github</Text>
+                  <Item regular>
+                    <Input
+                      placeholder="Masukkan Github"
+                      style={styles.input}
+                      onChangeText={handleChange('github')}
+                      onBlur={handleBlur('github')}
+                      value={values.github}
+                    />
+                  </Item>
+                  {touched.github && errors.github && (
+                    <Text style={styles.error}>{errors.github}</Text>
                   )}
                 </View>
               </Card>
