@@ -92,7 +92,7 @@ const ProfileWorker = ({navigation}) => {
                 !skill.listSkillIsError &&
                 skill.listSkillData.length &&
                 skill.listSkillData.map((item) => (
-                  <View style={styles.skill}>
+                  <View style={styles.skill} key={item.id}>
                     <Text style={styles.skillText}>{item.Skill.name}</Text>
                   </View>
                 ))}

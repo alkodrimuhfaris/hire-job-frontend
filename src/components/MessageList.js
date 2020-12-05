@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, Text, TouchableOpacity, Image, StyleSheet} from 'react-native';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import moment from 'moment';
 
 // import assets
@@ -8,7 +8,11 @@ import worker from '../assets/img/profile.png';
 import recruiter from '../assets/img/company.png';
 import {API_URL_IMAGE} from '@env';
 
+// import action
+import messageAction from '../redux/actions/message';
+
 export default function RenderItem({item, navigation}) {
+  const dispatch = useDispatch();
   const selfId = useSelector((state) => state.auth.id);
   const isWorker = useSelector((state) => state.auth.isWorker);
   const avatar = isWorker ? recruiter : worker;
@@ -23,7 +27,7 @@ export default function RenderItem({item, navigation}) {
   const displayName = !isWorker ? name : company;
 
   const goToRoomChat = () => {
-    console.log(id);
+    dispatch(messageAction.clearMsg());
     navigation.navigate('ChatRoom', {id});
   };
 

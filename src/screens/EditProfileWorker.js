@@ -24,10 +24,14 @@ import portfolioAction from '../redux/actions/portfolio';
 import skillAction from '../redux/actions/skill';
 import profileAction from '../redux/actions/profileWorker';
 
-const options = {
-  title: 'my picture',
-  takePhotoButtonTitle: 'Take Photo',
-  chooseFromLibraryButtonTitle: 'Choose Photo',
+let options = {
+  maxWidth: 300,
+  maxHeight: 300,
+  mediaType: 'photo',
+  noData: true,
+  storageOptions: {
+    skipBackup: true,
+  },
 };
 
 var radio_props = [
@@ -102,9 +106,8 @@ const EditProfile = ({navigation}) => {
   const takePictures = () => {
     ImagePicker.showImagePicker(options, async (response) => {
       if (response.didCancel) {
-        console.log('User cancelled image picker');
-      } else if (response.error) {
-        console.log('ImagePicker Error: ', response.error);
+      } else if (response.fileSize > 2 * 1024 * 1024) {
+        Alert.alert('Gagal pilih gambar!', 'File gambar harus kurang dari 2MB');
       } else {
         setAvatar({uri: response.uri});
         const form = new FormData();
@@ -123,9 +126,8 @@ const EditProfile = ({navigation}) => {
   const pickPortofolio = () => {
     ImagePicker.launchImageLibrary(options, async (response) => {
       if (response.didCancel) {
-        console.log('User cancelled image picker');
-      } else if (response.error) {
-        console.log('ImagePicker Error: ', response.error);
+      } else if (response.fileSize > 2 * 1024 * 1024) {
+        Alert.alert('Gagal pilih gambar!', 'File gambar harus kurang dari 2MB');
       } else {
         setPortofolio(response.uri);
         await setDataImage({
