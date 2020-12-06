@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {
   Image,
   StyleSheet,
@@ -7,6 +7,7 @@ import {
   TextInput,
   TouchableOpacity,
   Alert,
+  ActivityIndicator,
 } from 'react-native';
 import {Button, Text, Container, Title, Form, Label} from 'native-base';
 import {useNavigation} from '@react-navigation/native';
@@ -42,137 +43,158 @@ const registerValidationSchema = yup.object().shape({
 const SignupWorker = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
-  const regiter = useSelector((state) => state.register);
+  const register = useSelector((state) => state.register);
+  const isLoading = useSelector((state) => state.register.isLoading);
 
   function doRegister(data) {
     dispatch(authAction.registerWorker(data));
-    if (regiter.isError) {
-      Alert.alert(regiter.message);
-      dispatch(authAction.clearAlert());
-    } else {
-      Alert.alert(regiter.message);
+  }
+
+  useEffect(() => {
+    if (register.isRegistry) {
+      Alert.alert('Sukses!', 'Registrasi berhasil.', [
+        {text: 'OK', onPress: () => console.log('OK press')},
+      ]);
       dispatch(authAction.clearAlert());
       navigation.navigate('LoginWorker');
     }
-  }
+
+    if (register.isError) {
+      Alert.alert('Gagal!', 'Registrasi gagal.', [
+        {text: 'OK', onPress: () => console.log('OK press')},
+      ]);
+      dispatch(authAction.clearAlert());
+    }
+  });
 
   return (
     <Container>
-      <ScrollView>
-        <View style={styles.padding}>
-          <Image source={Logo} style={styles.logo} />
-          <Title style={styles.title}>Signup</Title>
-          <Text note>Cari pekerjaan yang sesuai impianmu</Text>
-          <Formik
-            validationSchema={registerValidationSchema}
-            initialValues={{
-              name: '',
-              email: '',
-              phoneNumber: '',
-              password: '',
-              confirmPassword: '',
-            }}
-            onSubmit={(values) => doRegister(values)}>
-            {({
-              handleChange,
-              handleBlur,
-              handleSubmit,
-              values,
-              errors,
-              isValid,
-              touched,
-            }) => (
-              <View style={styles.register}>
-                <Form>
-                  <Label style={styles.label}>Nama</Label>
-                  <TextInput
-                    name="name"
-                    placeholder="Masukkan nama panjang"
-                    style={styles.textInput}
-                    onChangeText={handleChange('name')}
-                    onBlur={handleBlur('name')}
-                    value={values.name}
-                  />
-                  {touched.name && errors.name && (
-                    <Text style={styles.textError}>{errors.name}</Text>
-                  )}
-                  <Label style={styles.label}>Email</Label>
-                  <TextInput
-                    name="email"
-                    placeholder="Masukkan alamat email"
-                    style={styles.textInput}
-                    onChangeText={handleChange('email')}
-                    onBlur={handleBlur('email')}
-                    value={values.email}
-                    keyboardType="email-address"
-                  />
-                  {touched.email && errors.email && (
-                    <Text style={styles.textError}>{errors.email}</Text>
-                  )}
-                  <Label style={styles.label}>Phone</Label>
-                  <TextInput
-                    name="phoneNumber"
-                    placeholder="Masukkan no handphone"
-                    style={styles.textInput}
-                    onChangeText={handleChange('phoneNumber')}
-                    onBlur={handleBlur('phoneNumber')}
-                    value={values.phoneNumber}
-                    keyboardType={'phone-pad'}
-                  />
-                  {errors.phoneNumber && (
-                    <Text style={styles.textError}>{errors.phoneNumber}</Text>
-                  )}
-                  <Label style={styles.label}>Kata Sandi</Label>
-                  <TextInput
-                    name="password"
-                    placeholder="Masukkan kata sandi"
-                    style={styles.textInput}
-                    onChangeText={handleChange('password')}
-                    onBlur={handleBlur('password')}
-                    value={values.password}
-                    secureTextEntry
-                  />
-                  {touched.password && errors.password && (
-                    <Text style={styles.textError}>{errors.password}</Text>
-                  )}
-                  <Label style={styles.label}>Konfirmasi Kata Sandi</Label>
-                  <TextInput
-                    name="password"
-                    placeholder="Konfirmasi kata sandi"
-                    style={styles.textInput}
-                    onChangeText={handleChange('confirmPassword')}
-                    onBlur={handleBlur('confirmPassword')}
-                    value={values.confirmPassword}
-                    secureTextEntry
-                  />
-                  {touched.confirmPassword && errors.confirmPassword && (
-                    <Text style={styles.textError}>
-                      {errors.confirmPassword}
-                    </Text>
-                  )}
-                  <Button
-                    style={styles.btnSignup}
-                    onPress={handleSubmit}
-                    disabled={!isValid}
-                    block
-                    transparent>
-                    <Text style={styles.btntext}>daftar</Text>
-                  </Button>
-                  <View style={styles.linkLogin}>
-                    <Text style={styles.textSign}>
-                      Already have a account?{' '}
-                    </Text>
-                    <TouchableOpacity
-                      onPress={() => navigation.navigate('LoginWorker')}>
-                      <Text style={styles.link}>Masuk Disini</Text>
-                    </TouchableOpacity>
-                  </View>
-                </Form>
-              </View>
-            )}
-          </Formik>
+      {isLoading === false ? (
+        <ScrollView>
+          <View style={styles.padding}>
+            <Image source={Logo} style={styles.logo} />
+            <Title style={styles.title}>Signup</Title>
+            <Text note>Cari pekerjaan yang sesuai impianmu</Text>
+            <Formik
+              validationSchema={registerValidationSchema}
+              initialValues={{
+                name: '',
+                email: '',
+                phoneNumber: '',
+                password: '',
+                confirmPassword: '',
+              }}
+              onSubmit={(values) => doRegister(values)}>
+              {({
+                handleChange,
+                handleBlur,
+                handleSubmit,
+                values,
+                errors,
+                isValid,
+                touched,
+              }) => (
+                <View style={styles.register}>
+                  <Form>
+                    <Label style={styles.label}>Nama</Label>
+                    <TextInput
+                      name="name"
+                      placeholder="Masukkan nama panjang"
+                      style={styles.textInput}
+                      onChangeText={handleChange('name')}
+                      onBlur={handleBlur('name')}
+                      value={values.name}
+                    />
+                    {touched.name && errors.name && (
+                      <Text style={styles.textError}>{errors.name}</Text>
+                    )}
+                    <Label style={styles.label}>Email</Label>
+                    <TextInput
+                      name="email"
+                      placeholder="Masukkan alamat email"
+                      style={styles.textInput}
+                      onChangeText={handleChange('email')}
+                      onBlur={handleBlur('email')}
+                      value={values.email}
+                      keyboardType="email-address"
+                    />
+                    {touched.email && errors.email && (
+                      <Text style={styles.textError}>{errors.email}</Text>
+                    )}
+                    <Label style={styles.label}>Phone</Label>
+                    <TextInput
+                      name="phoneNumber"
+                      placeholder="Masukkan no handphone"
+                      style={styles.textInput}
+                      onChangeText={handleChange('phoneNumber')}
+                      onBlur={handleBlur('phoneNumber')}
+                      value={values.phoneNumber}
+                      keyboardType={'phone-pad'}
+                    />
+                    {touched.phoneNumber && errors.phoneNumber && (
+                      <Text style={styles.textError}>{errors.phoneNumber}</Text>
+                    )}
+                    <Label style={styles.label}>Kata Sandi</Label>
+                    <TextInput
+                      name="password"
+                      placeholder="Masukkan kata sandi"
+                      style={styles.textInput}
+                      onChangeText={handleChange('password')}
+                      onBlur={handleBlur('password')}
+                      value={values.password}
+                      secureTextEntry
+                    />
+                    {touched.password && errors.password && (
+                      <Text style={styles.textError}>{errors.password}</Text>
+                    )}
+                    <Label style={styles.label}>Konfirmasi Kata Sandi</Label>
+                    <TextInput
+                      name="password"
+                      placeholder="Konfirmasi kata sandi"
+                      style={styles.textInput}
+                      onChangeText={handleChange('confirmPassword')}
+                      onBlur={handleBlur('confirmPassword')}
+                      value={values.confirmPassword}
+                      secureTextEntry
+                    />
+                    {touched.confirmPassword && errors.confirmPassword && (
+                      <Text style={styles.textError}>
+                        {errors.confirmPassword}
+                      </Text>
+                    )}
+                    <Button
+                      style={styles.btnSignup}
+                      onPress={handleSubmit}
+                      disabled={!isValid}
+                      block
+                      transparent>
+                      <Text style={styles.btntext}>daftar</Text>
+                    </Button>
+                    <View style={styles.linkLogin}>
+                      <Text style={styles.textSign}>
+                        Already have a account?{' '}
+                      </Text>
+                      <TouchableOpacity
+                        onPress={() => navigation.navigate('LoginWorker')}>
+                        <Text style={styles.link}>Masuk Disini</Text>
+                      </TouchableOpacity>
+                    </View>
+                  </Form>
+                </View>
+              )}
+            </Formik>
+          </View>
+        </ScrollView>
+      ) : (
+        <View style={styles.parentsLoading}>
+          <ActivityIndicator
+            size="large"
+            color="#5E50A1"
+            animating={isLoading}
+            style={styles.indicator}
+          />
         </View>
-      </ScrollView>
+      )}
     </Container>
   );
 };
@@ -232,5 +254,13 @@ const styles = StyleSheet.create({
   textError: {
     fontSize: 10,
     color: 'red',
+  },
+  indicator: {
+    marginVertical: 20,
+  },
+  parentsLoading: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

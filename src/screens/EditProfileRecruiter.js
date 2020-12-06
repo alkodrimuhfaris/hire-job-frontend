@@ -20,6 +20,7 @@ import {useSelector, useDispatch} from 'react-redux';
 import profileAction from '../redux/actions/profileRecruiter';
 
 import {API_URL_IMAGE} from '@env';
+import profileRecruiter from '../redux/actions/profileRecruiter';
 
 import ModalLoading from '../components/ModalLoading';
 
@@ -59,23 +60,33 @@ export default function EditProfileRecruiter({navigation}) {
     dispatch(profileAction.getProfile(auth.token));
     dispatch(profileAction.getMyCompany(auth.token));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [updateCompanyState, updateProfileState]);
+  }, [dispatch]);
 
   const schema = Yup.object().shape({
     companyName: Yup.string().required('Nama perusahaan dibutuhkan'),
-    companyField: Yup.string().required('Bidang perusahaan dibutuhkan'),
-    city: Yup.string().required('Kota perusahaan dibutuhkan'),
-    description: Yup.string().required('Deskripsi perusahaan dibutuhkan'),
+    companyField: Yup.string()
+      .required('Bidang perusahaan dibutuhkan')
+      .nullable(),
+    city: Yup.string().required('Kota perusahaan dibutuhkan').nullable(),
+    description: Yup.string()
+      .required('Deskripsi perusahaan dibutuhkan')
+      .nullable(),
     email: Yup.string()
       .email('Masukkan alamat email dengan benar')
       .required('Email dibutuhkan'),
-    instagram: Yup.string(),
+    instagram: Yup.string()
+      .nullable()
+      .required('Jika tidak ada, isi dengan karakter "-"'),
     phoneNumber: Yup.string()
       .min(10, 'Minimal karakter no handphone adalah 10')
       .max(12, 'Maksimal karakter no handphone adalah 12')
       .required('No handphone dibutuhkan'),
-    linkedin: Yup.string(),
-    github: Yup.string(),
+    linkedin: Yup.string()
+      .nullable()
+      .required('Jika tidak ada, isi dengan karakter "-"'),
+    github: Yup.string()
+      .nullable()
+      .required('Jika tidak ada, isi dengan karakter "-"'),
   });
 
   function selectImage() {
@@ -114,7 +125,7 @@ export default function EditProfileRecruiter({navigation}) {
   }
 
   // updatenya
-  function change(value) {
+  async function change(value) {
     const {
       companyName,
       companyField,
@@ -130,28 +141,30 @@ export default function EditProfileRecruiter({navigation}) {
       email,
       phoneNumber,
       company: companyName,
-      // jobTitle: companyField,
       address: city,
-      instagram,
+      instagram: `https://www.instagram.com/${instagram}/`,
+      linkedin: `https://www.linkedin.com/in/${linkedin}/`,
+      github: `https://github.com/${github}`,
       bio: description,
-      linkedin,
-      github,
     };
     const dataCompany = {
       name: companyName,
       field: companyField,
       city,
     };
-    dispatch(profileAction.updateProfile(auth.token, dataRecruiter));
-    dispatch(profileAction.updateCompany(auth.token, dataCompany));
+    await dispatch(profileAction.updateProfile(auth.token, dataRecruiter));
+    await dispatch(profileAction.updateCompany(auth.token, dataCompany));
+    navigation.goBack();
   }
 
   React.useEffect(() => {
     if (companyUpdateSuccess) {
-      navigation.goBack();
+      dispatch(profileAction.clearAlert());
+      dispatch(profileAction.getProfile(auth.token));
+      dispatch(profileAction.getMyCompany(auth.token));
+      navigation.navigate('ProfileRecruiter');
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [companyUpdateSuccess]);
+  });
 
   return (
     <>
@@ -198,10 +211,17 @@ export default function EditProfileRecruiter({navigation}) {
             city: companyData.length ? companyData[0].city : '',
             description: profileData.length ? profileData[0].bio : '',
             email: profileData.length ? profileData[0].email : '',
-            instagram: profileData.length ? profileData[0].instagram : '',
+            instagram:
+              profileData[0].instagram &&
+              profileData[0].instagram
+                .slice(26, profileData[0].instagram.length)
+                .slice(0, -1),
             phoneNumber: profileData.length ? profileData[0].phoneNumber : '',
-            linkedin: profileData.length ? profileData[0].linkedin : '',
-            github: profileData.length ? profileData[0].github : '',
+            linkedin:
+              profileData[0].linkedin &&
+              profileData[0].linkedin
+                .slice(28, profileData[0].linkedin.length)
+                .slice(0, -1),
           }}
           validationSchema={schema}
           onSubmit={(values) => change(values)}>

@@ -55,6 +55,12 @@ export default (state = initialState, action) => {
         companyData: action.payload.data.results,
       };
     }
+    case 'CLEAR_ALERT': {
+      return {
+        ...state,
+        companyUpdateSuccess: false,
+      };
+    }
     default: {
       return state;
     }

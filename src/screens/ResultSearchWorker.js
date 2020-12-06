@@ -1,6 +1,5 @@
 import React from 'react';
 import {View, Text, FlatList, StyleSheet, TouchableOpacity} from 'react-native';
-import {Container, Content} from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import sectionConditioner from '../helpers/sectionConditioner';
 import {useDispatch, useSelector} from 'react-redux';
@@ -30,6 +29,9 @@ export default function ResultSearch({navigation}) {
       } else if (sortBy === 3) {
         const item = sectionConditioner.bySkill(data);
         setRenderItem(item);
+      } else if (sortBy === 4) {
+        const item = sectionConditioner.byJobTitle(data);
+        setRenderItem(item);
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -41,31 +43,28 @@ export default function ResultSearch({navigation}) {
     setLoading(false);
   };
 
-  async function getWorkerDetail(id) {
-    await dispatch(homeAction.getDetailsUser(token, id));
-    navigation.navigate('DetailWorker');
-  }
-
-  const nextPage = () => {
-    if (pageInfo.pages > pageInfo.currentPage) {
-      dispatch(
-        searchWorkerAction.scrollSearch(
-          token,
-          search,
-          pageInfo.currentPage + 1,
-        ),
-      );
+  const goNextPage = () => {
+    const nextPage = pageInfo.nextLink ? pageInfo.nextLink.slice(28) : null;
+    if (nextPage) {
+      dispatch(searchWorkerAction.scrollSearch(token, nextPage));
     }
   };
 
+  async function getRecruiterDetail(id) {
+    await dispatch(homeAction.getDetailsUser(token, id));
+    navigation.navigate('DetailWorker', id);
+  }
+
   return (
-    <Container style={styles.parent}>
+    <View style={styles.parent}>
       <View style={styles.btnBack}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
+        <TouchableOpacity
+          style={styles.btnWrapper}
+          onPress={() => navigation.goBack()}>
           <Icon name="angle-left" size={35} />
         </TouchableOpacity>
       </View>
-      <Content style={styles.content}>
+      <View style={styles.content}>
         {sortBy === 1 ? (
           <Text style={styles.title}>Berdasarkan Nama</Text>
         ) : null}
@@ -76,15 +75,21 @@ export default function ResultSearch({navigation}) {
                 data={renderItem}
                 onRefresh={doRefresh}
                 refreshing={loading}
-                onEndReached={nextPage}
+                onEndReached={goNextPage}
                 onEndReachedThreshold={0.5}
                 numColumns={2}
+                showsVerticalScrollIndicator={false}
                 keyExtractor={(_item, index) => index.toString()}
-                renderItem={({item}) => {
+                renderItem={({item, index}) => {
                   return (
                     <TouchableOpacity
-                      onPress={() => getWorkerDetail(item.id)}
-                      style={styles.cardWrapper}>
+                      onPress={() => getRecruiterDetail(item.id)}
+                      style={[
+                        styles.cardWrapper,
+                        index > renderItem.length - 1
+                          ? styles.cardWrapperEnd
+                          : null,
+                      ]}>
                       <SearchWorkerCard item={item} />
                     </TouchableOpacity>
                   );
@@ -96,8 +101,9 @@ export default function ResultSearch({navigation}) {
               data={renderItem}
               onRefresh={doRefresh}
               refreshing={loading}
-              onEndReached={nextPage}
+              onEndReached={goNextPage}
               onEndReachedThreshold={0.5}
+              showsVerticalScrollIndicator={false}
               keyExtractor={(item, index) => index.toString()}
               renderItem={({item}) => {
                 return (
@@ -110,11 +116,16 @@ export default function ResultSearch({navigation}) {
                         data={item.data}
                         numColumns={2}
                         keyExtractor={(_item, index) => index.toString()}
-                        renderItem={({item: itemDetail}) => {
+                        renderItem={({item: itemDetail, index}) => {
                           return (
                             <TouchableOpacity
-                              onPress={() => getWorkerDetail(itemDetail.id)}
-                              style={styles.cardWrapper}>
+                              onPress={() => getRecruiterDetail(itemDetail.id)}
+                              style={[
+                                styles.cardWrapper,
+                                index > renderItem.length - 1
+                                  ? styles.cardWrapperEnd
+                                  : null,
+                              ]}>
                               <SearchWorkerCard item={itemDetail} />
                             </TouchableOpacity>
                           );
@@ -127,32 +138,43 @@ export default function ResultSearch({navigation}) {
             />
           )}
         </View>
-      </Content>
-    </Container>
+      </View>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   parent: {
     backgroundColor: '#F6F7F8',
+    flex: 1,
   },
   btnBack: {
     marginTop: 20,
     marginBottom: 20,
     marginLeft: 28,
+    backgroundColor: '#F6F7F8',
+  },
+  btnWrapper: {
+    backgroundColor: '#F6F7F8',
   },
   flatlistParent: {
-    flex: 1,
+    height: '100%',
     alignItems: 'center',
   },
   cardWrapper: {
     marginVertical: 3,
   },
+  cardWrapperEnd: {
+    marginTop: 3,
+    marginBottom: 20,
+  },
   content: {
     marginLeft: 16,
+    flex: 1,
+    backgroundColor: '#F6F7F8',
   },
   flatList: {
-    marginBottom: 30,
+    flex: 1,
   },
   title: {
     fontSize: 18,

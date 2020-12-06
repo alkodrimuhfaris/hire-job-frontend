@@ -1,6 +1,6 @@
 const initialState = {
   searchResult: [],
-  searchQuery: '',
+  searchQuery: {},
   sortBy: 1,
   pageInfo: {},
   isLoading: false,

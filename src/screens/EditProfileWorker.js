@@ -9,15 +9,30 @@ import {
   Alert,
 } from 'react-native';
 import RadioForm from 'react-native-simple-radio-button';
-import {Text, Button, Card, Title, Form, Label, Textarea} from 'native-base';
+import {
+  Text,
+  Button,
+  Card,
+  Title,
+  Form,
+  Label,
+  DatePicker,
+  Textarea,
+  CheckBox,
+} from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import ImagePicker from 'react-native-image-picker';
 import {useDispatch, useSelector} from 'react-redux';
 import {Formik} from 'formik';
 import * as yup from 'yup';
+import moment from 'moment';
+import ModalAlert from '../components/ModalAlert';
 
 import profile from '../assets/img/profile.png';
 import {API_URL_IMAGE} from '@env';
+
+// import component
+import ModalLoading from '../components/ModalLoading';
 
 // import actions
 import portfolioAction from '../redux/actions/portfolio';
@@ -42,8 +57,6 @@ var radio_props = [
 const schemaExperience = yup.object().shape({
   position: yup.string().required('Posisi terakhir dibutuhkan '),
   companyName: yup.string().required('Nama perusahaan terakhir dibutuhkan '),
-  startAt: yup.date().required('Format tanggal dibutuhkan: YYYY-MM-DD'),
-  finishAt: yup.date().required('Format tanggal dibutuhkan: YYYY-MM-DD'),
   description: yup
     .string()
     .max(255, 'Deskripsi tidak dapat lebih dari 255 karakter')
@@ -103,6 +116,14 @@ const EditProfile = ({navigation}) => {
   const profileWorker = useSelector((state) => state.profileWorker);
   const token = useSelector((state) => state.auth.token);
 
+  const [start, setStart] = React.useState('');
+  const [finish, setFinish] = React.useState('');
+  const [stillWorking, setStillWorking] = React.useState(false);
+
+  // set modal
+  const [modalError, setModalError] = React.useState(false);
+  const [textAlert, setTextAlert] = React.useState('');
+
   const takePictures = () => {
     ImagePicker.showImagePicker(options, async (response) => {
       if (response.didCancel) {
@@ -139,12 +160,27 @@ const EditProfile = ({navigation}) => {
     });
   };
 
-  async function addExperienceWorker(dataExperience) {
-    await dispatch(profileAction.addExperience(token, dataExperience));
-    if (profileWorker.experienceIsAdded) {
-      Alert.alert(profileWorker.profileAlertMsg);
+  function addExperienceWorker(dataExperience) {
+    if (stillWorking) {
+      if (start) {
+        const startAt = moment(start).format('YYYY-MM-DD');
+        Object.assign(dataExperience, {startAt});
+        dispatch(profileAction.addExperience(token, dataExperience));
+      } else {
+        setTextAlert('Masukkan tanggal anda mulai bekerja!');
+        setModalError(true);
+      }
+    } else {
+      if (start && finish) {
+        const startAt = moment(start).format('YYYY-MM-DD');
+        const finishAt = moment(finish).format('YYYY-MM-DD');
+        Object.assign(dataExperience, {startAt, finishAt});
+        dispatch(profileAction.addExperience(token, dataExperience));
+      } else {
+        setTextAlert('Masukkan tanggal anda mulai dan berhenti bekerja!');
+        setModalError(true);
+      }
     }
-    navigation.navigate('MainAppWorker');
   }
 
   async function addPortofolioWorker(values, img, type) {
@@ -164,12 +200,37 @@ const EditProfile = ({navigation}) => {
       dispatch(profileAction.clearAlert());
       dispatch(portfolioAction.getPortfolioList(token));
       navigation.navigate('ProfileWorker');
-      Alert.alert('Success add new portfolio.');
+      Alert.alert('Sukses!', 'Tambah portofolio berhasil.');
     }
   });
 
+  useEffect(() => {
+    if (profileWorker.experienceIsAdded) {
+      dispatch(profileAction.clearAlert());
+      dispatch(profileAction.getWorkerExp(token));
+      navigation.navigate('ProfileWorker');
+      Alert.alert('Sukses!', 'Tambah pengalaman kerja berhasil.');
+    }
+  });
+
+  React.useEffect(() => {
+    if (stillWorking) {
+      setFinish('');
+    }
+  }, [stillWorking]);
+
   return (
     <>
+      {/* modal alert */}
+      {navigation.isFocused() ? (
+        <ModalAlert
+          setModalOpen={setModalError}
+          modalOpen={modalError}
+          content={textAlert}
+          useOneBtn={true}
+        />
+      ) : null}
+
       <ScrollView>
         {/*Card for Profile*/}
         <Card style={styles.cardUp} transparent>
@@ -209,7 +270,7 @@ const EditProfile = ({navigation}) => {
             TempatKerja: profileWorker.profileData.company,
             description: profileWorker.profileData.bio,
           }}
-          onSubmit={async (values) => {
+          onSubmit={(values) => {
             const dataDiri = {
               name: values.name,
               jobTitle: values.job,
@@ -217,8 +278,9 @@ const EditProfile = ({navigation}) => {
               company: values.TempatKerja,
               bio: values.description,
             };
-            await dispatch(profileAction.updateProfile(token, dataDiri));
-            await dispatch(profileAction.getProfile(token));
+            console.log('simpan value');
+            dispatch(profileAction.updateProfile(token, dataDiri));
+            dispatch(profileAction.getProfile(token));
             navigation.goBack();
           }}>
           {({
@@ -236,7 +298,11 @@ const EditProfile = ({navigation}) => {
                 disabled={!isValid}
                 block
                 transparent>
-                <Text style={styles.save}>Simpan</Text>
+                {profileWorker.updateProfileIsLoading === false ? (
+                  <Text style={styles.save}>Simpan</Text>
+                ) : (
+                  <ModalLoading />
+                )}
               </Button>
               <Button
                 block
@@ -394,8 +460,6 @@ const EditProfile = ({navigation}) => {
               initialValues={{
                 position: '',
                 companyName: '',
-                startAt: '',
-                finishAt: '',
                 description: '',
               }}
               onSubmit={(values) => addExperienceWorker(values)}>
@@ -435,29 +499,54 @@ const EditProfile = ({navigation}) => {
                       <Text style={styles.textError}>{errors.companyName}</Text>
                     )}
                     <Label style={styles.label}>Masuk Pada</Label>
-                    <TextInput
-                      name="startAt"
-                      placeholder="2000-1-1"
-                      style={styles.textInput}
-                      onChangeText={handleChange('startAt')}
-                      onBlur={handleBlur('startAt')}
-                      value={values.startAt}
+                    <DatePicker
+                      formatChosenDate={(date) => {
+                        return moment(date).format('YYYY-MM-DD');
+                      }}
+                      minimumDate={new Date('2000-1-1')}
+                      maximumDate={finish ? finish : new Date()}
+                      modalTransparent={false}
+                      animationType={'fade'}
+                      androidMode="default"
+                      placeHolderText={
+                        <Icon name="calendar" size={24} color="black" />
+                      }
+                      textStyle={styles.textInput}
+                      placeHolderTextStyle={styles.textInput}
+                      onDateChange={(date) => setStart(date)}
                     />
-                    {touched.startAt && errors.startAt && (
-                      <Text style={styles.textError}>{errors.startAt}</Text>
-                    )}
-                    <Label style={styles.label}>Keluar pada</Label>
-                    <TextInput
-                      name="finishAt"
-                      placeholder="2000-1-1"
-                      style={styles.textInput}
-                      onChangeText={handleChange('finishAt')}
-                      onBlur={handleBlur('finishAt')}
-                      value={values.finishAt}
-                    />
-                    {touched.finishAt && errors.finishAt && (
-                      <Text style={styles.textError}>{errors.finishAt}</Text>
-                    )}
+                    <View style={styles.stillWorking}>
+                      <Text style={styles.stillWorkingTxt}>
+                        Masih bekerja di sini
+                      </Text>
+                      <CheckBox
+                        style={styles.checkboxStill}
+                        onPress={() => setStillWorking(!stillWorking)}
+                        checked={stillWorking}
+                        color="#5E50A1"
+                      />
+                    </View>
+                    {!stillWorking ? (
+                      <>
+                        <Label style={styles.label}>Keluar pada</Label>
+                        <DatePicker
+                          formatChosenDate={(date) => {
+                            return moment(date).format('YYYY-MM-DD');
+                          }}
+                          minimumDate={start ? start : new Date('2020-10-10')}
+                          maximumDate={new Date()}
+                          modalTransparent={false}
+                          animationType={'fade'}
+                          androidMode="default"
+                          placeHolderText={
+                            <Icon name="calendar" size={24} color="black" />
+                          }
+                          textStyle={styles.textInput}
+                          placeHolderTextStyle={styles.textInput}
+                          onDateChange={(date) => setFinish(date)}
+                        />
+                      </>
+                    ) : null}
                     <Label style={styles.label}>Masukkan deskripsi</Label>
                     <Textarea
                       name="description"
@@ -476,9 +565,13 @@ const EditProfile = ({navigation}) => {
                       disabled={!isValid}
                       block
                       transparent>
-                      <Text style={styles.experience}>
-                        Tambah Pengalaman Kerja
-                      </Text>
+                      {profileWorker.addExperienceIsLoading === false ? (
+                        <Text style={styles.experience}>
+                          Tambah Pengalaman Kerja
+                        </Text>
+                      ) : (
+                        <ModalLoading />
+                      )}
                     </Button>
                   </Form>
                 </View>
@@ -603,7 +696,11 @@ const EditProfile = ({navigation}) => {
                       style={styles.addExperience}
                       transparent
                       onPress={handleSubmit}>
-                      <Text style={styles.experience}>Tambah Portofolio</Text>
+                      {profileWorker.addPortofolioIsLoading === false ? (
+                        <Text style={styles.experience}>Tambah Portofolio</Text>
+                      ) : (
+                        <ModalLoading />
+                      )}
                     </Button>
                   </Form>
                 </View>
@@ -647,7 +744,7 @@ const EditProfile = ({navigation}) => {
                 await dispatch(profileAction.getProfile(token));
                 navigation.navigate('ProfileWorker');
                 Alert.alert(
-                  'Berhasil',
+                  'Sukses!',
                   'Akun sosial media berhasil di edit!',
                   [{text: 'OK', onPress: () => console.log('OK Pressed')}],
                   {cancelable: false},
@@ -719,7 +816,7 @@ const EditProfile = ({navigation}) => {
                     disabled={!isValid}
                     block
                     transparent>
-                    <Text style={styles.experience}>Tambah Sosial Media</Text>
+                    <Text style={styles.experience}>Edit Sosial Media</Text>
                   </Button>
                 </View>
               )}
@@ -834,6 +931,19 @@ const styles = StyleSheet.create({
     marginTop: 20,
     color: '#9ea0a5',
     fontSize: 15,
+  },
+  stillWorking: {
+    flexDirection: 'row',
+    width: '100%',
+    marginTop: 10,
+    justifyContent: 'space-between',
+  },
+  stillWorkingTxt: {
+    color: '#9ea0a5',
+    fontSize: 15,
+  },
+  checkboxStill: {
+    marginRight: 10,
   },
   textError: {
     fontSize: 10,
