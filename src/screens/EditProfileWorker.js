@@ -326,11 +326,7 @@ const EditProfile = ({navigation}) => {
 
       {/* loading get skill and loading delete skill */}
       {navigation.isFocused() ? (
-        <ModalLoading
-          modalOpen={
-            deleteSkillLoading || listSkillIsLoading || postSkillIsLoading
-          }
-        />
+        <ModalLoading modalOpen={deleteSkillLoading || postSkillIsLoading} />
       ) : null}
 
       <ScrollView>
