@@ -31,10 +31,13 @@ export default function HomeWorker({navigation}) {
     const readEvent = 'read ' + selfId;
     const sendEvent = 'send ' + selfId;
     dispatch(messageAction.getAllList(token));
-    socket.on(sendEvent, ({sender, message}) => {
+    socket.on(sendEvent, ({sender, message, senderData}) => {
       console.log('theres an event');
+      console.log(message);
       dispatch(messageAction.getAllList(token));
       dispatch(messageAction.getPrivate(token, sender));
+      console.log(senderData);
+      console.log(message);
     });
     socket.on(readEvent, ({reciever, read}) => {
       dispatch(messageAction.getAllList(token));

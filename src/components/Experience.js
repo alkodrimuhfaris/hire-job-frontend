@@ -14,6 +14,9 @@ import {API_URL_IMAGE} from '@env';
 import ModalLoading from '../components/ModalLoading';
 import dayjs from 'dayjs';
 
+// import modal alert for delete
+import ModalAlert from '../components/ModalAlert';
+
 // import actions
 import profileAction from '../redux/actions/profileWorker';
 import workerExpAction from '../redux/actions/workExperience';
@@ -55,6 +58,7 @@ const SecondRoute = ({token}) => {
   const [actionVisible, setActionVisible] = React.useState(false);
   const [id, setId] = React.useState(null);
   const [profileDataRender, setProfileDataRender] = React.useState([]);
+  const [deleteConfirm, setDeleteConfirm] = React.useState(false);
 
   const profileIsLoading = useSelector(
     (state) => state.profileWorker.profileIsLoading,
@@ -69,8 +73,10 @@ const SecondRoute = ({token}) => {
   const profileDataForRecruiter = useSelector(
     (state) => state.home.userDetailsData.WorkExperiences,
   );
-  const {expDetail, isDelete, deleteIsLoading} = useSelector(
-    (state) => state.workExperience,
+  const isDelete = useSelector((state) => state.workExperience.isDelete);
+  const expDetail = useSelector((state) => state.workExperience.expDetail);
+  const deleteIsLoading = useSelector(
+    (state) => state.workExperience.deleteIsLoading,
   );
 
   useEffect(() => {
@@ -98,8 +104,8 @@ const SecondRoute = ({token}) => {
     setId(_id);
   }
 
-  async function deletePortfolio(_id) {
-    await dispatch(workerExpAction.deleteExp(token, _id));
+  async function deleteWorkExp() {
+    await dispatch(workerExpAction.deleteExp(token, id));
     setActionVisible(false);
   }
 
@@ -153,17 +159,26 @@ const SecondRoute = ({token}) => {
           <View style={styles.list}>
             <View style={styles.child}>
               <TouchableOpacity>
-                <Text>Edit Portofolio</Text>
+                <Text>Sunting Pengalaman Kerja</Text>
               </TouchableOpacity>
             </View>
             <View style={styles.child}>
-              <TouchableOpacity onPress={() => deletePortfolio(id)}>
-                <Text>Hapus Portofolio</Text>
+              <TouchableOpacity onPress={() => setDeleteConfirm(true)}>
+                <Text>Hapus Pengalaman Kerja</Text>
               </TouchableOpacity>
             </View>
           </View>
         </View>
       </Modal>
+
+      <ModalAlert
+        content="Anda yakin untuk menghapus pengalaman pekerjaan ini?"
+        okText="Hapus"
+        cancelText="Batal"
+        setOk={() => deleteWorkExp()}
+        setModalOpen={setDeleteConfirm}
+        modalOpen={deleteConfirm}
+      />
 
       <ModalLoading modalOpen={deleteIsLoading || profileIsLoading} />
     </>

@@ -127,6 +127,11 @@ export default (state = initialState, action) => {
         profileIsLoading: false,
         profileIsError: true,
         profileAlertMsg: action.payload.response.data.message,
+        dataExperienceWorker:
+          action.payload.response.data.message ===
+          'unable to display Work Experience'
+            ? []
+            : state.dataExperienceWorker,
       };
     }
     case 'GET_EXP_FULFILLED': {
