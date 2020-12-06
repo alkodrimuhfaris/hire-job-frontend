@@ -8,6 +8,16 @@ const initialState = {
   deleteIsError: false,
   deleteAlert: '',
   isDelete: false,
+
+  portfolioDetailData: {},
+  portfolioDetailIsLoading: false,
+  portfolioDetailIsError: false,
+  portfolioDetailAlertMsg: '',
+
+  editIsLoading: false,
+  editIsError: false,
+  editAlert: '',
+  isEdit: false,
 };
 
 export default (state = initialState, action) => {
@@ -58,11 +68,60 @@ export default (state = initialState, action) => {
         deleteAlert: 'Successfully remove portfolio from list',
       };
     }
+    case 'GET_PORTFOLIO_DETAIL_PENDING': {
+      return {
+        ...state,
+        portfolioDetailIsLoading: true,
+      };
+    }
+    case 'GET_PORTFOLIO_DETAIL_REJECTED': {
+      return {
+        ...state,
+        portfolioDetailIsLoading: false,
+        portfolioDetailIsError: true,
+        portfolioDetailAlertMsg: action.payload.response.data.message,
+      };
+    }
+    case 'GET_PORTFOLIO_DETAIL_FULFILLED': {
+      return {
+        ...state,
+        portfolioDetailIsLoading: false,
+        portfolioDetailIsError: false,
+        portfolioDetailData: action.payload.data.results,
+      };
+    }
+    case 'UPDATE_PORTFOLIO_PENDING': {
+      return {
+        ...state,
+        editIsLoading: true,
+        editAlert: 'Edit portfolio in progress. Please wait..',
+      };
+    }
+    case 'UPDATE_PORTFOLIO_REJECTED': {
+      return {
+        ...state,
+        editIsLoading: false,
+        editIsError: true,
+        editAlert: action.payload.response.data.message,
+      };
+    }
+    case 'UPDATE_PORTFOLIO_FULFILLED': {
+      return {
+        ...state,
+        editIsLoading: false,
+        editIsError: false,
+        isEdit: true,
+        editAlert: 'Successfully edit portfolio',
+      };
+    }
     case 'CLEAR_ALERT': {
       return {
         ...state,
         deleteIsError: false,
         isDelete: false,
+        portfolioDetailData: {},
+        editIsError: false,
+        isEdit: false,
       };
     }
     case 'DESTROY': {

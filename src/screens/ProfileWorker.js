@@ -35,7 +35,7 @@ const ProfileWorker = ({navigation}) => {
   const renderScene = ({route}) => {
     switch (route.key) {
       case 'first':
-        return <FirstRoute token={auth.token} />;
+        return <FirstRoute token={auth.token} navigation={navigation} />;
       case 'second':
         return <SecondRoute />;
       default:

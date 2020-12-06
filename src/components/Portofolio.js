@@ -18,7 +18,7 @@ import portfolioAction from '../redux/actions/portfolio';
 
 import ModalLoading from '../components/ModalLoading';
 
-const FirstRoute = ({token}) => {
+const FirstRoute = ({token, navigation}) => {
   const dispatch = useDispatch();
   const {portfolioData, isDelete, deleteIsLoading} = useSelector(
     (state) => state.portfolio,
@@ -54,6 +54,12 @@ const FirstRoute = ({token}) => {
   async function deletePortfolio(_id) {
     await dispatch(portfolioAction.deletePortfolio(token, _id));
     setActionVisible(false);
+  }
+
+  function updatePortfolio(_id) {
+    setActionVisible(false);
+    dispatch(portfolioAction.clearAlert());
+    navigation.navigate('EditPortfolio', {id: _id});
   }
 
   useEffect(() => {
@@ -144,7 +150,7 @@ const FirstRoute = ({token}) => {
         <View style={styles.modalParent}>
           <View style={styles.list}>
             <View style={styles.child}>
-              <TouchableOpacity>
+              <TouchableOpacity onPress={() => updatePortfolio(id)}>
                 <Text>Edit Portofolio</Text>
               </TouchableOpacity>
             </View>
