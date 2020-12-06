@@ -10,6 +10,9 @@ const initialState = {
   postSkillIsLoading: false,
   postSkillIsError: false,
   postSkillAlertMsg: '',
+  deleteSkillLoading: false,
+  deleteSkillError: false,
+  deleteSkillSuccess: false,
 };
 
 export default (state = initialState, action) => {
@@ -77,6 +80,30 @@ export default (state = initialState, action) => {
         ...state,
         postSkillIsLoading: false,
         postSkillIsError: false,
+      };
+    }
+    case 'DELETE_SKILL_PENDING': {
+      return {
+        ...state,
+        deleteSkillLoading: true,
+        deleteSkillError: false,
+        deleteSkillSuccess: false,
+      };
+    }
+    case 'DELETE_SKILL_REJECTED': {
+      return {
+        ...state,
+        deleteSkillLoading: false,
+        deleteSkillError: true,
+        deleteSkillSuccess: false,
+      };
+    }
+    case 'DELETE_SKILL_FULFILLED': {
+      return {
+        ...state,
+        deleteSkillLoading: false,
+        deleteSkillError: false,
+        deleteSkillSuccess: true,
       };
     }
     default: {

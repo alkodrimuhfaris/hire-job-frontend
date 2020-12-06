@@ -22,4 +22,11 @@ export default {
       payload: http(token).get('/worker/list/skill'),
     };
   },
+
+  deleteWorkerSkill: (token, id) => {
+    return {
+      type: 'DELETE_SKILL',
+      payload: http(token).delete('/worker/delete/skill/' + id),
+    };
+  },
 };

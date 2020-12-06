@@ -19,13 +19,13 @@ export default function ModalCenter({
   cancelText = 'Cancel',
 }) {
   const cancel = () => {
+    setCancel();
     setModalOpen(false);
-    setCancel;
   };
 
   const proceed = () => {
+    setOk();
     setModalOpen(false);
-    setOk;
   };
 
   return (
