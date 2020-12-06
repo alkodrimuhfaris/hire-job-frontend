@@ -144,10 +144,6 @@ const EditProfile = ({navigation}) => {
 
   async function addExperienceWorker(dataExperience) {
     await dispatch(profileAction.addExperience(token, dataExperience));
-    if (profileWorker.experienceIsAdded) {
-      Alert.alert(profileWorker.profileAlertMsg);
-    }
-    navigation.navigate('MainAppWorker');
   }
 
   async function addPortofolioWorker(values, img, type) {
@@ -168,6 +164,15 @@ const EditProfile = ({navigation}) => {
       dispatch(portfolioAction.getPortfolioList(token));
       navigation.navigate('ProfileWorker');
       Alert.alert('Success add new portfolio.');
+    }
+  });
+
+  useEffect(() => {
+    if (profileWorker.experienceIsAdded) {
+      dispatch(profileAction.clearAlert());
+      dispatch(profileAction.getWorkerExp(token));
+      navigation.navigate('ProfileWorker');
+      Alert.alert('Berhasil!', 'Tambah pengalaman kerja berhasil.');
     }
   });
 
