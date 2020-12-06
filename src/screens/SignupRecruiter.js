@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import {Image, TouchableOpacity, StyleSheet, View, Alert} from 'react-native';
 import {Button, Text, Container, Content, Item, Input} from 'native-base';
 import {useDispatch, useSelector} from 'react-redux';
@@ -10,37 +10,38 @@ import Logo from '../assets/img/logo-purple.png';
 
 export default function SignupRecruiter({navigation}) {
   const dispatch = useDispatch();
-  const regiter = useSelector((state) => state.register);
+  const register = useSelector((state) => state.register);
 
   const schema = Yup.object().shape({
-    name: Yup.string().required('Name field is required'),
+    name: Yup.string().required('Nama lengkap dibutuhkan'),
     email: Yup.string()
-      .email('Email is invalid')
-      .required('Email field is required'),
-    company: Yup.string().required('Company field is required'),
-    jobTitle: Yup.string().required('Position field is required'),
+      .email('Masukkan alamat email dengan benar')
+      .required('Email dibutuhkan'),
+    company: Yup.string().required('Nama perusahaan dibutuhkan'),
+    jobTitle: Yup.string().required('Jabatan dibutuhkan'),
     phoneNumber: Yup.string()
-      .min(10, 'Phone number required minimal 10 chars')
-      .max(12, 'Phone number required maximal 12 chars')
-      .required('Phone number field is required'),
+      .min(10, 'Minimal karakter no handphone adalah 10')
+      .max(12, 'Maksimal karakter no handphone adalah 12')
+      .required('No handphone dibutuhkan'),
     password: Yup.string()
-      .min(8, 'Password required minimal 8 characters')
-      .required('Password field is required'),
+      .min(8, 'Password setidaknya terdiri dari 8 karakter')
+      .required('Password dibutuhkan'),
     confirmPassword: Yup.string()
-      .oneOf([Yup.ref('password'), null], "Password doesn't match")
-      .required('Confirm password field is required'),
+      .oneOf([Yup.ref('password'), null], 'Password tidak cocok')
+      .required('Konfirmasi password dibutuhkan'),
   });
 
-  function doRegister(data) {
+  function doRegisterRecruiter(data) {
     dispatch(authAction.registerRecruiter(data));
-  }
-
-  useEffect(() => {
-    if (regiter.isError) {
-      Alert.alert(regiter.message);
+    if (register.isError) {
+      Alert.alert(register.message);
       dispatch(authAction.clearAlert());
+    } else {
+      Alert.alert(register.message);
+      dispatch(authAction.clearAlert());
+      navigation.navigate('LoginRecruiter');
     }
-  });
+  }
 
   return (
     <Container style={styles.parent}>
@@ -55,7 +56,7 @@ export default function SignupRecruiter({navigation}) {
           confirmPassword: '',
         }}
         validationSchema={schema}
-        onSubmit={(values) => doRegister(values)}>
+        onSubmit={(values) => doRegisterRecruiter(values)}>
         {({
           handleChange,
           handleBlur,

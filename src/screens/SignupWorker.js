@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import {
   Image,
   StyleSheet,
@@ -19,27 +19,24 @@ import authAction from '../redux/actions/auth';
 import Logo from '../assets/img/logo-purple.png';
 
 const registerValidationSchema = yup.object().shape({
-  name: yup
-    .string()
-    .matches(/(\w.+\s).+/, 'Enter at least 2 names')
-    .required('Name dibutuhkan'),
+  name: yup.string().required('Nama lengkap dibutuhkan'),
   email: yup
     .string()
-    .email('Please enter valid email')
+    .email('Masukkan alamat email dengan benar')
     .required('Alamat email dibutuhkan'),
   phoneNumber: yup
     .string()
-    .min(10, 'Phone number required minimal 10 chars')
-    .max(12, 'Phone number required maximal 12 chars')
-    .required('Phone number field is required'),
+    .min(10, 'Minimal karakter no handphone adalah 10')
+    .max(12, 'Maksimal karakter no handphone adalah 12')
+    .required('No handphone dibutuhkan'),
   password: yup
     .string()
-    .min(8, ({min}) => `Password must be at least ${min} characters`)
+    .min(8, ({min}) => `Password setidaknya terdiri dari ${min} karakter`)
     .required('Password dibutuhkan'),
   confirmPassword: yup
     .string()
-    .oneOf([yup.ref('password'), null], "Password doesn't match")
-    .required('Confirm password field is required'),
+    .oneOf([yup.ref('password'), null], 'Password tidak cocok')
+    .required('Konfirmasi password dibutuhkan'),
 });
 
 const SignupWorker = () => {
@@ -49,15 +46,15 @@ const SignupWorker = () => {
 
   function doRegister(data) {
     dispatch(authAction.registerWorker(data));
-    navigation.navigate('LoginWorker');
-  }
-
-  useEffect(() => {
     if (regiter.isError) {
       Alert.alert(regiter.message);
       dispatch(authAction.clearAlert());
+    } else {
+      Alert.alert(regiter.message);
+      dispatch(authAction.clearAlert());
+      navigation.navigate('LoginWorker');
     }
-  });
+  }
 
   return (
     <Container>
@@ -165,7 +162,8 @@ const SignupWorker = () => {
                     <Text style={styles.textSign}>
                       Already have a account?{' '}
                     </Text>
-                    <TouchableOpacity>
+                    <TouchableOpacity
+                      onPress={() => navigation.navigate('LoginWorker')}>
                       <Text style={styles.link}>Masuk Disini</Text>
                     </TouchableOpacity>
                   </View>

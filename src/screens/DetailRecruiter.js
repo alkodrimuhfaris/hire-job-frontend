@@ -1,16 +1,31 @@
 import * as React from 'react';
 import {StyleSheet, View, ScrollView, Image} from 'react-native';
+import {Button} from 'native-base';
 import {Text, Card} from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {useSelector} from 'react-redux';
 import {API_URL_IMAGE} from '@env';
+import ModalCenter from '../components/ModalCenter';
 
-import profile from '../assets/img/profile.png';
+import profile from '../assets/img/company.png';
 
 const DetailRecruiter = () => {
   const home = useSelector((state) => state.home);
+  const [modalApply, openModalApply] = React.useState(false);
+
+  const goApply = () => {
+    openModalApply(true);
+  };
+
   return (
     <>
+      {/* modal for create cover letter */}
+      <ModalCenter
+        modalOpen={modalApply}
+        setModalOpen={openModalApply}
+        noTouchToBack={true}
+      />
+
       <ScrollView>
         <Card style={styles.cardUp} transparent>
           <View style={styles.parent}>
@@ -28,31 +43,59 @@ const DetailRecruiter = () => {
             <Text style={styles.field}>
               {home.userDetailsData.jobTitle || ''}
             </Text>
-            <View style={styles.location}>
-              <Icon name="map-marker" size={24} color="#8e8e8e" />
-              <Text style={styles.map}>
-                {home.userDetailsData.address || ''}
-              </Text>
-            </View>
+            {Object.keys(home.userDetailsData).length &&
+            home.userDetailsData.address ? (
+              <View style={styles.location}>
+                <Icon name="map-marker" size={24} color="#8e8e8e" />
+                <Text style={styles.map}>
+                  {home.userDetailsData.address || ''}
+                </Text>
+              </View>
+            ) : (
+              <View style={styles.location}>
+                <Text style={styles.noLocation}>
+                  This company haven't specified their address yet
+                </Text>
+              </View>
+            )}
             <Text style={styles.desc}>{home.userDetailsData.bio || ''}</Text>
+            <Button block style={styles.btnApply} onPress={() => goApply()}>
+              <Text style={styles.textBtn}>Apply</Text>
+            </Button>
           </View>
           <View style={styles.div}>
-            <View style={styles.sosmed}>
-              <Icon name="envelope-o" size={20} color="#8e8e8e" />
-              <Text style={styles.email}>{home.userDetailsData.email}</Text>
-            </View>
-            <View style={styles.sosmed}>
-              <Icon name="instagram" size={24} color="#8e8e8e" />
-              <Text style={styles.email}>{home.userDetailsData.instagram}</Text>
-            </View>
-            <View style={styles.sosmed}>
-              <Icon name="github" size={24} color="#8e8e8e" />
-              <Text style={styles.email}>{home.userDetailsData.github}</Text>
-            </View>
-            <View style={styles.sosmed}>
-              <Icon name="gitlab" size={20} color="#8e8e8e" />
-              <Text style={styles.email}>{home.userDetailsData.linkedin}</Text>
-            </View>
+            {Object.keys(home.userDetailsData).length &&
+            home.userDetailsData.email ? (
+              <View style={styles.sosmed}>
+                <Icon name="envelope-o" size={20} color="#8e8e8e" />
+                <Text style={styles.email}>{home.userDetailsData.email}</Text>
+              </View>
+            ) : null}
+            {Object.keys(home.userDetailsData).length &&
+            home.userDetailsData.instagram ? (
+              <View style={styles.sosmed}>
+                <Icon name="instagram" size={24} color="#8e8e8e" />
+                <Text style={styles.email}>
+                  {home.userDetailsData.instagram}
+                </Text>
+              </View>
+            ) : null}
+            {Object.keys(home.userDetailsData).length &&
+            home.userDetailsData.github ? (
+              <View style={styles.sosmed}>
+                <Icon name="github" size={24} color="#8e8e8e" />
+                <Text style={styles.email}>{home.userDetailsData.github}</Text>
+              </View>
+            ) : null}
+            {Object.keys(home.userDetailsData).length &&
+            home.userDetailsData.linkedin ? (
+              <View style={styles.sosmed}>
+                <Icon name="linkedin" size={20} color="#8e8e8e" />
+                <Text style={styles.email}>
+                  {home.userDetailsData.linkedin}
+                </Text>
+              </View>
+            ) : null}
           </View>
         </Card>
       </ScrollView>
@@ -95,11 +138,28 @@ const styles = StyleSheet.create({
     marginTop: 13,
     marginBottom: 8,
   },
+  noLocation: {
+    width: '80%',
+    textAlign: 'center',
+    color: '#9EA0A5',
+    fontSize: 14,
+    fontWeight: '400',
+  },
   map: {
     marginLeft: 15,
     color: '#9EA0A5',
     fontSize: 14,
     fontWeight: '400',
+  },
+  btnApply: {
+    margin: 20,
+    backgroundColor: '#5E50A1',
+  },
+  textBtn: {
+    color: '#ffffff',
+    fontSize: 16,
+    fontWeight: '700',
+    textTransform: 'capitalize',
   },
   desc: {
     textAlign: 'center',

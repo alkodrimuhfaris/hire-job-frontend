@@ -16,11 +16,11 @@ export default function LoginRecruiter({navigation}) {
 
   const schema = Yup.object().shape({
     email: Yup.string()
-      .email('Email is invalid')
-      .required('Email field is required'),
+      .email('Masukkan alamat email dengan benar')
+      .required('Email dibutuhkan'),
     password: Yup.string()
-      .min(6, 'Password required minimal 6 characters')
-      .required('Password field is required'),
+      .min(8, 'Password setidaknya terdiri dari 8 karakter')
+      .required('Password dibutuhkan'),
   });
 
   function doLogin(data) {

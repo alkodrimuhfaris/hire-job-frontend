@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, {useEffect} from 'react';
 import {
   StyleSheet,
   View,
@@ -17,15 +17,21 @@ import {Formik} from 'formik';
 import * as yup from 'yup';
 
 import profile from '../assets/img/profile.png';
-import {API_URL} from '@env';
+import {API_URL_IMAGE} from '@env';
 
+// import actions
+import portfolioAction from '../redux/actions/portfolio';
 import skillAction from '../redux/actions/skill';
 import profileAction from '../redux/actions/profileWorker';
 
-const options = {
-  title: 'my picture',
-  takePhotoButtonTitle: 'Take Photo',
-  chooseFromLibraryButtonTitle: 'Choose Photo',
+let options = {
+  maxWidth: 300,
+  maxHeight: 300,
+  mediaType: 'photo',
+  noData: true,
+  storageOptions: {
+    skipBackup: true,
+  },
 };
 
 var radio_props = [
@@ -34,37 +40,37 @@ var radio_props = [
 ];
 
 const schemaExperience = yup.object().shape({
-  position: yup.string().required('posisi dibutuhkan '),
-  companyName: yup.string().required('Nama perusahaan dibutuhkan '),
-  startAt: yup.date().required('YYYY-MM-DD'),
-  finishAt: yup.date().required('YYYY-MM-DD'),
+  position: yup.string().required('Posisi terakhir dibutuhkan '),
+  companyName: yup.string().required('Nama perusahaan terakhir dibutuhkan '),
+  startAt: yup.date().required('Format tanggal dibutuhkan: YYYY-MM-DD'),
+  finishAt: yup.date().required('Format tanggal dibutuhkan: YYYY-MM-DD'),
   description: yup
     .string()
-    .max(255, 'cannot more 255 character')
-    .required('deskripsi dibutuhkan'),
+    .max(255, 'Deskripsi tidak dapat lebih dari 255 karakter')
+    .required('Deskripsi dibutuhkan'),
 });
 
 const schemaPortofolio = yup.object().shape({
-  name: yup.string().required('Nama Aplikasi dibutuhkan '),
+  name: yup.string().required('Nama aplikasi dibutuhkan'),
   publicLink: yup
     .string()
     .matches(
       /((https?):\/\/)?(www.)?[a-z0-9]+(\.[a-z]{2,}){1,3}(#?\/?[a-zA-Z0-9#]+)*\/?(\?[a-zA-Z0-9-_]+=[a-zA-Z0-9-%]+&?)?$/,
-      'Enter correct url!',
+      'Masukkan alamat url. Contoh: http://internet.com',
     )
-    .required('Please enter website'),
+    .required('Alamat publikasi dibutuhkan'),
   repoLink: yup
     .string()
     .matches(
       /((https?):\/\/)?(www.)?[a-z0-9]+(\.[a-z]{2,}){1,3}(#?\/?[a-zA-Z0-9#]+)*\/?(\?[a-zA-Z0-9-_]+=[a-zA-Z0-9-%]+&?)?$/,
-      'Enter correct url!',
+      'Masukkan alamat repo. Contoh: http://github.com',
     )
-    .required('Please enter website'),
+    .required('Alamat repositori dibutuhkan'),
   description: yup
     .string()
-    .max(255, 'cannot more 255 character')
-    .required('deskripsi dibutuhkan'),
-  company: yup.string().required('Nama tempat kerja terkait '),
+    .max(255, 'Deskripsi tidak dapat lebih dari 255 karakter')
+    .required('Deskripsi dibutuhkan'),
+  company: yup.string().required('Nama tempat kerja terkait dibutuhkan'),
 });
 
 const skillValidation = yup.object().shape({
@@ -72,33 +78,38 @@ const skillValidation = yup.object().shape({
 });
 
 const profileValidation = yup.object().shape({
-  name: yup
+  name: yup.string(),
+  job: yup.string(),
+  domisili: yup.string(),
+  TempatKerja: yup.string(),
+  description: yup
     .string()
-    .matches(/(\w.+\s).+/, 'Masukkan Lebih dari 2 nama')
-    .required(),
-  job: yup.string().required(),
-  domisili: yup.string().required(),
-  TempatKerja: yup.string().required(),
-  description: yup.string().max(255, 'cannot more 255 character').required(),
+    .max(255, 'Deskripsi tidak dapat lebih dari 255 karakter'),
+});
+
+const schemaSosialMedia = yup.object().shape({
+  email: yup.string().email('Masukkan alamat email dengan benar'),
+  instagram: yup.string(),
+  github: yup.string(),
+  linkedin: yup.string(),
 });
 
 const EditProfile = ({navigation}) => {
   const dispatch = useDispatch();
   const [data, setData] = React.useState(0);
-  const [AvatarSource, setAvatarSource] = React.useState('');
-  const [dataImage, setDataImage] = React.useState();
+  const [dataImage, setDataImage] = React.useState('');
   const [portofolio, setPortofolio] = React.useState('');
+  const [avatar, setAvatar] = React.useState(profile);
   const profileWorker = useSelector((state) => state.profileWorker);
   const token = useSelector((state) => state.auth.token);
-  const skill = useSelector((state) => state.skill);
 
   const takePictures = () => {
     ImagePicker.showImagePicker(options, async (response) => {
       if (response.didCancel) {
-        console.log('User cancelled image picker');
-      } else if (response.error) {
-        console.log('ImagePicker Error: ', response.error);
+      } else if (response.fileSize > 2 * 1024 * 1024) {
+        Alert.alert('Gagal pilih gambar!', 'File gambar harus kurang dari 2MB');
       } else {
+        setAvatar({uri: response.uri});
         const form = new FormData();
         form.append('photo', {
           uri: response.uri,
@@ -111,29 +122,22 @@ const EditProfile = ({navigation}) => {
       }
     });
   };
-  // Open Image Library fro portofolio
+
   const pickPortofolio = () => {
     ImagePicker.launchImageLibrary(options, async (response) => {
       if (response.didCancel) {
-        console.log('User cancelled image picker');
-      } else if (response.error) {
-        console.log('ImagePicker Error: ', response.error);
+      } else if (response.fileSize > 2 * 1024 * 1024) {
+        Alert.alert('Gagal pilih gambar!', 'File gambar harus kurang dari 2MB');
       } else {
         setPortofolio(response.uri);
-        const form = new FormData();
-        form.append('pictures', {
+        await setDataImage({
           uri: response.uri,
           name: response.fileName,
           type: response.type,
         });
-        await setDataImage(form);
       }
     });
   };
-
-  React.useEffect(() => {
-    console.log(dataImage);
-  });
 
   async function addExperienceWorker(dataExperience) {
     await dispatch(profileAction.addExperience(token, dataExperience));
@@ -143,13 +147,26 @@ const EditProfile = ({navigation}) => {
     navigation.navigate('MainAppWorker');
   }
 
-  async function addPortofolioWorker(dataPortofolio) {
-    await dispatch(profileAction.addPortofolio(token, dataPortofolio));
-    if (profileWorker.experienceIsAdded) {
-      Alert.alert(profileWorker.profileAlertMsg);
-    }
-    navigation.navigate('MainAppWorker');
+  async function addPortofolioWorker(values, img, type) {
+    const form = new FormData();
+    form.append('name', values.name);
+    form.append('type', type === 0 ? false : true);
+    form.append('description', values.description);
+    form.append('publicLink', values.publicLink);
+    form.append('repoLink', values.repoLink);
+    form.append('company', values.company);
+    form.append('photo', img);
+    await dispatch(profileAction.addPortofolio(token, form));
   }
+
+  useEffect(() => {
+    if (profileWorker.portfolioIsAdded) {
+      dispatch(profileAction.clearAlert());
+      dispatch(portfolioAction.getPortfolioList(token));
+      navigation.navigate('ProfileWorker');
+      Alert.alert('Success add new portfolio.');
+    }
+  });
 
   return (
     <>
@@ -160,8 +177,8 @@ const EditProfile = ({navigation}) => {
             <Image
               source={
                 profileWorker.profileData.photo
-                  ? {uri: API_URL + profileWorker.profileData.photo}
-                  : profile
+                  ? {uri: API_URL_IMAGE + profileWorker.profileData.photo}
+                  : avatar
               }
               style={styles.avatar}
             />
@@ -193,7 +210,6 @@ const EditProfile = ({navigation}) => {
             description: profileWorker.profileData.bio,
           }}
           onSubmit={async (values) => {
-            console.log(values);
             const dataDiri = {
               name: values.name,
               jobTitle: values.job,
@@ -430,7 +446,7 @@ const EditProfile = ({navigation}) => {
                     {touched.startAt && errors.startAt && (
                       <Text style={styles.textError}>{errors.startAt}</Text>
                     )}
-                    <Label style={styles.label}>Keuar pada</Label>
+                    <Label style={styles.label}>Keluar pada</Label>
                     <TextInput
                       name="finishAt"
                       placeholder="2000-1-1"
@@ -451,7 +467,7 @@ const EditProfile = ({navigation}) => {
                       onBlur={handleBlur('description')}
                       value={values.description}
                     />
-                    {touched.c && errors.description && (
+                    {touched.description && errors.description && (
                       <Text style={styles.textError}>{errors.description}</Text>
                     )}
                     <Button
@@ -478,14 +494,13 @@ const EditProfile = ({navigation}) => {
               validationSchema={schemaPortofolio}
               initialValues={{
                 name: '',
-                description: '',
                 publicLink: '',
                 repoLink: '',
                 company: '',
-                type: data,
+                description: '',
               }}
               onSubmit={(values) =>
-                addPortofolioWorker(token, values, dataImage)
+                addPortofolioWorker(values, dataImage, data)
               }>
               {({
                 handleChange,
@@ -554,7 +569,7 @@ const EditProfile = ({navigation}) => {
                       onBlur={handleBlur('company')}
                       value={values.company}
                     />
-                    {errors.company && (
+                    {touched.company && errors.company && (
                       <Text style={styles.textError}>{errors.company}</Text>
                     )}
                     <Label style={styles.label}>Jenis Portofolio</Label>
@@ -565,7 +580,7 @@ const EditProfile = ({navigation}) => {
                       selectedButtonColor={'#5E50A1'}
                       buttonColor={'#5E50A1'}
                       formHorizontal={true}
-                      onPress={() => setData({data: data})}
+                      onPress={(value) => setData(value)}
                     />
                     <Label style={styles.label}>Upload Gambar</Label>
                     {portofolio === '' ? (
@@ -591,6 +606,121 @@ const EditProfile = ({navigation}) => {
                       <Text style={styles.experience}>Tambah Portofolio</Text>
                     </Button>
                   </Form>
+                </View>
+              )}
+            </Formik>
+          </View>
+        </Card>
+        {/* Card for sosmed */}
+        <Card style={styles.cardUp} transparent>
+          <View style={styles.padding}>
+            <Title style={styles.title}>Sosial Media</Title>
+            <Formik
+              validationSchema={schemaSosialMedia}
+              initialValues={{
+                email: profileWorker.profileData.email,
+                instagram: profileWorker.profileData.instagram
+                  ? profileWorker.profileData.instagram
+                      .slice(26, profileWorker.profileData.instagram.length)
+                      .slice(0, -1)
+                  : '',
+                github: profileWorker.profileData.github
+                  ? profileWorker.profileData.github.slice(
+                      19,
+                      profileWorker.profileData.github.length,
+                    )
+                  : '',
+                linkedin: profileWorker.profileData.linkedin
+                  ? profileWorker.profileData.linkedin
+                      .slice(28, profileWorker.profileData.linkedin.length)
+                      .slice(0, -1)
+                  : '',
+              }}
+              onSubmit={async (values) => {
+                const dataSosmed = {
+                  email: values.email,
+                  instagram: `https://www.instagram.com/${values.instagram}/`,
+                  github: `https://github.com/${values.github}`,
+                  linkedin: `https://www.linkedin.com/in/${values.linkedin}/`,
+                };
+                await dispatch(profileAction.updateProfile(token, dataSosmed));
+                await dispatch(profileAction.getProfile(token));
+                navigation.navigate('ProfileWorker');
+                Alert.alert(
+                  'Berhasil',
+                  'Akun sosial media berhasil di edit!',
+                  [{text: 'OK', onPress: () => console.log('OK Pressed')}],
+                  {cancelable: false},
+                );
+              }}>
+              {({
+                handleChange,
+                handleBlur,
+                handleSubmit,
+                values,
+                errors,
+                isValid,
+                touched,
+              }) => (
+                <View>
+                  <Form>
+                    <Label style={styles.label}>Email</Label>
+                    <TextInput
+                      name="email"
+                      placeholder="Email"
+                      style={styles.textInput}
+                      onChangeText={handleChange('email')}
+                      onBlur={handleBlur('email')}
+                      value={values.email}
+                    />
+                    {touched.email && errors.email && (
+                      <Text style={styles.textError}>{errors.email}</Text>
+                    )}
+                    <Label style={styles.label}>Instagram</Label>
+                    <TextInput
+                      name="instagram"
+                      placeholder="Instagram"
+                      style={styles.textInput}
+                      onChangeText={handleChange('instagram')}
+                      onBlur={handleBlur('instagram')}
+                      value={values.instagram}
+                    />
+                    {touched.instagram && errors.instagram && (
+                      <Text style={styles.textError}>{errors.instagram}</Text>
+                    )}
+                    <Label style={styles.label}>Github</Label>
+                    <TextInput
+                      name="github"
+                      placeholder="Github"
+                      style={styles.textInput}
+                      onChangeText={handleChange('github')}
+                      onBlur={handleBlur('github')}
+                      value={values.github}
+                    />
+                    {touched.github && errors.github && (
+                      <Text style={styles.textError}>{errors.github}</Text>
+                    )}
+                    <Label style={styles.label}>Linkedin</Label>
+                    <TextInput
+                      name="linkedin"
+                      placeholder="Linkedin"
+                      style={styles.textInput}
+                      onChangeText={handleChange('linkedin')}
+                      onBlur={handleBlur('linkedin')}
+                      value={values.linkedin}
+                    />
+                    {touched.linkedin && errors.linkedin && (
+                      <Text style={styles.textError}>{errors.linkedin}</Text>
+                    )}
+                  </Form>
+                  <Button
+                    style={styles.addExperience}
+                    onPress={handleSubmit}
+                    disabled={!isValid}
+                    block
+                    transparent>
+                    <Text style={styles.experience}>Tambah Sosial Media</Text>
+                  </Button>
                 </View>
               )}
             </Formik>
