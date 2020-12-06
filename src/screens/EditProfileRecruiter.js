@@ -74,19 +74,19 @@ export default function EditProfileRecruiter({navigation}) {
     email: Yup.string()
       .email('Masukkan alamat email dengan benar')
       .required('Email dibutuhkan'),
-    instagram: Yup.string()
-      .nullable()
-      .required('Jika tidak ada, isi dengan karakter "-"'),
+    instagram: Yup.string(),
+    // .nullable()
+    // .required('Jika tidak ada, isi dengan karakter "-"'),
     phoneNumber: Yup.string()
       .min(10, 'Minimal karakter no handphone adalah 10')
       .max(12, 'Maksimal karakter no handphone adalah 12')
       .required('No handphone dibutuhkan'),
-    linkedin: Yup.string()
-      .nullable()
-      .required('Jika tidak ada, isi dengan karakter "-"'),
-    github: Yup.string()
-      .nullable()
-      .required('Jika tidak ada, isi dengan karakter "-"'),
+    linkedin: Yup.string(),
+    // .nullable()
+    // .required('Jika tidak ada, isi dengan karakter "-"'),
+    github: Yup.string(),
+    // .nullable()
+    // .required('Jika tidak ada, isi dengan karakter "-"'),
   });
 
   function selectImage() {
@@ -123,7 +123,6 @@ export default function EditProfileRecruiter({navigation}) {
       }
     });
   }
-
   // updatenya
   async function change(value) {
     const {
@@ -156,6 +155,12 @@ export default function EditProfileRecruiter({navigation}) {
     await dispatch(profileAction.updateCompany(auth.token, dataCompany));
     navigation.goBack();
   }
+
+  React.useEffect(() => {
+    dispatch(profileAction.getProfile(auth.token));
+    dispatch(profileAction.getMyCompany(auth.token));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [updateCompanyState, updateProfileState]);
 
   React.useEffect(() => {
     if (companyUpdateSuccess) {
@@ -193,13 +198,11 @@ export default function EditProfileRecruiter({navigation}) {
               />
             </TouchableOpacity>
             <Text style={styles.name}>{profileData[0].company}</Text>
-            <Text style={styles.field}>
-              {companyData.length ? companyData[0].field : ''}
-            </Text>
+            <Text style={styles.field}>{companyData[0].field || 'Title'}</Text>
             <View style={styles.location}>
               <Icon name="map-marker" size={24} color="#8e8e8e" />
               <Text style={styles.map}>
-                {profileData.length ? profileData[0].address : ''}
+                {profileData[0].address || 'Location'}
               </Text>
             </View>
           </View>
@@ -222,6 +225,9 @@ export default function EditProfileRecruiter({navigation}) {
               profileData[0].linkedin
                 .slice(28, profileData[0].linkedin.length)
                 .slice(0, -1),
+            github:
+              profileData[0].github &&
+              profileData[0].github.slice(19, profileData[0].github.length),
           }}
           validationSchema={schema}
           onSubmit={(values) => change(values)}>

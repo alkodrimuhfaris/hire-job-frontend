@@ -15,6 +15,7 @@ import updateProfileRecruiter from './updateProfileRecruiter';
 import updateCompany from './updateCompany';
 import myCompany from './getCompany';
 import experience from './experience';
+import workExperience from './workExperience';
 
 export default combineReducers({
   auth,
@@ -32,4 +33,5 @@ export default combineReducers({
   updateCompany,
   resultSearch,
   experience,
+  workExperience,
 });

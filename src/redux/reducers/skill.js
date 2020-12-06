@@ -79,6 +79,15 @@ export default (state = initialState, action) => {
         postSkillIsError: false,
       };
     }
+    case 'CLEAR_SKILL': {
+      return {
+        ...state,
+        skillData: [],
+        skillIsLoading: false,
+        skillIsError: false,
+        skillAlertMsg: '',
+      };
+    }
     default: {
       return state;
     }
