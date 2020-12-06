@@ -123,7 +123,6 @@ export default function EditProfileRecruiter({navigation}) {
       }
     });
   }
-
   // updatenya
   async function change(value) {
     const {
