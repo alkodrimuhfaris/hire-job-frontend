@@ -7,6 +7,7 @@ const initialState = {
   profileIsError: false,
   profileAlertMsg: '',
   updateProfileIsLoading: false,
+  updateProfileIsSuccess: false,
   addExperienceIsLoading: false,
   addPortofolioIsLoading: false,
   updateProfileIsError: false,
@@ -24,12 +25,14 @@ export default (state = initialState, action) => {
       return {
         ...state,
         profileIsLoading: true,
+        updateProfileIsSuccess: false,
       };
     }
     case 'GET_PROFILE_REJECTED': {
       return {
         ...state,
         profileIsLoading: false,
+        updateProfileIsSuccess: false,
         profileIsError: true,
         profileAlertMsg: action.payload.response.data.message,
       };
@@ -38,6 +41,7 @@ export default (state = initialState, action) => {
       return {
         ...state,
         profileIsLoading: false,
+        updateProfileIsSuccess: false,
         profileIsError: false,
         profileData: action.payload.data.results,
       };
@@ -46,6 +50,7 @@ export default (state = initialState, action) => {
       return {
         ...state,
         updateProfileIsLoading: true,
+        updateProfileIsSuccess: false,
       };
     }
     case 'UPDATE_PROFILE_REJECTED': {
@@ -53,6 +58,7 @@ export default (state = initialState, action) => {
         ...state,
         updateProfileIsLoading: false,
         updateProfileIsError: true,
+        updateProfileIsSuccess: false,
         updateProfileAlertMsg: action.payload.response.data.message,
       };
     }
@@ -61,6 +67,7 @@ export default (state = initialState, action) => {
         ...state,
         updateProfileIsLoading: false,
         updateProfileIsError: false,
+        updateProfileIsSuccess: true,
       };
     }
     // add experience

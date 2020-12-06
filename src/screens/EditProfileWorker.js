@@ -7,6 +7,8 @@ import {
   TextInput,
   TouchableOpacity,
   Alert,
+  FlatList,
+  ActivityIndicator,
 } from 'react-native';
 import RadioForm from 'react-native-simple-radio-button';
 import {
@@ -126,6 +128,81 @@ const EditProfile = ({navigation}) => {
   const [modalError, setModalError] = React.useState(false);
   const [textAlert, setTextAlert] = React.useState('');
 
+  // set focus textInput skill
+  const [skillOnFocus, setSkillOnFocus] = React.useState(false);
+  const skillData = useSelector((state) => state.skill.skillData);
+
+  // get user skill's
+  const listSkillData = useSelector((state) => state.skill.listSkillData);
+  const listSkillIsLoading = useSelector(
+    (state) => state.skill.listSkillIsLoading,
+  );
+  const listSkillIsError = useSelector((state) => state.skill.listSkillIsError);
+
+  // state of deleting skill
+  const deleteSkillLoading = useSelector(
+    (state) => state.skill.deleteSkillLoading,
+  );
+  const deleteSkillError = useSelector((state) => state.skill.deleteSkillError);
+  const deleteSkillSuccess = useSelector(
+    (state) => state.skill.deleteSkillSuccess,
+  );
+
+  // state for store skill id that going to be deleted
+  const [deleteId, setDeleteId] = React.useState(null);
+  const [deletedSkill, setDeletedSkill] = React.useState('');
+  const [modalDelete, setModalDelete] = React.useState(false);
+
+  // deleting skill
+  const deleteSkill = () => {
+    console.log('delete');
+    dispatch(skillAction.deleteWorkerSkill(token, deleteId));
+  };
+
+  // open delete modal
+  const goDelete = (item) => {
+    setDeleteId(item.id);
+    setDeletedSkill(item.Skill.name);
+    setModalDelete(true);
+  };
+
+  // delete skill success get all skill again
+  React.useEffect(() => {
+    if (deleteSkillSuccess) {
+      dispatch(skillAction.listSkill(token));
+      setDeleteId(null);
+      setDeletedSkill('');
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [deleteSkillSuccess]);
+
+  // posting skill
+  const postSkillIsLoading = useSelector(
+    (state) => state.skill.postSkillIsLoading,
+  );
+
+  // do loading skill
+  React.useEffect(() => {
+    if (!postSkillIsLoading) {
+      dispatch(skillAction.listSkill(token));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [postSkillIsLoading]);
+
+  // update profile loading indicator
+  const updateProfileIsSuccess = useSelector(
+    (state) => state.profileWorker.updateProfileIsSuccess,
+  );
+
+  // getting profile after update is success
+  React.useEffect(() => {
+    if (updateProfileIsSuccess) {
+      dispatch(profileAction.getProfile(token));
+      // navigation.goBack();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [updateProfileIsSuccess]);
+
   const takePictures = () => {
     ImagePicker.showImagePicker(options, async (response) => {
       if (response.didCancel) {
@@ -233,6 +310,27 @@ const EditProfile = ({navigation}) => {
         />
       ) : null}
 
+      {/* modal alert for confirm delete */}
+      {navigation.isFocused() ? (
+        <ModalAlert
+          setModalOpen={setModalDelete}
+          modalOpen={modalDelete}
+          content={
+            'Are you sure want to remove ' +
+            deletedSkill +
+            ' from your skillset?'
+          }
+          useOneBtn={true}
+          setOk={() => deleteSkill()}
+          okText="Delete"
+        />
+      ) : null}
+
+      {/* loading get skill and loading delete skill */}
+      {navigation.isFocused() ? (
+        <ModalLoading modalOpen={deleteSkillLoading || postSkillIsLoading} />
+      ) : null}
+
       <ScrollView>
         {/*Card for Profile*/}
         <Card style={styles.cardUp} transparent>
@@ -290,8 +388,6 @@ const EditProfile = ({navigation}) => {
               {},
             );
             await dispatch(profileAction.updateProfile(token, filteredObject));
-            await dispatch(profileAction.getProfile(token));
-            navigation.goBack();
           }}>
           {({
             handleChange,
@@ -403,6 +499,33 @@ const EditProfile = ({navigation}) => {
         <Card style={styles.cardUp} transparent>
           <View style={styles.padding}>
             <Title style={styles.title}>Skill</Title>
+            <View style={styles.skillsContainer}>
+              {listSkillIsLoading ? (
+                <ActivityIndicator
+                  color="#5E50A1"
+                  animating={listSkillIsLoading}
+                  size="small"
+                />
+              ) : listSkillIsError ? (
+                <Text style={styles.deleteSkillInfo}>
+                  Error getting skill set
+                </Text>
+              ) : (
+                <>
+                  <Text style={styles.deleteSkillInfo}>
+                    Touch skill to remove from your skill set
+                  </Text>
+                  {listSkillData.map((item) => (
+                    <TouchableOpacity
+                      key={item.id}
+                      onPress={() => goDelete(item)}
+                      style={styles.skill}>
+                      <Text style={styles.skillText}>{item.Skill.name}</Text>
+                    </TouchableOpacity>
+                  ))}
+                </>
+              )}
+            </View>
             <Formik
               validationSchema={skillValidation}
               initialValues={{skill: ''}}
@@ -411,14 +534,13 @@ const EditProfile = ({navigation}) => {
                   name: values.skill,
                 };
                 await dispatch(skillAction.postSkill(token, dataSkill));
-                dispatch(skillAction.listSkill(token));
-                dispatch(skillAction.destroy());
                 resetForm('');
               }}>
               {({
                 handleChange,
                 handleBlur,
                 handleSubmit,
+                setFieldValue,
                 values,
                 errors,
                 isValid,
@@ -441,6 +563,7 @@ const EditProfile = ({navigation}) => {
                       }}
                       onBlur={handleBlur('skill')}
                       value={values.skill}
+                      onFocus={() => setSkillOnFocus(true)}
                     />
                     {errors.skill && (
                       <Text style={styles.textError}>{errors.skill}</Text>
@@ -991,6 +1114,30 @@ const styles = StyleSheet.create({
     padding: 10,
     width: 185,
   },
+  optionStyle: {
+    width: 185,
+    height: 200,
+    backgroundColor: '#fff',
+    flexDirection: 'row',
+    borderLeftWidth: 0.2,
+    borderLeftColor: '#bbb',
+    borderRightWidth: 0.2,
+    borderRightColor: '#bbb',
+    borderBottomWidth: 0.2,
+    borderBottomColor: '#bbb',
+    borderBottomLeftRadius: 8,
+    borderBottomRightRadius: 8,
+  },
+  optionWrapper: {
+    width: '100%',
+    borderBottomWidth: 0.2,
+    borderBottomColor: '#bbb',
+    padding: 5,
+  },
+  skillOptionTxt: {
+    color: '#222',
+    fontSize: 14,
+  },
   btnAdd: {
     backgroundColor: '#fbb017',
   },
@@ -1030,6 +1177,13 @@ const styles = StyleSheet.create({
     marginTop: 20,
     flexDirection: 'row',
     flexWrap: 'wrap',
+  },
+  deleteSkillInfo: {
+    width: '100%',
+    textAlign: 'center',
+    marginBottom: 10,
+    color: '#999',
+    fontSize: 14,
   },
   skill: {
     backgroundColor: '#FBB017',
