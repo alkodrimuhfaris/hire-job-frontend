@@ -100,7 +100,9 @@ const EditProfile = ({navigation}) => {
   const [dataImage, setDataImage] = React.useState('');
   const [portofolio, setPortofolio] = React.useState('');
   const [avatar, setAvatar] = React.useState(profile);
+  const [skillResult, setSkillResult] = React.useState('');
   const profileWorker = useSelector((state) => state.profileWorker);
+  const skill = useSelector((state) => state.skill);
   const token = useSelector((state) => state.auth.token);
 
   const takePictures = () => {
@@ -203,20 +205,21 @@ const EditProfile = ({navigation}) => {
         <Formik
           validationSchema={profileValidation}
           initialValues={{
-            name: profileWorker.profileData.name,
-            job: profileWorker.profileData.jobTitle,
-            domisili: profileWorker.profileData.address,
-            TempatKerja: profileWorker.profileData.company,
-            description: profileWorker.profileData.bio,
+            name: profileWorker.profileData.name || '',
+            job: profileWorker.profileData.jobTitle || '',
+            domisili: profileWorker.profileData.address || '',
+            TempatKerja: profileWorker.profileData.company || '',
+            description: profileWorker.profileData.bio || '',
           }}
           onSubmit={async (values) => {
             const dataDiri = {
-              name: values.name,
-              jobTitle: values.job,
-              address: values.domisili,
-              company: values.TempatKerja,
-              bio: values.description,
+              name: values.name.length ? values.name : null,
+              jobTitle: values.job.length ? values.job : null,
+              address: values.domisili.length ? values.domisili : null,
+              company: values.TempatKerja.length ? values.TempatKerja : null,
+              bio: values.description.length ? values.description : null,
             };
+            console.log(values);
             await dispatch(profileAction.updateProfile(token, dataDiri));
             await dispatch(profileAction.getProfile(token));
             navigation.goBack();
@@ -330,12 +333,13 @@ const EditProfile = ({navigation}) => {
             <Formik
               validationSchema={skillValidation}
               initialValues={{skill: ''}}
-              onSubmit={(values, {resetForm}) => {
+              onSubmit={async (values, {resetForm}) => {
                 const dataSkill = {
                   name: values.skill,
                 };
-                dispatch(skillAction.postSkill(token, dataSkill));
+                await dispatch(skillAction.postSkill(token, dataSkill));
                 dispatch(skillAction.listSkill(token));
+                dispatch(skillAction.destroy());
                 resetForm('');
               }}>
               {({
@@ -353,9 +357,15 @@ const EditProfile = ({navigation}) => {
                       placeholder="Masukkan skill"
                       style={styles.inputSkill}
                       onChangeText={handleChange('skill')}
-                      onChange={(text) =>
-                        dispatch(skillAction.getSkill(token, text))
-                      }
+                      onChange={({nativeEvent}) => {
+                        if (nativeEvent.text.length) {
+                          dispatch(
+                            skillAction.getSkill(token, nativeEvent.text),
+                          );
+                        } else {
+                          dispatch(skillAction.destroy());
+                        }
+                      }}
                       onBlur={handleBlur('skill')}
                       value={values.skill}
                     />
@@ -372,17 +382,25 @@ const EditProfile = ({navigation}) => {
                 </View>
               )}
             </Formik>
-            {/* <View style={styles.skillsContainer}>
+            <View style={styles.skillsContainer}>
               {!skill.skillIsLoading &&
                 !skill.skillIsError &&
-                skill.skillData.length &&
                 skill.skillData.map((item) => (
-                  <View style={styles.skill}>
-                    <Text style={styles.skillText}>{item.name}</Text>
-                  </View>
+                  <TouchableOpacity
+                    onPress={async () => {
+                      await dispatch(
+                        skillAction.postSkill(token, {name: item.name}),
+                      );
+                      dispatch(skillAction.listSkill(token));
+                      dispatch(skillAction.destroy());
+                    }}>
+                    <View style={styles.skill}>
+                      <Text style={styles.skillText}>{item.name || ''}</Text>
+                    </View>
+                  </TouchableOpacity>
                 ))}
               <Text>&nbsp;</Text>
-            </View> */}
+            </View>
           </View>
         </Card>
         {/*Card for Experience*/}
