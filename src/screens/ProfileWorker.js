@@ -18,6 +18,7 @@ import profile from '../assets/img/profile.png';
 
 import FirstRoute from '../components/Portofolio';
 import SecondRoute from '../components/Experience';
+import Modal from '../components/ModalLoading';
 
 const ProfileWorker = ({navigation}) => {
   const profileWorker = useSelector((state) => state.profileWorker);
@@ -54,6 +55,7 @@ const ProfileWorker = ({navigation}) => {
   return (
     <>
       <ScrollView>
+        {profileWorker.profileIsLoading && <Modal />}
         <Card style={styles.cardUp} transparent>
           <View style={styles.parent}>
             <Image
