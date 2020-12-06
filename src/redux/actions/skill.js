@@ -22,4 +22,8 @@ export default {
       payload: http(token).get('/worker/list/skill'),
     };
   },
+
+  destroy: () => ({
+    type: 'CLEAR_SKILL',
+  }),
 };

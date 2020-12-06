@@ -113,7 +113,9 @@ const EditProfile = ({navigation}) => {
   const [dataImage, setDataImage] = React.useState('');
   const [portofolio, setPortofolio] = React.useState('');
   const [avatar, setAvatar] = React.useState(profile);
+  const [skillResult, setSkillResult] = React.useState('');
   const profileWorker = useSelector((state) => state.profileWorker);
+  const skill = useSelector((state) => state.skill);
   const token = useSelector((state) => state.auth.token);
 
   const [start, setStart] = React.useState('');
@@ -264,23 +266,31 @@ const EditProfile = ({navigation}) => {
         <Formik
           validationSchema={profileValidation}
           initialValues={{
-            name: profileWorker.profileData.name,
-            job: profileWorker.profileData.jobTitle,
-            domisili: profileWorker.profileData.address,
-            TempatKerja: profileWorker.profileData.company,
-            description: profileWorker.profileData.bio,
+            name: profileWorker.profileData.name || '',
+            job: profileWorker.profileData.jobTitle || '',
+            domisili: profileWorker.profileData.address || '',
+            TempatKerja: profileWorker.profileData.company || '',
+            description: profileWorker.profileData.bio || '',
           }}
-          onSubmit={(values) => {
+          onSubmit={async (values) => {
             const dataDiri = {
-              name: values.name,
-              jobTitle: values.job,
-              address: values.domisili,
-              company: values.TempatKerja,
-              bio: values.description,
+              name: values.name || undefined,
+              jobTitle: values.job || undefined,
+              address: values.domisili || undefined,
+              company: values.TempatKerja || undefined,
+              bio: values.description || undefined,
             };
-            console.log('simpan value');
-            dispatch(profileAction.updateProfile(token, dataDiri));
-            dispatch(profileAction.getProfile(token));
+            const filteredObject = Object.keys(dataDiri).reduce(
+              (results, key) => {
+                if (dataDiri[key] !== undefined) {
+                  results[key] = dataDiri[key];
+                }
+                return results;
+              },
+              {},
+            );
+            await dispatch(profileAction.updateProfile(token, filteredObject));
+            await dispatch(profileAction.getProfile(token));
             navigation.goBack();
           }}>
           {({
@@ -396,12 +406,13 @@ const EditProfile = ({navigation}) => {
             <Formik
               validationSchema={skillValidation}
               initialValues={{skill: ''}}
-              onSubmit={(values, {resetForm}) => {
+              onSubmit={async (values, {resetForm}) => {
                 const dataSkill = {
                   name: values.skill,
                 };
-                dispatch(skillAction.postSkill(token, dataSkill));
+                await dispatch(skillAction.postSkill(token, dataSkill));
                 dispatch(skillAction.listSkill(token));
+                dispatch(skillAction.destroy());
                 resetForm('');
               }}>
               {({
@@ -419,9 +430,15 @@ const EditProfile = ({navigation}) => {
                       placeholder="Masukkan skill"
                       style={styles.inputSkill}
                       onChangeText={handleChange('skill')}
-                      onChange={(text) =>
-                        dispatch(skillAction.getSkill(token, text))
-                      }
+                      onChange={({nativeEvent}) => {
+                        if (nativeEvent.text.length) {
+                          dispatch(
+                            skillAction.getSkill(token, nativeEvent.text),
+                          );
+                        } else {
+                          dispatch(skillAction.destroy());
+                        }
+                      }}
                       onBlur={handleBlur('skill')}
                       value={values.skill}
                     />
@@ -438,17 +455,25 @@ const EditProfile = ({navigation}) => {
                 </View>
               )}
             </Formik>
-            {/* <View style={styles.skillsContainer}>
+            <View style={styles.skillsContainer}>
               {!skill.skillIsLoading &&
                 !skill.skillIsError &&
-                skill.skillData.length &&
                 skill.skillData.map((item) => (
-                  <View style={styles.skill}>
-                    <Text style={styles.skillText}>{item.name}</Text>
-                  </View>
+                  <TouchableOpacity
+                    onPress={async () => {
+                      await dispatch(
+                        skillAction.postSkill(token, {name: item.name}),
+                      );
+                      dispatch(skillAction.listSkill(token));
+                      dispatch(skillAction.destroy());
+                    }}>
+                    <View style={styles.skill}>
+                      <Text style={styles.skillText}>{item.name || ''}</Text>
+                    </View>
+                  </TouchableOpacity>
                 ))}
               <Text>&nbsp;</Text>
-            </View> */}
+            </View>
           </View>
         </Card>
         {/*Card for Experience*/}
