@@ -42,4 +42,7 @@ export default {
       payload: http(token).patch('recruiter/company', data),
     };
   },
+  clearAlert: () => ({
+    type: 'CLEAR_ALERT',
+  }),
 };
