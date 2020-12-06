@@ -38,7 +38,12 @@ export default function LoginWorker({navigation}) {
   useEffect(() => {
     console.log(isLoading);
     if (auth.isError) {
-      Alert.alert(auth.alertMsg);
+      Alert.alert(
+        'Login gagal!',
+        'Email atau password salah.',
+        [{text: 'OK', onPress: () => console.log('OK presss')}],
+        {cancelable: false},
+      );
       dispatch(authAction.clearAlert());
     }
   });

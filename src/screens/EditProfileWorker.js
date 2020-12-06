@@ -200,7 +200,7 @@ const EditProfile = ({navigation}) => {
       dispatch(profileAction.clearAlert());
       dispatch(portfolioAction.getPortfolioList(token));
       navigation.navigate('ProfileWorker');
-      Alert.alert('Success add new portfolio.');
+      Alert.alert('Sukses!', 'Tambah portofolio berhasil.');
     }
   });
 
@@ -209,7 +209,7 @@ const EditProfile = ({navigation}) => {
       dispatch(profileAction.clearAlert());
       dispatch(profileAction.getWorkerExp(token));
       navigation.navigate('ProfileWorker');
-      Alert.alert('Berhasil!', 'Tambah pengalaman kerja berhasil.');
+      Alert.alert('Sukses!', 'Tambah pengalaman kerja berhasil.');
     }
   });
 
@@ -744,7 +744,7 @@ const EditProfile = ({navigation}) => {
                 await dispatch(profileAction.getProfile(token));
                 navigation.navigate('ProfileWorker');
                 Alert.alert(
-                  'Berhasil',
+                  'Sukses!',
                   'Akun sosial media berhasil di edit!',
                   [{text: 'OK', onPress: () => console.log('OK Pressed')}],
                   {cancelable: false},
@@ -816,7 +816,7 @@ const EditProfile = ({navigation}) => {
                     disabled={!isValid}
                     block
                     transparent>
-                    <Text style={styles.experience}>Tambah Sosial Media</Text>
+                    <Text style={styles.experience}>Edit Sosial Media</Text>
                   </Button>
                 </View>
               )}

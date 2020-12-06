@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {
   Image,
   TouchableOpacity,
@@ -41,15 +41,24 @@ export default function SignupRecruiter({navigation}) {
 
   function doRegisterRecruiter(data) {
     dispatch(authAction.registerRecruiter(data));
-    if (register.isError) {
-      Alert.alert(register.message);
-      dispatch(authAction.clearAlert());
-    } else {
-      Alert.alert(register.message);
-      dispatch(authAction.clearAlert());
-      navigation.navigate('LoginRecruiter');
-    }
   }
+
+  useEffect(() => {
+    if (register.isRegistry) {
+      Alert.alert('Sukses!', 'Registrasi berhasil.', [
+        {text: 'OK', onPress: () => console.log('OK press')},
+      ]);
+      dispatch(authAction.clearAlert());
+      navigation.navigate('LoginWorker');
+    }
+
+    if (register.isError) {
+      Alert.alert('Gagal!', 'Registrasi gagal.', [
+        {text: 'OK', onPress: () => console.log('OK press')},
+      ]);
+      dispatch(authAction.clearAlert());
+    }
+  });
 
   return (
     <Container style={styles.parent}>

@@ -72,6 +72,7 @@ const DetailRecruiter = () => {
               </View>
             ) : null}
             {Object.keys(home.userDetailsData).length &&
+            home.userDetailsData.instagram !== '-' &&
             home.userDetailsData.instagram ? (
               <View style={styles.sosmed}>
                 <Icon name="instagram" size={24} color="#8e8e8e" />
@@ -81,6 +82,7 @@ const DetailRecruiter = () => {
               </View>
             ) : null}
             {Object.keys(home.userDetailsData).length &&
+            home.userDetailsData.github !== '-' &&
             home.userDetailsData.github ? (
               <View style={styles.sosmed}>
                 <Icon name="github" size={24} color="#8e8e8e" />
@@ -88,6 +90,7 @@ const DetailRecruiter = () => {
               </View>
             ) : null}
             {Object.keys(home.userDetailsData).length &&
+            home.userDetailsData.linkedin !== '-' &&
             home.userDetailsData.linkedin ? (
               <View style={styles.sosmed}>
                 <Icon name="linkedin" size={20} color="#8e8e8e" />

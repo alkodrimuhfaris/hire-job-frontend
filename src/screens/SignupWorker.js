@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {
   Image,
   StyleSheet,
@@ -43,20 +43,29 @@ const registerValidationSchema = yup.object().shape({
 const SignupWorker = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
-  const regiter = useSelector((state) => state.register);
+  const register = useSelector((state) => state.register);
   const isLoading = useSelector((state) => state.register.isLoading);
 
   function doRegister(data) {
     dispatch(authAction.registerWorker(data));
-    if (regiter.isError) {
-      Alert.alert(regiter.message);
-      dispatch(authAction.clearAlert());
-    } else {
-      Alert.alert(regiter.message);
+  }
+
+  useEffect(() => {
+    if (register.isRegistry) {
+      Alert.alert('Sukses!', 'Registrasi berhasil.', [
+        {text: 'OK', onPress: () => console.log('OK press')},
+      ]);
       dispatch(authAction.clearAlert());
       navigation.navigate('LoginWorker');
     }
-  }
+
+    if (register.isError) {
+      Alert.alert('Gagal!', 'Registrasi gagal.', [
+        {text: 'OK', onPress: () => console.log('OK press')},
+      ]);
+      dispatch(authAction.clearAlert());
+    }
+  });
 
   return (
     <Container>
