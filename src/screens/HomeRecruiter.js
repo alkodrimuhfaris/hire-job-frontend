@@ -11,6 +11,9 @@ import {API_URL} from '@env';
 import messageAction from '../redux/actions/message';
 import dayjs from 'dayjs';
 
+// notifications
+import {pushNotifications} from '../services';
+
 // import actions
 import profileRecruiterAction from '../redux/actions/profileRecruiter';
 import homeAction from '../redux/actions/home';
@@ -22,6 +25,7 @@ export default function HomeRecruiter({navigation}) {
   const dispatch = useDispatch();
   const {id: selfId, token} = useSelector((state) => state.auth);
   const {homeData} = useSelector((state) => state.home);
+  const {privateChat} = useSelector((state) => state.message);
   const data = sectionConditioner.byJobTitle(homeData);
 
   React.useEffect(() => {
@@ -29,12 +33,18 @@ export default function HomeRecruiter({navigation}) {
     const readEvent = 'read ' + selfId;
     const sendEvent = 'send ' + selfId;
     dispatch(messageAction.getAllList(token));
-    socket.on(sendEvent, ({sender, message}) => {
+    socket.on(sendEvent, async ({sender, message}) => {
       console.log('theres an event');
-      dispatch(messageAction.getAllList(token));
-      dispatch(messageAction.getPrivate(token, sender));
+      await dispatch(messageAction.getAllList(token));
+      await dispatch(messageAction.getPrivate(token, sender));
+      await pushNotifications.localNotifications(
+        sender,
+        privateChat[0].SenderDetails.name,
+        privateChat[0].message,
+      );
     });
     socket.on(readEvent, ({reciever, read}) => {
+      pushNotifications.cancelLocalNotifications(reciever);
       dispatch(messageAction.getAllList(token));
       dispatch(messageAction.getPrivate(token, reciever));
     });

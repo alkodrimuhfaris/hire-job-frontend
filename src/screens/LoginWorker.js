@@ -34,10 +34,6 @@ export default function LoginWorker({navigation}) {
 
   function doLogin(data) {
     dispatch(authAction.login(data));
-    pushNotifications.localNotifications(
-      'Login Success',
-      'Welcome Peworld User',
-    );
   }
 
   useEffect(() => {

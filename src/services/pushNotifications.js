@@ -13,11 +13,16 @@ const configure = () => {
   });
 };
 
-const localNotifications = (title, message) => {
+const localNotifications = (id, title, message) => {
   PushNotification.localNotification({
+    id: id,
     title: title, // (optional)
     message: message, // (required)
   });
 };
 
-export {configure, localNotifications};
+const cancelLocalNotifications = (id) => {
+  PushNotification.cancelLocalNotifications({id: id});
+};
+
+export {configure, localNotifications, cancelLocalNotifications};
