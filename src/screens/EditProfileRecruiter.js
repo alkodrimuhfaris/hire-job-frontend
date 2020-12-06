@@ -63,19 +63,23 @@ export default function EditProfileRecruiter({navigation}) {
 
   const schema = Yup.object().shape({
     companyName: Yup.string().required('Nama perusahaan dibutuhkan'),
-    companyField: Yup.string().required('Bidang perusahaan dibutuhkan'),
-    city: Yup.string().required('Kota perusahaan dibutuhkan'),
-    description: Yup.string().required('Deskripsi perusahaan dibutuhkan'),
+    companyField: Yup.string()
+      .required('Bidang perusahaan dibutuhkan')
+      .nullable(),
+    city: Yup.string().required('Kota perusahaan dibutuhkan').nullable(),
+    description: Yup.string()
+      .required('Deskripsi perusahaan dibutuhkan')
+      .nullable(),
     email: Yup.string()
       .email('Masukkan alamat email dengan benar')
       .required('Email dibutuhkan'),
-    instagram: Yup.string(),
+    instagram: Yup.string().nullable(),
     phoneNumber: Yup.string()
       .min(10, 'Minimal karakter no handphone adalah 10')
       .max(12, 'Maksimal karakter no handphone adalah 12')
       .required('No handphone dibutuhkan'),
-    linkedin: Yup.string(),
-    github: Yup.string(),
+    linkedin: Yup.string().nullable(),
+    github: Yup.string().nullable(),
   });
 
   function selectImage() {
