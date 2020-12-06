@@ -91,13 +91,14 @@ const ProfileWorker = ({navigation}) => {
             <Text style={styles.tag}>Skill</Text>
             <View style={styles.skillContainer}>
               {!skill.listSkillIsLoading &&
-                !skill.listSkillIsError &&
-                skill.listSkillData.length &&
-                skill.listSkillData.map((item) => (
-                  <View style={styles.skill} key={item.id}>
-                    <Text style={styles.skillText}>{item.Skill.name}</Text>
-                  </View>
-                ))}
+              !skill.listSkillIsError &&
+              skill.listSkillData.length
+                ? skill.listSkillData.map((item) => (
+                    <View style={styles.skill} key={item.id}>
+                      <Text style={styles.skillText}>{item.Skill.name}</Text>
+                    </View>
+                  ))
+                : null}
             </View>
             <View style={styles.sosmed}>
               <Icon name="envelope-o" size={20} color="#8e8e8e" />

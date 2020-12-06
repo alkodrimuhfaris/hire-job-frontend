@@ -174,6 +174,33 @@ const EditProfile = ({navigation}) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [deleteSkillSuccess]);
 
+  // posting skill
+  const postSkillIsLoading = useSelector(
+    (state) => state.skill.postSkillIsLoading,
+  );
+
+  // do loading skill
+  React.useEffect(() => {
+    if (!postSkillIsLoading) {
+      dispatch(skillAction.listSkill(token));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [postSkillIsLoading]);
+
+  // update profile loading indicator
+  const updateProfileIsSuccess = useSelector(
+    (state) => state.profileWorker.updateProfileIsSuccess,
+  );
+
+  // getting profile after update is success
+  React.useEffect(() => {
+    if (updateProfileIsSuccess) {
+      dispatch(profileAction.getProfile(token));
+      navigation.goBack();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [updateProfileIsSuccess]);
+
   const takePictures = () => {
     ImagePicker.showImagePicker(options, async (response) => {
       if (response.didCancel) {
@@ -299,7 +326,11 @@ const EditProfile = ({navigation}) => {
 
       {/* loading get skill and loading delete skill */}
       {navigation.isFocused() ? (
-        <ModalLoading modalOpen={deleteSkillLoading || listSkillIsLoading} />
+        <ModalLoading
+          modalOpen={
+            deleteSkillLoading || listSkillIsLoading || postSkillIsLoading
+          }
+        />
       ) : null}
 
       <ScrollView>
@@ -351,8 +382,6 @@ const EditProfile = ({navigation}) => {
             };
             console.log('simpan value');
             dispatch(profileAction.updateProfile(token, dataDiri));
-            dispatch(profileAction.getProfile(token));
-            navigation.goBack();
           }}>
           {({
             handleChange,
@@ -500,7 +529,6 @@ const EditProfile = ({navigation}) => {
                 };
                 setSkillOnFocus(false);
                 dispatch(skillAction.postSkill(token, dataSkill));
-                dispatch(skillAction.listSkill(token));
                 resetForm('');
               }}>
               {({
@@ -526,7 +554,7 @@ const EditProfile = ({navigation}) => {
                       value={values.skill}
                       onFocus={() => setSkillOnFocus(true)}
                     />
-                    {skillOnFocus ? (
+                    {skillOnFocus && values.skill ? (
                       <View style={styles.optionStyle}>
                         <FlatList
                           nestedScrollEnabled
