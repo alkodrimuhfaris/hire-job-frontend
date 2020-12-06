@@ -141,7 +141,6 @@ export default function EditProfileRecruiter({navigation}) {
       email,
       phoneNumber,
       company: companyName,
-      // jobTitle: companyField,
       address: city,
       instagram: `https://www.instagram.com/${value.instagram}/`,
       linkedin: `https://www.linkedin.com/in/${value.linkedin}/`,
