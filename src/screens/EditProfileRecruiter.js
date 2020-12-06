@@ -142,8 +142,8 @@ export default function EditProfileRecruiter({navigation}) {
       phoneNumber,
       company: companyName,
       address: city,
-      instagram: `https://www.instagram.com/${value.instagram}/`,
-      linkedin: `https://www.linkedin.com/in/${value.linkedin}/`,
+      instagram: `https://www.instagram.com/${instagram}/`,
+      linkedin: `https://www.linkedin.com/in/${linkedin}/`,
       bio: description,
     };
     const dataCompany = {
