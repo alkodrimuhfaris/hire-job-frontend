@@ -4,16 +4,16 @@ import {Container, Content} from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import sectionConditioner from '../helpers/sectionConditioner';
 import {useDispatch, useSelector} from 'react-redux';
-import searchWorkerAction from '../redux/actions/searchWorker';
-import SearchWorkerCard from '../components/SearchWorkerCard';
+import searchCompanyAction from '../redux/actions/searchCompany';
+import SearchCompanyCard from '../components/SearchCompanyCard';
 import homeAction from '../redux/actions/home';
 
 export default function ResultSearch({navigation}) {
   const dispatch = useDispatch();
-  const data = useSelector((state) => state.searchWorker.searchResult);
-  const pageInfo = useSelector((state) => state.searchWorker.pageInfo);
-  const search = useSelector((state) => state.searchWorker.searchQuery);
-  const sortBy = useSelector((state) => state.searchWorker.sortBy);
+  const data = useSelector((state) => state.searchCompany.searchResult);
+  const pageInfo = useSelector((state) => state.searchCompany.pageInfo);
+  const search = useSelector((state) => state.searchCompany.searchQuery);
+  const sortBy = useSelector((state) => state.searchCompany.sortBy);
   const token = useSelector((state) => state.auth.token);
   const [renderItem, setRenderItem] = React.useState([]);
   const [loading, setLoading] = React.useState(false);
@@ -25,10 +25,10 @@ export default function ResultSearch({navigation}) {
       if (sortBy === 1) {
         setRenderItem(data);
       } else if (sortBy === 2) {
-        const item = sectionConditioner.byCity(data);
+        const item = sectionConditioner.byField(data);
         setRenderItem(item);
       } else if (sortBy === 3) {
-        const item = sectionConditioner.bySkill(data);
+        const item = sectionConditioner.byCity(data);
         setRenderItem(item);
       }
     }
@@ -37,19 +37,14 @@ export default function ResultSearch({navigation}) {
 
   const doRefresh = () => {
     setLoading(true);
-    dispatch(searchWorkerAction.search(token, search));
+    dispatch(searchCompanyAction.search(token, search));
     setLoading(false);
   };
-
-  async function getWorkerDetail(id) {
-    await dispatch(homeAction.getDetailsUser(token, id));
-    navigation.navigate('DetailWorker');
-  }
 
   const nextPage = () => {
     if (pageInfo.pages > pageInfo.currentPage) {
       dispatch(
-        searchWorkerAction.scrollSearch(
+        searchCompanyAction.scrollSearch(
           token,
           search,
           pageInfo.currentPage + 1,
@@ -57,6 +52,11 @@ export default function ResultSearch({navigation}) {
       );
     }
   };
+
+  async function getRecruiterDetail(id) {
+    await dispatch(homeAction.getDetailsUser(token, id));
+    navigation.navigate('DetailRecruiter');
+  }
 
   return (
     <Container style={styles.parent}>
@@ -83,9 +83,9 @@ export default function ResultSearch({navigation}) {
                 renderItem={({item}) => {
                   return (
                     <TouchableOpacity
-                      onPress={() => getWorkerDetail(item.id)}
+                      onPress={() => getRecruiterDetail(item.id)}
                       style={styles.cardWrapper}>
-                      <SearchWorkerCard item={item} />
+                      <SearchCompanyCard item={item} />
                     </TouchableOpacity>
                   );
                 }}
@@ -113,9 +113,9 @@ export default function ResultSearch({navigation}) {
                         renderItem={({item: itemDetail}) => {
                           return (
                             <TouchableOpacity
-                              onPress={() => getWorkerDetail(itemDetail.id)}
+                              onPress={() => getRecruiterDetail(itemDetail.id)}
                               style={styles.cardWrapper}>
-                              <SearchWorkerCard item={itemDetail} />
+                              <SearchCompanyCard item={itemDetail} />
                             </TouchableOpacity>
                           );
                         }}

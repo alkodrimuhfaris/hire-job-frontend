@@ -6,10 +6,15 @@ import message from './message';
 import profileRecruiter from './profileRecruiter';
 import profileWorker from './profileWorker';
 import resultSearch from './resultSearch';
+import searchCompany from './searchCompany';
+import searchWorker from './searchWorker';
+import skill from './skill';
 import home from './home';
+import portfolio from './portfolio';
 import updateProfileRecruiter from './updateProfileRecruiter';
 import updateCompany from './updateCompany';
 import myCompany from './getCompany';
+import experience from './experience';
 
 export default combineReducers({
   auth,
@@ -17,9 +22,14 @@ export default combineReducers({
   message,
   profileRecruiter,
   profileWorker,
-  resultSearch,
+  searchCompany,
+  searchWorker,
+  skill,
   home,
+  portfolio,
   myCompany,
   updateProfileRecruiter,
   updateCompany,
+  resultSearch,
+  experience,
 });

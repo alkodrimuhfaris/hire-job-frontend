@@ -2,44 +2,56 @@ import * as React from 'react';
 import {StyleSheet, View, ScrollView, Image} from 'react-native';
 import {Text, Card} from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import {useSelector} from 'react-redux';
+import {API_URL_IMAGE} from '@env';
 
 import profile from '../assets/img/profile.png';
 
 const DetailRecruiter = () => {
+  const home = useSelector((state) => state.home);
   return (
     <>
       <ScrollView>
         <Card style={styles.cardUp} transparent>
           <View style={styles.parent}>
-            <Image source={profile} style={styles.avatar} />
-            <Text style={styles.name}>PT. Martabat Jaya Abadi</Text>
-            <Text style={styles.field}>Financial</Text>
+            <Image
+              source={
+                home.userDetailsData.photo
+                  ? {uri: API_URL_IMAGE + home.userDetailsData.photo}
+                  : profile
+              }
+              style={styles.avatar}
+            />
+            <Text style={styles.name}>
+              {home.userDetailsData.company || ''}
+            </Text>
+            <Text style={styles.field}>
+              {home.userDetailsData.jobTitle || ''}
+            </Text>
             <View style={styles.location}>
               <Icon name="map-marker" size={24} color="#8e8e8e" />
-              <Text style={styles.map}>Purwokerto, Jawa Tengah</Text>
+              <Text style={styles.map}>
+                {home.userDetailsData.address || ''}
+              </Text>
             </View>
-            <Text style={styles.desc}>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-              Vestibulum erat orci, mollis nec gravida sed, ornare quis urna.
-              Curabitur eu lacus fringilla, vestibulum risus at.
-            </Text>
+            <Text style={styles.desc}>{home.userDetailsData.bio || ''}</Text>
           </View>
           <View style={styles.div}>
             <View style={styles.sosmed}>
               <Icon name="envelope-o" size={20} color="#8e8e8e" />
-              <Text style={styles.email}>LouisVutton@mail.com</Text>
+              <Text style={styles.email}>{home.userDetailsData.email}</Text>
             </View>
             <View style={styles.sosmed}>
               <Icon name="instagram" size={24} color="#8e8e8e" />
-              <Text style={styles.email}>@Louis91</Text>
+              <Text style={styles.email}>{home.userDetailsData.instagram}</Text>
             </View>
             <View style={styles.sosmed}>
               <Icon name="github" size={24} color="#8e8e8e" />
-              <Text style={styles.email}>@LouisVutton21</Text>
+              <Text style={styles.email}>{home.userDetailsData.github}</Text>
             </View>
             <View style={styles.sosmed}>
               <Icon name="gitlab" size={20} color="#8e8e8e" />
-              <Text style={styles.email}>@Vutton21</Text>
+              <Text style={styles.email}>{home.userDetailsData.linkedin}</Text>
             </View>
           </View>
         </Card>

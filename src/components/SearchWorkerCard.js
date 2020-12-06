@@ -1,15 +1,17 @@
 import React from 'react';
 import {Image, StyleSheet, View} from 'react-native';
 import {Text} from 'native-base';
-import {API_URL} from '@env';
 
 import Avatar from '../assets/img/profile.png';
+import {API_URL} from '@env';
 
 export default function HomeCardRecruiter({item}) {
+  let skillArr = item.WorkerSkills;
+  skillArr = skillArr.length > 2 ? skillArr.slice(0, 3) : skillArr;
   return (
     <View style={styles.card}>
       <Image
-        source={item.photo ? {uri: `${API_URL}${item.photo}`} : Avatar}
+        source={item.photo ? {uri: API_URL + item.photo} : Avatar}
         style={styles.avatar}
       />
       <Text numberOfLines={1} ellipsizeMode="tail" style={styles.name}>
@@ -18,20 +20,20 @@ export default function HomeCardRecruiter({item}) {
       <Text numberOfLines={1} ellipsizeMode="tail" style={styles.position}>
         {item.jobTitle}
       </Text>
-      {item.SkillAmount > 0 && (
-        <View style={styles.skillList}>
-          {item.WorkerSkills.slice(0, 3).map((skill) => {
-            return (
-              <View style={styles.skill} key={skill.id}>
-                <Text style={styles.skillText}>{skill.Skill.name}</Text>
-              </View>
-            );
-          })}
-          {item.SkillAmount > 3 && (
-            <Text style={styles.skillMore}>{item.SkillAmount - 3}+</Text>
-          )}
-        </View>
-      )}
+      <View style={styles.skillList}>
+        {skillArr.length
+          ? skillArr.map((skillItem) => {
+              return (
+                <View style={styles.skill}>
+                  <Text style={styles.skillText}>{skillItem.Skill.name}</Text>
+                </View>
+              );
+            })
+          : null}
+        <Text style={styles.skillMore}>
+          {item.SkillAmount > 3 ? `${item.SkillAmount - 3}+` : null}
+        </Text>
+      </View>
     </View>
   );
 }
