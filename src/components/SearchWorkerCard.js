@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffffff',
     borderRadius: 4,
     width: 160,
-    height: 220,
+    height: 230,
     alignItems: 'center',
     shadowColor: '#000',
     shadowOpacity: 0.2,
@@ -76,6 +76,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 5,
     backgroundColor: '#FBB017',
     borderRadius: 4,
+    marginVertical: 3,
     marginHorizontal: 2,
   },
   skillText: {
@@ -84,9 +85,12 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   skillList: {
+    width: '95%',
+    flexWrap: 'wrap',
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: 39,
+    justifyContent: 'center',
+    marginTop: 20,
   },
   skillMore: {
     fontSize: 10,
