@@ -26,7 +26,10 @@ class Item extends React.Component {
           <Text style={styles.position}>{this.props.position}</Text>
           <Text style={styles.company}>{this.props.company}</Text>
           <Text style={styles.dueTime}>
-            {this.props.start} s/d {this.props.finish}
+            {this.props.start}{' '}
+            {this.props.finish
+              ? 's/d' + this.props.finish
+              : ' - sampai sekarang'}
           </Text>
           <Text style={styles.jobdesk}>{this.props.desc}</Text>
         </View>
@@ -67,15 +70,15 @@ const SecondRoute = () => {
     }
   };
 
+  const profileDataRender = profileDataForRecruiter
+    ? profileDataForRecruiter
+    : profileDataWorker;
+
   return (
     <>
       <ScrollView>
         <FlatList
-          data={
-            profileDataForRecruiter
-              ? profileDataForRecruiter
-              : profileDataWorker
-          }
+          data={profileDataRender}
           keyExtractor={(item, index) => index.toString()}
           renderItem={({item}) => (
             <Item
