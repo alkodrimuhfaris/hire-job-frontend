@@ -29,4 +29,8 @@ export default {
       payload: http(token).delete('/worker/delete/skill/' + id),
     };
   },
+
+  destroy: () => ({
+    type: 'CLEAR_SKILL',
+  }),
 };

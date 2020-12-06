@@ -115,7 +115,9 @@ const EditProfile = ({navigation}) => {
   const [dataImage, setDataImage] = React.useState('');
   const [portofolio, setPortofolio] = React.useState('');
   const [avatar, setAvatar] = React.useState(profile);
+  const [skillResult, setSkillResult] = React.useState('');
   const profileWorker = useSelector((state) => state.profileWorker);
+  const skill = useSelector((state) => state.skill);
   const token = useSelector((state) => state.auth.token);
 
   const [start, setStart] = React.useState('');
@@ -196,7 +198,7 @@ const EditProfile = ({navigation}) => {
   React.useEffect(() => {
     if (updateProfileIsSuccess) {
       dispatch(profileAction.getProfile(token));
-      navigation.goBack();
+      // navigation.goBack();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [updateProfileIsSuccess]);
@@ -362,22 +364,30 @@ const EditProfile = ({navigation}) => {
         <Formik
           validationSchema={profileValidation}
           initialValues={{
-            name: profileWorker.profileData.name,
-            job: profileWorker.profileData.jobTitle,
-            domisili: profileWorker.profileData.address,
-            TempatKerja: profileWorker.profileData.company,
-            description: profileWorker.profileData.bio,
+            name: profileWorker.profileData.name || '',
+            job: profileWorker.profileData.jobTitle || '',
+            domisili: profileWorker.profileData.address || '',
+            TempatKerja: profileWorker.profileData.company || '',
+            description: profileWorker.profileData.bio || '',
           }}
-          onSubmit={(values) => {
+          onSubmit={async (values) => {
             const dataDiri = {
-              name: values.name,
-              jobTitle: values.job,
-              address: values.domisili,
-              company: values.TempatKerja,
-              bio: values.description,
+              name: values.name || undefined,
+              jobTitle: values.job || undefined,
+              address: values.domisili || undefined,
+              company: values.TempatKerja || undefined,
+              bio: values.description || undefined,
             };
-            console.log('simpan value');
-            dispatch(profileAction.updateProfile(token, dataDiri));
+            const filteredObject = Object.keys(dataDiri).reduce(
+              (results, key) => {
+                if (dataDiri[key] !== undefined) {
+                  results[key] = dataDiri[key];
+                }
+                return results;
+              },
+              {},
+            );
+            await dispatch(profileAction.updateProfile(token, filteredObject));
           }}>
           {({
             handleChange,
@@ -519,12 +529,11 @@ const EditProfile = ({navigation}) => {
             <Formik
               validationSchema={skillValidation}
               initialValues={{skill: ''}}
-              onSubmit={(values, {resetForm}) => {
+              onSubmit={async (values, {resetForm}) => {
                 const dataSkill = {
                   name: values.skill,
                 };
-                setSkillOnFocus(false);
-                dispatch(skillAction.postSkill(token, dataSkill));
+                await dispatch(skillAction.postSkill(token, dataSkill));
                 resetForm('');
               }}>
               {({
@@ -542,40 +551,20 @@ const EditProfile = ({navigation}) => {
                       name="skill"
                       placeholder="Masukkan skill"
                       style={styles.inputSkill}
-                      onChangeText={(e) => {
-                        handleChange('skill')(e);
-                        dispatch(skillAction.getSkill(token, e));
+                      onChangeText={handleChange('skill')}
+                      onChange={({nativeEvent}) => {
+                        if (nativeEvent.text.length) {
+                          dispatch(
+                            skillAction.getSkill(token, nativeEvent.text),
+                          );
+                        } else {
+                          dispatch(skillAction.destroy());
+                        }
                       }}
                       onBlur={handleBlur('skill')}
                       value={values.skill}
                       onFocus={() => setSkillOnFocus(true)}
                     />
-                    {skillOnFocus && values.skill ? (
-                      <View style={styles.optionStyle}>
-                        <FlatList
-                          nestedScrollEnabled
-                          data={skillData}
-                          keyExtractor={(_item, index) => index.toString()}
-                          renderItem={({item}) => {
-                            return (
-                              <TouchableOpacity
-                                style={styles.optionWrapper}
-                                onPress={() => {
-                                  setFieldValue('skill', item.name);
-                                  setSkillOnFocus(false);
-                                }}>
-                                <Text
-                                  numberOfLines={2}
-                                  ellipsizeMode="tail"
-                                  style={styles.skillOptionTxt}>
-                                  {item.name}
-                                </Text>
-                              </TouchableOpacity>
-                            );
-                          }}
-                        />
-                      </View>
-                    ) : null}
                     {errors.skill && (
                       <Text style={styles.textError}>{errors.skill}</Text>
                     )}
@@ -589,17 +578,25 @@ const EditProfile = ({navigation}) => {
                 </View>
               )}
             </Formik>
-            {/* <View style={styles.skillsContainer}>
+            <View style={styles.skillsContainer}>
               {!skill.skillIsLoading &&
                 !skill.skillIsError &&
-                skill.skillData.length &&
                 skill.skillData.map((item) => (
-                  <View style={styles.skill}>
-                    <Text style={styles.skillText}>{item.name}</Text>
-                  </View>
+                  <TouchableOpacity
+                    onPress={async () => {
+                      await dispatch(
+                        skillAction.postSkill(token, {name: item.name}),
+                      );
+                      dispatch(skillAction.listSkill(token));
+                      dispatch(skillAction.destroy());
+                    }}>
+                    <View style={styles.skill}>
+                      <Text style={styles.skillText}>{item.name || ''}</Text>
+                    </View>
+                  </TouchableOpacity>
                 ))}
               <Text>&nbsp;</Text>
-            </View> */}
+            </View>
           </View>
         </Card>
         {/*Card for Experience*/}

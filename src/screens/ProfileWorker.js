@@ -66,20 +66,43 @@ const ProfileWorker = ({navigation}) => {
               }
               style={styles.avatar}
             />
+            {profileWorker.profileData.photo === null ? (
+              <View style={styles.warningWrapper}>
+                <Text style={[styles.warning, styles.centerWarning]}>
+                  Tambahkan foto profile anda, semua orang ingin melihat foto
+                  profile anda
+                </Text>
+              </View>
+            ) : null}
             <Text style={styles.name}>{profileWorker.profileData.name}</Text>
-            <Text style={styles.field}>
-              {profileWorker.profileData.jobTitle || ''}
-            </Text>
-            <View style={styles.location}>
-              <Icon name="map-marker" size={24} color="#8e8e8e" />
-              <Text style={styles.map}>
-                {profileWorker.profileData.address || ''}
+            {profileWorker.profileData.jobTitle && (
+              <Text style={styles.field}>
+                {profileWorker.profileData.jobTitle || ''}
               </Text>
-            </View>
+            )}
+            {profileWorker.profileData.address && (
+              <View style={styles.location}>
+                <Icon name="map-marker" size={24} color="#8e8e8e" />
+                <Text style={styles.map}>
+                  {profileWorker.profileData.address || ''}
+                </Text>
+              </View>
+            )}
             {/* <Text style={styles.map}>Freelancer</Text> */}
-            <Text style={styles.desc}>
-              {profileWorker.profileData.bio || ''}
-            </Text>
+            {profileWorker.profileData.bio && (
+              <Text style={styles.desc}>
+                {profileWorker.profileData.bio || ''}
+              </Text>
+            )}
+            {profileWorker.profileData.address === null &&
+            profileWorker.profileData.bio === null ? (
+              <View style={styles.warningWrapper}>
+                <Text style={[styles.warning, styles.centerWarning]}>
+                  Lengkapi profil data diri anda agar kesempatan mendapatkan
+                  pekerjaan yang berkualitas menjadi lebih tinggi
+                </Text>
+              </View>
+            ) : null}
             <Button
               block
               style={styles.btnHire}
@@ -106,37 +129,43 @@ const ProfileWorker = ({navigation}) => {
                 {profileWorker.profileData.email}
               </Text>
             </View>
-            <View style={styles.sosmed}>
-              <Icon name="instagram" size={24} color="#8e8e8e" />
-              <Text style={styles.email}>
-                {profileWorker.profileData.instagram
-                  ? profileWorker.profileData.instagram
-                      .slice(26, profileWorker.profileData.instagram.length)
-                      .slice(0, -1)
-                  : ''}
-              </Text>
-            </View>
-            <View style={styles.sosmed}>
-              <Icon name="github" size={24} color="#8e8e8e" />
-              <Text style={styles.email}>
-                {profileWorker.profileData.github
-                  ? profileWorker.profileData.github.slice(
-                      19,
-                      profileWorker.profileData.github.length,
-                    )
-                  : ''}
-              </Text>
-            </View>
-            <View style={styles.sosmed}>
-              <Icon name="linkedin" size={20} color="#8e8e8e" />
-              <Text style={styles.email}>
-                {profileWorker.profileData.linkedin
-                  ? profileWorker.profileData.linkedin
-                      .slice(28, profileWorker.profileData.linkedin.length)
-                      .slice(0, -1)
-                  : ''}
-              </Text>
-            </View>
+            {profileWorker.profileData.instagram && (
+              <View style={styles.sosmed}>
+                <Icon name="instagram" size={24} color="#8e8e8e" />
+                <Text style={styles.email}>
+                  {profileWorker.profileData.instagram
+                    ? profileWorker.profileData.instagram
+                        .slice(26, profileWorker.profileData.instagram.length)
+                        .slice(0, -1)
+                    : ''}
+                </Text>
+              </View>
+            )}
+            {profileWorker.profileData.github && (
+              <View style={styles.sosmed}>
+                <Icon name="github" size={24} color="#8e8e8e" />
+                <Text style={styles.email}>
+                  {profileWorker.profileData.github
+                    ? profileWorker.profileData.github.slice(
+                        19,
+                        profileWorker.profileData.github.length,
+                      )
+                    : ''}
+                </Text>
+              </View>
+            )}
+            {profileWorker.profileData.linkedin && (
+              <View style={styles.sosmed}>
+                <Icon name="linkedin" size={20} color="#8e8e8e" />
+                <Text style={styles.email}>
+                  {profileWorker.profileData.linkedin
+                    ? profileWorker.profileData.linkedin
+                        .slice(28, profileWorker.profileData.linkedin.length)
+                        .slice(0, -1)
+                    : ''}
+                </Text>
+              </View>
+            )}
           </View>
         </Card>
         <Card style={styles.cardBottom} transparent>
@@ -287,5 +316,23 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#1F2A36',
     fontWeight: '400',
+  },
+  warningWrapper: {
+    marginVertical: 10,
+    width: '100%',
+    paddingHorizontal: '20%',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  warning: {
+    fontSize: 12,
+    color: '#FBB017',
+  },
+  centerWarning: {
+    textAlign: 'center',
+  },
+  buttonWarning: {
+    textAlign: 'center',
+    width: '90%',
   },
 });

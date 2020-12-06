@@ -106,6 +106,15 @@ export default (state = initialState, action) => {
         deleteSkillSuccess: true,
       };
     }
+    case 'CLEAR_SKILL': {
+      return {
+        ...state,
+        skillData: [],
+        skillIsLoading: false,
+        skillIsError: false,
+        skillAlertMsg: '',
+      };
+    }
     default: {
       return state;
     }

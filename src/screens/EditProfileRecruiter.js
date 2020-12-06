@@ -198,13 +198,11 @@ export default function EditProfileRecruiter({navigation}) {
               />
             </TouchableOpacity>
             <Text style={styles.name}>{profileData[0].company}</Text>
-            <Text style={styles.field}>
-              {companyData.length ? companyData[0].field : ''}
-            </Text>
+            <Text style={styles.field}>{companyData[0].field || 'Title'}</Text>
             <View style={styles.location}>
               <Icon name="map-marker" size={24} color="#8e8e8e" />
               <Text style={styles.map}>
-                {profileData.length ? profileData[0].address : ''}
+                {profileData[0].address || 'Location'}
               </Text>
             </View>
           </View>
