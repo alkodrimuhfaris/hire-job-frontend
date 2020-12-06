@@ -17,17 +17,24 @@ import {Formik} from 'formik';
 import * as yup from 'yup';
 
 import profile from '../assets/img/profile.png';
-import {API_URL} from '@env';
+import {API_URL_IMAGE} from '@env';
+
+// import component
+import ModalLoading from '../components/ModalLoading';
 
 // import actions
 import portfolioAction from '../redux/actions/portfolio';
 import skillAction from '../redux/actions/skill';
 import profileAction from '../redux/actions/profileWorker';
 
-const options = {
-  title: 'my picture',
-  takePhotoButtonTitle: 'Take Photo',
-  chooseFromLibraryButtonTitle: 'Choose Photo',
+let options = {
+  maxWidth: 300,
+  maxHeight: 300,
+  mediaType: 'photo',
+  noData: true,
+  storageOptions: {
+    skipBackup: true,
+  },
 };
 
 var radio_props = [
@@ -36,39 +43,37 @@ var radio_props = [
 ];
 
 const schemaExperience = yup.object().shape({
-  position: yup.string().required('Posisi akhir tidak boleh kosong '),
-  companyName: yup
-    .string()
-    .required('Nama perusahaan akhir tidak boleh kosong '),
-  startAt: yup.date().required('YYYY-MM-DD'),
-  finishAt: yup.date().required('YYYY-MM-DD'),
+  position: yup.string().required('Posisi terakhir dibutuhkan '),
+  companyName: yup.string().required('Nama perusahaan terakhir dibutuhkan '),
+  startAt: yup.date().required('Format tanggal dibutuhkan: YYYY-MM-DD'),
+  finishAt: yup.date().required('Format tanggal dibutuhkan: YYYY-MM-DD'),
   description: yup
     .string()
-    .max(255, 'Maksimal 255 karakter')
-    .required('Deskripsi tidak boleh kosong'),
+    .max(255, 'Deskripsi tidak dapat lebih dari 255 karakter')
+    .required('Deskripsi dibutuhkan'),
 });
 
 const schemaPortofolio = yup.object().shape({
-  name: yup.string().required('Nama Aplikasi tidak boleh kosong '),
+  name: yup.string().required('Nama aplikasi dibutuhkan'),
   publicLink: yup
     .string()
     .matches(
       /((https?):\/\/)?(www.)?[a-z0-9]+(\.[a-z]{2,}){1,3}(#?\/?[a-zA-Z0-9#]+)*\/?(\?[a-zA-Z0-9-_]+=[a-zA-Z0-9-%]+&?)?$/,
-      'Masukkan url dengan benar!',
+      'Masukkan alamat url. Contoh: http://internet.com',
     )
-    .required('Masukkan alamat publikasi'),
+    .required('Alamat publikasi dibutuhkan'),
   repoLink: yup
     .string()
     .matches(
       /((https?):\/\/)?(www.)?[a-z0-9]+(\.[a-z]{2,}){1,3}(#?\/?[a-zA-Z0-9#]+)*\/?(\?[a-zA-Z0-9-_]+=[a-zA-Z0-9-%]+&?)?$/,
-      'Masukkan url dengan benar!',
+      'Masukkan alamat repo. Contoh: http://github.com',
     )
-    .required('Masukkan alamat repositori'),
+    .required('Alamat repositori dibutuhkan'),
   description: yup
     .string()
-    .max(255, 'Maksimal255 karakter')
-    .required('Deskripsi tidak boleh kosong'),
-  company: yup.string().required('Nama tempat kerja terkait '),
+    .max(255, 'Deskripsi tidak dapat lebih dari 255 karakter')
+    .required('Deskripsi dibutuhkan'),
+  company: yup.string().required('Nama tempat kerja terkait dibutuhkan'),
 });
 
 const skillValidation = yup.object().shape({
@@ -76,15 +81,17 @@ const skillValidation = yup.object().shape({
 });
 
 const profileValidation = yup.object().shape({
-  name: yup.string().matches(/(\w.+\s).+/, 'Masukkan Lebih dari 2 nama'),
-  job: yup.string('Dalam bentuk string'),
+  name: yup.string(),
+  job: yup.string(),
   domisili: yup.string(),
   TempatKerja: yup.string(),
-  description: yup.string().max(255, 'Maksimal 255 karakter'),
+  description: yup
+    .string()
+    .max(255, 'Deskripsi tidak dapat lebih dari 255 karakter'),
 });
 
 const schemaSosialMedia = yup.object().shape({
-  email: yup.string().email('Email tidak sesauai'),
+  email: yup.string().email('Masukkan alamat email dengan benar'),
   instagram: yup.string(),
   github: yup.string(),
   linkedin: yup.string(),
@@ -102,9 +109,8 @@ const EditProfile = ({navigation}) => {
   const takePictures = () => {
     ImagePicker.showImagePicker(options, async (response) => {
       if (response.didCancel) {
-        console.log('User cancelled image picker');
-      } else if (response.error) {
-        console.log('ImagePicker Error: ', response.error);
+      } else if (response.fileSize > 2 * 1024 * 1024) {
+        Alert.alert('Gagal pilih gambar!', 'File gambar harus kurang dari 2MB');
       } else {
         setAvatar({uri: response.uri});
         const form = new FormData();
@@ -120,14 +126,24 @@ const EditProfile = ({navigation}) => {
     });
   };
 
+  const pickPortofolio = () => {
+    ImagePicker.launchImageLibrary(options, async (response) => {
+      if (response.didCancel) {
+      } else if (response.fileSize > 2 * 1024 * 1024) {
+        Alert.alert('Gagal pilih gambar!', 'File gambar harus kurang dari 2MB');
+      } else {
+        setPortofolio(response.uri);
+        await setDataImage({
+          uri: response.uri,
+          name: response.fileName,
+          type: response.type,
+        });
+      }
+    });
+  };
+
   async function addExperienceWorker(dataExperience) {
     await dispatch(profileAction.addExperience(token, dataExperience));
-    if (profileWorker.experienceIsAdded) {
-      Alert.alert('Behasil', 'Berhasil menambahkan pengalaman kerja');
-      navigation.navigate('MainAppWorker');
-    } else {
-      Alert.alert('Gagal', 'Harap masukkan data dengan benar');
-    }
   }
 
   async function addPortofolioWorker(values, img, type) {
@@ -147,7 +163,16 @@ const EditProfile = ({navigation}) => {
       dispatch(profileAction.clearAlert());
       dispatch(portfolioAction.getPortfolioList(token));
       navigation.navigate('ProfileWorker');
-      Alert.alert('Sukses', 'Berahsil menambahkan portofoli');
+      Alert.alert('Sukses!', 'Tambah portofolio berhasil.');
+    }
+  });
+
+  useEffect(() => {
+    if (profileWorker.experienceIsAdded) {
+      dispatch(profileAction.clearAlert());
+      dispatch(profileAction.getWorkerExp(token));
+      navigation.navigate('ProfileWorker');
+      Alert.alert('Sukses!', 'Tambah pengalaman kerja berhasil.');
     }
   });
 
@@ -160,7 +185,7 @@ const EditProfile = ({navigation}) => {
             <Image
               source={
                 profileWorker.profileData.photo
-                  ? {uri: API_URL + profileWorker.profileData.photo}
+                  ? {uri: API_URL_IMAGE + profileWorker.profileData.photo}
                   : avatar
               }
               style={styles.avatar}
@@ -193,7 +218,6 @@ const EditProfile = ({navigation}) => {
             description: profileWorker.profileData.bio,
           }}
           onSubmit={async (values) => {
-            console.log(values);
             const dataDiri = {
               name: values.name,
               jobTitle: values.job,
@@ -220,7 +244,11 @@ const EditProfile = ({navigation}) => {
                 disabled={!isValid}
                 block
                 transparent>
-                <Text style={styles.save}>Simpan</Text>
+                {profileWorker.updateProfileIsLoading === false ? (
+                  <Text style={styles.save}>Simpan</Text>
+                ) : (
+                  <ModalLoading />
+                )}
               </Button>
               <Button
                 block
@@ -430,7 +458,7 @@ const EditProfile = ({navigation}) => {
                     {touched.startAt && errors.startAt && (
                       <Text style={styles.textError}>{errors.startAt}</Text>
                     )}
-                    <Label style={styles.label}>Keuar pada</Label>
+                    <Label style={styles.label}>Keluar pada</Label>
                     <TextInput
                       name="finishAt"
                       placeholder="2000-1-1"
@@ -451,7 +479,7 @@ const EditProfile = ({navigation}) => {
                       onBlur={handleBlur('description')}
                       value={values.description}
                     />
-                    {touched.c && errors.description && (
+                    {touched.description && errors.description && (
                       <Text style={styles.textError}>{errors.description}</Text>
                     )}
                     <Button
@@ -460,9 +488,13 @@ const EditProfile = ({navigation}) => {
                       disabled={!isValid}
                       block
                       transparent>
-                      <Text style={styles.experience}>
-                        Tambah Pengalaman Kerja
-                      </Text>
+                      {profileWorker.addExperienceIsLoading === false ? (
+                        <Text style={styles.experience}>
+                          Tambah Pengalaman Kerja
+                        </Text>
+                      ) : (
+                        <ModalLoading />
+                      )}
                     </Button>
                   </Form>
                 </View>
@@ -481,7 +513,7 @@ const EditProfile = ({navigation}) => {
                 publicLink: '',
                 repoLink: '',
                 company: '',
-                // type: data,
+                description: '',
               }}
               onSubmit={(values) =>
                 addPortofolioWorker(values, dataImage, data)
@@ -568,52 +600,14 @@ const EditProfile = ({navigation}) => {
                     />
                     <Label style={styles.label}>Upload Gambar</Label>
                     {portofolio === '' ? (
-                      <TouchableOpacity
-                        onPress={() =>
-                          ImagePicker.launchImageLibrary(
-                            options,
-                            async (response) => {
-                              if (response.didCancel) {
-                                console.log('User cancelled image picker');
-                              } else {
-                                setPortofolio(response.uri);
-                                const form = new FormData();
-                                form.append('photo', {
-                                  uri: response.uri,
-                                  name: response.fileName,
-                                  type: response.type,
-                                });
-                                setDataImage(form);
-                              }
-                            },
-                          )
-                        }>
+                      <TouchableOpacity onPress={pickPortofolio}>
                         <View style={styles.InputImage}>
                           <Icon name="cloud-upload" size={50} color="#8e8e8e" />
                           <Text note>upload file dari penyimpanan</Text>
                         </View>
                       </TouchableOpacity>
                     ) : (
-                      <TouchableOpacity
-                        onPress={() =>
-                          ImagePicker.launchImageLibrary(
-                            options,
-                            async (response) => {
-                              if (response.didCancel) {
-                                console.log('User cancelled image picker');
-                              } else {
-                                setPortofolio(response.uri);
-                                const form = new FormData();
-                                form.append('photo', {
-                                  uri: response.uri,
-                                  name: response.fileName,
-                                  type: response.type,
-                                });
-                                setDataImage(form);
-                              }
-                            },
-                          )
-                        }>
+                      <TouchableOpacity onPress={pickPortofolio}>
                         <Image
                           style={styles.portofolioImg}
                           source={{uri: portofolio}}
@@ -625,7 +619,11 @@ const EditProfile = ({navigation}) => {
                       style={styles.addExperience}
                       transparent
                       onPress={handleSubmit}>
-                      <Text style={styles.experience}>Tambah Portofolio</Text>
+                      {profileWorker.addPortofolioIsLoading === false ? (
+                        <Text style={styles.experience}>Tambah Portofolio</Text>
+                      ) : (
+                        <ModalLoading />
+                      )}
                     </Button>
                   </Form>
                 </View>
@@ -665,11 +663,11 @@ const EditProfile = ({navigation}) => {
                   github: `https://github.com/${values.github}`,
                   linkedin: `https://www.linkedin.com/in/${values.linkedin}/`,
                 };
-                console.log(dataSosmed);
                 await dispatch(profileAction.updateProfile(token, dataSosmed));
                 await dispatch(profileAction.getProfile(token));
+                navigation.navigate('ProfileWorker');
                 Alert.alert(
-                  'Berhasil',
+                  'Sukses!',
                   'Akun sosial media berhasil di edit!',
                   [{text: 'OK', onPress: () => console.log('OK Pressed')}],
                   {cancelable: false},
@@ -741,7 +739,7 @@ const EditProfile = ({navigation}) => {
                     disabled={!isValid}
                     block
                     transparent>
-                    <Text style={styles.experience}>Tambah Sosial Media</Text>
+                    <Text style={styles.experience}>Edit Sosial Media</Text>
                   </Button>
                 </View>
               )}

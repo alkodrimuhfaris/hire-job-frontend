@@ -7,6 +7,7 @@ const initialState = {
   alertMsg: '',
   id: 0,
   isWorker: false,
+  isLoading: false,
 
   isEmailError: false,
   emailValidData: {},

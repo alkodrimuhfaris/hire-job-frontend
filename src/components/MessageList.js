@@ -1,16 +1,21 @@
 import React from 'react';
 import {View, Text, TouchableOpacity, Image, StyleSheet} from 'react-native';
-import {useSelector, useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import moment from 'moment';
 
 // import assets
-import avatar from '../assets/img/profile.png';
-import {API_URL_IMAGE, API_URL} from '@env';
+import worker from '../assets/img/profile.png';
+import recruiter from '../assets/img/company.png';
+import {API_URL_IMAGE} from '@env';
+
+// import action
+import messageAction from '../redux/actions/message';
 
 export default function RenderItem({item, navigation}) {
+  const dispatch = useDispatch();
   const selfId = useSelector((state) => state.auth.id);
   const isWorker = useSelector((state) => state.auth.isWorker);
-  const urlImage = isWorker ? API_URL_IMAGE : API_URL;
+  const avatar = isWorker ? recruiter : worker;
   const data = item;
   console.log(data);
   let {RecipientDetails, SenderDetails, sender, unread, createdAt} = data;
@@ -22,7 +27,7 @@ export default function RenderItem({item, navigation}) {
   const displayName = !isWorker ? name : company;
 
   const goToRoomChat = () => {
-    console.log(id);
+    dispatch(messageAction.clearMsg());
     navigation.navigate('ChatRoom', {id});
   };
 
@@ -45,7 +50,7 @@ export default function RenderItem({item, navigation}) {
     <TouchableOpacity onPress={() => goToRoomChat()}>
       <View style={styles.imgParent}>
         <Image
-          source={photo ? {uri: urlImage + photo} : avatar}
+          source={photo ? {uri: API_URL_IMAGE + photo} : avatar}
           style={styles.image}
         />
         <View style={styles.parentList}>
@@ -55,12 +60,30 @@ export default function RenderItem({item, navigation}) {
             </Text>
             <Text style={styles.listTime}>{time}</Text>
           </View>
-          <Text
-            numberOfLines={1}
-            ellipsizeMode="tail"
-            style={[styles.message, unreadChat ? styles.unread : null]}>
-            {data.message}
-          </Text>
+          <View style={styles.chatWrapper}>
+            <View style={styles.messageWrapper}>
+              <Text
+                numberOfLines={1}
+                ellipsizeMode="tail"
+                style={[styles.message, unreadChat ? styles.unread : null]}>
+                {item.message}
+              </Text>
+            </View>
+            <View style={styles.indicator}>
+              {selfId !== sender ? (
+                unread ? (
+                  <View style={styles.dot}>
+                    <Text>&nbsp;</Text>
+                  </View>
+                ) : null
+              ) : (
+                <Text style={styles.unreadIndicator}>
+                  {unread ? '(send)' : '(read)'}
+                </Text>
+              )}
+              <Text />
+            </View>
+          </View>
         </View>
       </View>
     </TouchableOpacity>
@@ -106,9 +129,15 @@ const styles = StyleSheet.create({
     color: '#9EA0A5',
     marginRight: 10,
   },
+  messageWrapper: {
+    width: '80%',
+    flexDirection: 'row',
+  },
   message: {
     fontSize: 14,
     color: '#9EA0A5',
+    width: '100%',
+    textAlign: 'left',
   },
   unread: {
     fontWeight: 'bold',
@@ -122,5 +151,27 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  chatWrapper: {
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  indicator: {
+    flexDirection: 'row',
+    width: '20%',
+    height: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  dot: {
+    width: 10,
+    height: 10,
+    borderRadius: 20,
+    backgroundColor: '#5E50A1',
+  },
+  unreadIndicator: {
+    fontSize: 12,
+    color: '#9EA0A5',
   },
 });

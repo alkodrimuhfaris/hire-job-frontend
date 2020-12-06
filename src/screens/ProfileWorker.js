@@ -2,9 +2,9 @@ import * as React from 'react';
 import {StyleSheet, View, ScrollView, Image} from 'react-native';
 import {Text, Button, Card} from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import {TabView, SceneMap, TabBar} from 'react-native-tab-view';
+import {TabView, TabBar} from 'react-native-tab-view';
 import {useDispatch, useSelector} from 'react-redux';
-import {API_URL} from '@env';
+import {API_URL_IMAGE} from '@env';
 
 // import actions
 import authAction from '../redux/actions/auth';
@@ -59,7 +59,7 @@ const ProfileWorker = ({navigation}) => {
             <Image
               source={
                 profileWorker.profileData.photo
-                  ? {uri: API_URL + profileWorker.profileData.photo}
+                  ? {uri: API_URL_IMAGE + profileWorker.profileData.photo}
                   : profile
               }
               style={styles.avatar}
@@ -92,7 +92,7 @@ const ProfileWorker = ({navigation}) => {
                 !skill.listSkillIsError &&
                 skill.listSkillData.length &&
                 skill.listSkillData.map((item) => (
-                  <View style={styles.skill}>
+                  <View style={styles.skill} key={item.id}>
                     <Text style={styles.skillText}>{item.Skill.name}</Text>
                   </View>
                 ))}
@@ -125,7 +125,7 @@ const ProfileWorker = ({navigation}) => {
               </Text>
             </View>
             <View style={styles.sosmed}>
-              <Icon name="gitlab" size={20} color="#8e8e8e" />
+              <Icon name="linkedin" size={20} color="#8e8e8e" />
               <Text style={styles.email}>
                 {profileWorker.profileData.linkedin
                   ? profileWorker.profileData.linkedin

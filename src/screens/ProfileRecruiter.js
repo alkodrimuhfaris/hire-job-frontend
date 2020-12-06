@@ -13,7 +13,7 @@ import profileWorkerAction from '../redux/actions/profileWorker';
 import portfolioAction from '../redux/actions/portfolio';
 import companyAction from '../redux/actions/profileRecruiter';
 
-import profile from '../assets/img/profile.png';
+import profile from '../assets/img/company.png';
 
 import {API_URL_IMAGE} from '@env';
 
@@ -47,6 +47,16 @@ const ProfileRecruiter = ({navigation}) => {
     dispatch(portfolioAction.destroy());
   }
 
+  const profileKey = profileData.length
+    ? Object.keys(profileData[0]).length
+    : null;
+
+  const profileValue = profileData.length
+    ? Object.values(profileData[0]).filter((item) => item).length
+    : null;
+
+  const profileUncomplete = profileKey > profileValue;
+
   return (
     <>
       <ScrollView>
@@ -60,6 +70,14 @@ const ProfileRecruiter = ({navigation}) => {
               }
               style={styles.avatar}
             />
+            {profileData.length && profileData[0].photo === null ? (
+              <View style={styles.warningWrapper}>
+                <Text style={[styles.warning, styles.centerWarning]}>
+                  Tambahkan logo perusahaan anda, semua orang ingin melihat logo
+                  perusahaan anda
+                </Text>
+              </View>
+            ) : null}
             <Text style={styles.name}>
               {profileData.length && profileData[0].company}
             </Text>
@@ -68,7 +86,7 @@ const ProfileRecruiter = ({navigation}) => {
             <Text style={styles.field}>
               {companyData.length && companyData[0].field !== null
                 ? companyData[0].field
-                : 'Field'}
+                : '-'}
             </Text>
 
             <View style={styles.location}>
@@ -76,14 +94,20 @@ const ProfileRecruiter = ({navigation}) => {
               <Text style={styles.map}>
                 {profileData.length && profileData[0].address !== null
                   ? profileData[0].address
-                  : 'City'}
+                  : '-'}
               </Text>
             </View>
             <Text style={styles.desc}>
               {profileData.length && profileData[0].bio !== null
                 ? profileData[0].bio
-                : 'Bio'}
+                : '-'}
             </Text>
+            {profileUncomplete ? (
+              <Text style={[styles.warning, styles.buttonWarning]}>
+                Lengkapi profil perusahaan anda agar kesempatan mendapatkan
+                pekerja yang berkualitas menjadi lebih tinggi
+              </Text>
+            ) : null}
             <Button
               block
               style={styles.btn}
@@ -117,7 +141,7 @@ const ProfileRecruiter = ({navigation}) => {
               </Text>
             </View>
             <View style={styles.sosmed}>
-              <Icon name="gitlab" size={20} color="#8e8e8e" />
+              <Icon name="linkedin" size={20} color="#8e8e8e" />
               <Text style={styles.email}>
                 {profileData.length &&
                   profileData[0].linkedin &&
@@ -161,6 +185,24 @@ const styles = StyleSheet.create({
     marginTop: 40,
     borderRadius: 100,
     resizeMode: 'cover',
+  },
+  warningWrapper: {
+    marginVertical: 10,
+    width: '100%',
+    paddingHorizontal: '20%',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  warning: {
+    fontSize: 12,
+    color: '#FBB017',
+  },
+  centerWarning: {
+    textAlign: 'center',
+  },
+  buttonWarning: {
+    textAlign: 'center',
+    width: '90%',
   },
   name: {
     fontSize: 22,

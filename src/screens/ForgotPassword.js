@@ -16,8 +16,8 @@ export default function ForgotPassword({navigation}) {
 
   const schema = Yup.object().shape({
     email: Yup.string()
-      .email('Email tidak sesuai')
-      .required('Email tidak boleh kosong'),
+      .email('Masukkan alamat email dengan benar')
+      .required('Email dibutuhkan'),
   });
 
   function isEmailValid(data) {
@@ -26,7 +26,7 @@ export default function ForgotPassword({navigation}) {
 
   useEffect(() => {
     if (auth.isEmailError) {
-      Alert.alert('Gagal', 'Email tidak dapat ditemukan');
+      Alert.alert('Gagal!', 'Email tidak dapat ditemukan.');
       dispatch(authAction.clearAlert());
     }
 

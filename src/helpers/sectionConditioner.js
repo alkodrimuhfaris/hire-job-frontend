@@ -73,13 +73,10 @@ module.exports = {
 
     console.log(searchResult);
 
-    skillArr = skillArr.filter((item) => item);
-    skillArr = skillArr.sort();
-    skillArr.push(null);
     const resultSearch = [];
 
     for (const skill of skillArr) {
-      const item = {title: skill ? skill : 'Skilless'};
+      const item = {title: skill};
       const data = [];
       for (const result of searchResult) {
         if (skill) {

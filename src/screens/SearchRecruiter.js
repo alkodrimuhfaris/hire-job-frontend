@@ -28,9 +28,16 @@ const Search = ({navigation}) => {
   const [modalError, setModalError] = useState(false);
   const [load, setLoad] = useState(false);
 
+  const sortByArr = [null, 'company', 'field', 'address'];
+
   const submitSearch = () => {
-    dispatch(searchCompanyAction.addSearch(search));
-    dispatch(searchCompanyAction.search(token, search));
+    const searchQuery = {
+      search: {company: search},
+      sortBy: sortByArr[sortBy],
+      sortType: 'ASC',
+    };
+    dispatch(searchCompanyAction.addSearch(searchQuery));
+    dispatch(searchCompanyAction.search(token, searchQuery));
   };
 
   React.useEffect(() => {
@@ -100,12 +107,14 @@ const Search = ({navigation}) => {
       </Modal>
 
       {/* modal loading */}
-      <ModalLoading
-        modalOpen={load}
-        modalContent={
-          <ActivityIndicator visible={load} size="large" color="#5E50A1" />
-        }
-      />
+      {navigation.isFocused() ? (
+        <ModalLoading
+          modalOpen={load}
+          modalContent={
+            <ActivityIndicator visible={load} size="large" color="#5E50A1" />
+          }
+        />
+      ) : null}
 
       {/* modal center */}
       <ModalCenter

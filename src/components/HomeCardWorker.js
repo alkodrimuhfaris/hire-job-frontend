@@ -3,7 +3,7 @@ import {Image, StyleSheet, View} from 'react-native';
 import {Text} from 'native-base';
 import {API_URL_IMAGE} from '@env';
 
-import Avatar from '../assets/img/profile.png';
+import Avatar from '../assets/img/company.png';
 
 export default function HomeCardWorker({item}) {
   return (

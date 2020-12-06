@@ -57,6 +57,7 @@ export default (state = initialState, action) => {
       return {
         ...state,
         isError: false,
+        isRegistry: false,
         alertMsg: '',
       };
     }

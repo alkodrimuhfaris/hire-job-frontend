@@ -206,6 +206,17 @@ export default (state = initialState, action) => {
         alertMsg: 'Read chat failed',
       };
     }
+    case 'CLEAR_MESSAGE': {
+      return {
+        ...state,
+        isLoading: false,
+        isError: false,
+        privateChat: [],
+        privateChatPageInfo: {},
+        profileColluctor: {},
+        alertMsg: '',
+      };
+    }
     case 'DESTROY': {
       return initialState;
     }

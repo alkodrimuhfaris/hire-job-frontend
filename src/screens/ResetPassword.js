@@ -17,11 +17,11 @@ export default function ResetPassword({navigation, route}) {
 
   const schema = Yup.object().shape({
     password: Yup.string()
-      .min(6, 'Password minimal 6 karakter')
-      .required('Password tidak boleh kosong'),
+      .min(8, 'Password setidaknya terdiri dari 8 karakter')
+      .required('Password dibutuhkan'),
     confirmPassword: Yup.string()
       .oneOf([Yup.ref('password'), null], 'Password tidak cocok')
-      .required('Konfirmasi password tidak boleh kosong'),
+      .required('Konfirmasi password dibutuhkan'),
   });
 
   function doResetPassword(values) {
@@ -34,7 +34,7 @@ export default function ResetPassword({navigation, route}) {
 
   useEffect(() => {
     if (auth.isReset) {
-      Alert.alert('Reset password berhasil', 'Harap login...');
+      Alert.alert('Reset password berhasil!', 'Harap login...');
       navigation.navigate('Welcome');
       dispatch(authAction.clearAlert());
     }

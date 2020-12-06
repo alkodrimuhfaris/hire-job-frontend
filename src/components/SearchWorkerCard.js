@@ -3,15 +3,15 @@ import {Image, StyleSheet, View} from 'react-native';
 import {Text} from 'native-base';
 
 import Avatar from '../assets/img/profile.png';
-import {API_URL} from '@env';
+import {API_URL_IMAGE} from '@env';
 
-export default function HomeCardRecruiter({item}) {
+export default function SearchWorkerCard({item}) {
   let skillArr = item.WorkerSkills;
   skillArr = skillArr.length > 2 ? skillArr.slice(0, 3) : skillArr;
   return (
     <View style={styles.card}>
       <Image
-        source={item.photo ? {uri: API_URL + item.photo} : Avatar}
+        source={item.photo ? {uri: API_URL_IMAGE + item.photo} : Avatar}
         style={styles.avatar}
       />
       <Text numberOfLines={1} ellipsizeMode="tail" style={styles.name}>
@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffffff',
     borderRadius: 4,
     width: 160,
-    height: 220,
+    height: 230,
     alignItems: 'center',
     shadowColor: '#000',
     shadowOpacity: 0.2,
@@ -76,6 +76,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 5,
     backgroundColor: '#FBB017',
     borderRadius: 4,
+    marginVertical: 3,
     marginHorizontal: 2,
   },
   skillText: {
@@ -84,9 +85,12 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   skillList: {
+    width: '95%',
+    flexWrap: 'wrap',
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: 39,
+    justifyContent: 'center',
+    marginTop: 20,
   },
   skillMore: {
     fontSize: 10,
