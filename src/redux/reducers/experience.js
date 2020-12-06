@@ -1,32 +1,33 @@
 const initialState = {
-  experienceData: [],
-  experienceIsLoading: false,
-  experienceIsError: false,
-  experienceAlertMsg: '',
+  experienceDetailData: {},
+  experienceDetailIsLoading: false,
+  experienceDetailIsError: false,
+  experienceDetailAlertMsg: '',
+  
 };
 
 export default (state = initialState, action) => {
   switch (action.type) {
-    case 'GET_EXPERIENCE_PENDING': {
+    case 'GET_EXPERIENCE_DETAIL_PENDING': {
       return {
         ...state,
-        experienceIsLoading: true,
+        experienceDetailIsLoading: true,
       };
     }
-    case 'GET_EXPERIENCE_REJECTED': {
+    case 'GET_EXPERIENCE_DETAIL_REJECTED': {
       return {
         ...state,
-        experienceIsLoading: false,
-        experienceIsError: true,
-        experienceAlertMsg: action.payload.response.data.message,
+        experienceDetailIsLoading: false,
+        experienceDetailIsError: true,
+        experienceDetailAlertMsg: action.payload.response.data.message,
       };
     }
-    case 'GET_EXPERIENCE_FULFILLED': {
+    case 'GET_EXPERIENCE_DETAIL_FULFILLED': {
       return {
         ...state,
-        experienceIsLoading: true,
-        experienceIsError: true,
-        experienceData: action.payload.data.results,
+        experienceDetailIsLoading: true,
+        experienceDetailIsError: true,
+        experienceDetailData: action.payload.data.results,
       };
     }
     case 'DESTROY': {
