@@ -101,19 +101,29 @@ const ProfileRecruiter = ({navigation}) => {
             <View style={styles.sosmed}>
               <Icon name="instagram" size={24} color="#8e8e8e" />
               <Text style={styles.email}>
-                {profileData.length && profileData[0].instagram}
+                {profileData.length &&
+                  profileData[0].instagram &&
+                  profileData[0].instagram
+                    .slice(26, profileData[0].instagram.length)
+                    .slice(0, -1)}
               </Text>
             </View>
             <View style={styles.sosmed}>
               <Icon name="github" size={24} color="#8e8e8e" />
               <Text style={styles.email}>
-                {profileData.length && profileData[0].github}
+                {profileData.length &&
+                  profileData[0].github &&
+                  profileData[0].github.slice(19, profileData[0].github.length)}
               </Text>
             </View>
             <View style={styles.sosmed}>
               <Icon name="gitlab" size={20} color="#8e8e8e" />
               <Text style={styles.email}>
-                {profileData.length && profileData[0].linkedin}
+                {profileData.length &&
+                  profileData[0].linkedin &&
+                  profileData[0].linkedin
+                    .slice(28, profileData[0].linkedin.length)
+                    .slice(0, -1)}
               </Text>
             </View>
           </View>

@@ -19,6 +19,7 @@ import {useSelector, useDispatch} from 'react-redux';
 import profileAction from '../redux/actions/profileRecruiter';
 
 import {API_URL_IMAGE} from '@env';
+import profileRecruiter from '../redux/actions/profileRecruiter';
 
 export default function EditProfileRecruiter({navigation}) {
   const dispatch = useDispatch();
@@ -50,12 +51,12 @@ export default function EditProfileRecruiter({navigation}) {
     email: Yup.string()
       .email('Email tidak sesai')
       .required('Email tidak boleh kosong'),
-    instagram: Yup.string(),
+    instagram: Yup.string('Instagram harus string'),
     phoneNumber: Yup.string()
       .min(10, 'Nomor telepon minimal 10 karakter')
       .max(12, 'Nomor telepon maksimal 12 karakter')
       .required('Nomor telepon tidak boleh kosong'),
-    linkedin: Yup.string(),
+    linkedin: Yup.string('Linkedin harus string'),
   });
 
   function selectImage() {
@@ -90,7 +91,7 @@ export default function EditProfileRecruiter({navigation}) {
   }
 
   // updatenya
-  function change(value) {
+  async function change(value) {
     const {
       companyName,
       companyField,
@@ -107,17 +108,17 @@ export default function EditProfileRecruiter({navigation}) {
       company: companyName,
       // jobTitle: companyField,
       address: city,
-      instagram,
+      instagram: `https://www.instagram.com/${value.instagram}/`,
+      linkedin: `https://www.linkedin.com/in/${value.linkedin}/`,
       bio: description,
-      linkedin,
     };
     const dataCompany = {
       name: companyName,
       field: companyField,
       city,
     };
-    dispatch(profileAction.updateProfile(auth.token, dataRecruiter));
-    dispatch(profileAction.updateCompany(auth.token, dataCompany));
+    await dispatch(profileAction.updateProfile(auth.token, dataRecruiter));
+    await dispatch(profileAction.updateCompany(auth.token, dataCompany));
     navigation.goBack();
   }
 
@@ -155,9 +156,17 @@ export default function EditProfileRecruiter({navigation}) {
             city: companyData.length ? companyData[0].city : '',
             description: profileData.length ? profileData[0].bio : '',
             email: profileData.length ? profileData[0].email : '',
-            instagram: profileData.length ? profileData[0].instagram : '',
+            instagram:
+              profileData[0].instagram &&
+              profileData[0].instagram
+                .slice(26, profileData[0].instagram.length)
+                .slice(0, -1),
             phoneNumber: profileData.length ? profileData[0].phoneNumber : '',
-            linkedin: profileData.length ? profileData[0].linkedin : '',
+            linkedin:
+              profileData[0].linkedin &&
+              profileData[0].linkedin
+                .slice(28, profileData[0].linkedin.length)
+                .slice(0, -1),
           }}
           validationSchema={schema}
           onSubmit={(values) => change(values)}>
