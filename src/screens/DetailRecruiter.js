@@ -5,26 +5,30 @@ import {Text, Card} from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {useSelector} from 'react-redux';
 import {API_URL_IMAGE} from '@env';
-import ModalCenter from '../components/ModalCenter';
+// import ModalCenter from '../components/ModalCenter';
 
 import profile from '../assets/img/company.png';
 
-const DetailRecruiter = () => {
+const DetailRecruiter = ({navigation}) => {
   const home = useSelector((state) => state.home);
-  const [modalApply, openModalApply] = React.useState(false);
+  // const [modalApply, openModalApply] = React.useState(false);
 
   const goApply = () => {
-    openModalApply(true);
+    navigation.navigate('ChatRoom', {
+      id: home.userDetailsData.id,
+      message:
+        'Salam sejahtera, saya berniat untuk mendaftarkan diri ke perusahaan anda, adapun portofolio beserta pengalaman pekerjaan saya sertakan dengan pesan ini',
+    });
   };
 
   return (
     <>
       {/* modal for create cover letter */}
-      <ModalCenter
+      {/* <ModalCenter
         modalOpen={modalApply}
         setModalOpen={openModalApply}
         noTouchToBack={true}
-      />
+      /> */}
 
       <ScrollView>
         <Card style={styles.cardUp} transparent>
