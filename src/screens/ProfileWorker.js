@@ -37,7 +37,7 @@ const ProfileWorker = ({navigation}) => {
       case 'first':
         return <FirstRoute token={auth.token} navigation={navigation} />;
       case 'second':
-        return <SecondRoute token={auth.token} />;
+        return <SecondRoute token={auth.token} navigation={navigation} />;
       default:
         return null;
     }

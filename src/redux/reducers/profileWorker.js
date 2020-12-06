@@ -2,6 +2,7 @@ const initialState = {
   profileData: {},
   profileExperience: {},
   dataWorker: {},
+  experienceDetailData: {},
   profileIsLoading: false,
   profileIsError: false,
   profileAlertMsg: '',
@@ -13,6 +14,9 @@ const initialState = {
   updateProfileAlertMsg: '',
   experienceIsAdded: false,
   portfolioIsAdded: false,
+  experienceDetailIsLoading: false,
+  experienceDetailIsError: false,
+  experienceDetailAlertMsg: '',
 };
 
 export default (state = initialState, action) => {
@@ -165,6 +169,28 @@ export default (state = initialState, action) => {
         profileIsError: false,
         profileExperience: action.payload.data.results,
         dataExperienceWorker: action.payload.data,
+      };
+    }
+    case 'GET_EXPERIENCE_DETAIL_PENDING': {
+      return {
+        ...state,
+        experienceDetailIsLoading: true,
+      };
+    }
+    case 'GET_EXPERIENCE_DETAIL_REJECTED': {
+      return {
+        ...state,
+        experienceDetailIsLoading: false,
+        experienceDetailIsError: true,
+        experienceDetailAlertMsg: action.payload.response.data.message,
+      };
+    }
+    case 'GET_EXPERIENCE_DETAIL_FULFILLED': {
+      return {
+        ...state,
+        experienceDetailIsLoading: true,
+        experienceDetailIsError: true,
+        experienceDetailData: action.payload.data.results,
       };
     }
     case 'CLEAR_ALERT': {

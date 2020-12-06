@@ -52,7 +52,8 @@ class Item extends React.Component {
   }
 }
 
-const SecondRoute = ({token}) => {
+const SecondRoute = ({token, navigation}) => {
+  console.log(navigation);
   const dispatch = useDispatch();
   const {isWorker} = useSelector((state) => state.auth);
   const [actionVisible, setActionVisible] = React.useState(false);
@@ -78,7 +79,6 @@ const SecondRoute = ({token}) => {
   const deleteIsLoading = useSelector(
     (state) => state.workExperience.deleteIsLoading,
   );
-
   useEffect(() => {
     if (isWorker) {
       dispatch(profileAction.getWorkerExp(token));
@@ -109,6 +109,12 @@ const SecondRoute = ({token}) => {
     setActionVisible(false);
   }
 
+  function updateExperience() {
+    setActionVisible(false);
+    navigation.navigate('EditExperience', {id: id});
+    console.log(id);
+  }
+
   React.useEffect(() => {
     console.log(isDelete);
     if (isDelete) {
@@ -125,6 +131,13 @@ const SecondRoute = ({token}) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [profileDataWorker, profileDataForRecruiter]);
+
+  React.useEffect(() => {
+    if (id) {
+      dispatch(workerExpAction.getWorkerExpById(token, id));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id]);
 
   return (
     <>
@@ -158,7 +171,7 @@ const SecondRoute = ({token}) => {
         <View style={styles.modalParent}>
           <View style={styles.list}>
             <View style={styles.child}>
-              <TouchableOpacity>
+              <TouchableOpacity onPress={() => updateExperience()}>
                 <Text>Sunting Pengalaman Kerja</Text>
               </TouchableOpacity>
             </View>

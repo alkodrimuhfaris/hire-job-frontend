@@ -8,6 +8,10 @@ const initialState = {
   deleteIsError: false,
   deleteAlert: '',
   isDelete: false,
+
+  updateIsLoading: false,
+  updateIsError: false,
+  updateIsSuccess: false,
 };
 
 export default (state = initialState, action) => {
@@ -16,6 +20,9 @@ export default (state = initialState, action) => {
       return {
         ...state,
         expIsLoading: true,
+        expIsError: false,
+        updateIsError: false,
+        updateIsSuccess: false,
       };
     }
     case 'GET_EXP_DETAIL_REJECTED': {
@@ -23,6 +30,7 @@ export default (state = initialState, action) => {
         ...state,
         expIsLoading: false,
         expIsError: true,
+        updateIsSuccess: false,
         expAlertMsg: action.payload.response.data.message,
       };
     }
@@ -31,7 +39,32 @@ export default (state = initialState, action) => {
         ...state,
         expIsLoading: false,
         expIsError: false,
+        updateIsSuccess: false,
         expDetail: action.payload.data.results,
+      };
+    }
+    case 'UPDATE_EXPERIENCE_PENDING': {
+      return {
+        ...state,
+        updateIsLoading: true,
+        updateIsError: false,
+        updateIsSuccess: false,
+      };
+    }
+    case 'UPDATE_EXPERIENCE_REJECTED': {
+      return {
+        ...state,
+        updateIsLoading: false,
+        updateIsError: true,
+        updateIsSuccess: false,
+      };
+    }
+    case 'UPDATE_EXPERIENCE_FULFILLED': {
+      return {
+        ...state,
+        updateIsLoading: false,
+        updateIsError: false,
+        updateIsSuccess: true,
       };
     }
     case 'DELETE_EXP_PENDING': {

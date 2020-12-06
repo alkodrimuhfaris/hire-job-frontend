@@ -39,6 +39,12 @@ export default {
       payload: http(token).get('/worker/experience?' + qs.stringify({page})),
     };
   },
+  getDetailExperience: (token, id) => {
+    return {
+      type: 'GET_EXPERIENCE_DETAIL',
+      payload: http(token).get(`worker/experience/12`),
+    };
+  },
   addPortofolio: (token, form) => {
     return {
       type: 'ADD_PORTOFOLIO',
