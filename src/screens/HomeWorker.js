@@ -12,7 +12,6 @@ import skillAction from '../redux/actions/skill';
 import homeAction from '../redux/actions/home';
 
 import Card from '../components/HomeCardWorker';
-import Modal from '../components/ModalLoading';
 
 export default function HomeWorker({navigation}) {
   const dispatch = useDispatch();
@@ -35,7 +34,6 @@ export default function HomeWorker({navigation}) {
 
   return (
     <Container style={styles.parent}>
-      {profileWorker.profileIsLoading && <Modal />}
       {profileWorker.profileData && (
         <View style={[styles.header, styles.padding]}>
           <View>
