@@ -74,19 +74,19 @@ export default function EditProfileRecruiter({navigation}) {
     email: Yup.string()
       .email('Masukkan alamat email dengan benar')
       .required('Email dibutuhkan'),
-    instagram: Yup.string()
-      .nullable()
-      .required('Jika tidak ada, isi dengan karakter "-"'),
+    instagram: Yup.string(),
+    // .nullable()
+    // .required('Jika tidak ada, isi dengan karakter "-"'),
     phoneNumber: Yup.string()
       .min(10, 'Minimal karakter no handphone adalah 10')
       .max(12, 'Maksimal karakter no handphone adalah 12')
       .required('No handphone dibutuhkan'),
-    linkedin: Yup.string()
-      .nullable()
-      .required('Jika tidak ada, isi dengan karakter "-"'),
-    github: Yup.string()
-      .nullable()
-      .required('Jika tidak ada, isi dengan karakter "-"'),
+    linkedin: Yup.string(),
+    // .nullable()
+    // .required('Jika tidak ada, isi dengan karakter "-"'),
+    github: Yup.string(),
+    // .nullable()
+    // .required('Jika tidak ada, isi dengan karakter "-"'),
   });
 
   function selectImage() {
@@ -157,6 +157,12 @@ export default function EditProfileRecruiter({navigation}) {
   }
 
   React.useEffect(() => {
+    dispatch(profileAction.getProfile(auth.token));
+    dispatch(profileAction.getMyCompany(auth.token));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [updateCompanyState, updateProfileState]);
+
+  React.useEffect(() => {
     if (companyUpdateSuccess) {
       dispatch(profileAction.clearAlert());
       dispatch(profileAction.getProfile(auth.token));
@@ -221,6 +227,9 @@ export default function EditProfileRecruiter({navigation}) {
               profileData[0].linkedin
                 .slice(28, profileData[0].linkedin.length)
                 .slice(0, -1),
+            github:
+              profileData[0].github &&
+              profileData[0].github.slice(19, profileData[0].github.length),
           }}
           validationSchema={schema}
           onSubmit={(values) => change(values)}>
