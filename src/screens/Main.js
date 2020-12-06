@@ -30,6 +30,7 @@ import SearchRecruiter from './SearchRecruiter';
 import ResultSearchRecruiter from './ResultSearchCompany';
 import ProfileWorker from './ProfileWorker';
 import EditProfileWorker from './EditProfileWorker';
+import EditPortfolio from './EditPortfolio';
 
 // chat screen
 import ChatRoom from './ChatRoom';
@@ -127,6 +128,11 @@ export default function Main() {
           <Stack.Screen
             name="EditProfileWorker"
             component={EditProfileWorker}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="EditPortfolio"
+            component={EditPortfolio}
             options={{headerShown: false}}
           />
           <Stack.Screen

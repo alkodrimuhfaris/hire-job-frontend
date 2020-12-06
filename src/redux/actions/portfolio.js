@@ -7,6 +7,12 @@ export default {
       payload: http(token).get('worker/portofolio'),
     };
   },
+  getPortfolioDetail: (token, id) => {
+    return {
+      type: 'GET_PORTFOLIO_DETAIL',
+      payload: http(token).get(`worker/portofolio/${id}`),
+    };
+  },
   deletePortfolio: (token, id) => {
     return {
       type: 'DELETE_PORTFOLIO',
