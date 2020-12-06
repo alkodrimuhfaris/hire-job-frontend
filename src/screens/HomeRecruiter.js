@@ -16,6 +16,7 @@ import profileRecruiterAction from '../redux/actions/profileRecruiter';
 import homeAction from '../redux/actions/home';
 
 import Card from '../components/HomeCardRecruiter';
+import Modal from '../components/ModalLoading';
 
 export default function HomeRecruiter({navigation}) {
   // realtime
@@ -60,6 +61,7 @@ export default function HomeRecruiter({navigation}) {
 
   return (
     <Container style={styles.parent}>
+      {profileRecruiter.profileIsLoading && <Modal />}
       {profileRecruiter.profileData.length > 0 &&
         profileRecruiter.profileData.map((user) => {
           return (
