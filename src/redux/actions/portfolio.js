@@ -19,6 +19,12 @@ export default {
       payload: http(token).delete(`worker/portofolio/${id}`),
     };
   },
+  updatePortfolio: (token, id, form) => {
+    return {
+      type: 'UPDATE_PORTFOLIO',
+      payload: http(token).patch(`worker/portofolio/${id}`, form),
+    };
+  },
   clearAlert: () => ({
     type: 'CLEAR_ALERT',
   }),

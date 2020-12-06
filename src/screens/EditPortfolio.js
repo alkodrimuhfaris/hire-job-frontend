@@ -22,15 +22,19 @@ import portfolioAction from '../redux/actions/portfolio';
 // import component
 import ModalLoading from '../components/ModalLoading';
 
-export default function EditPortfolio({route}) {
+export default function EditPortfolio({route, navigation}) {
   const dispatch = useDispatch();
   const {id} = route.params;
   const {token} = useSelector((state) => state.auth);
-  const {portfolioDetailData, portfolioDetailIsLoading} = useSelector(
-    (state) => state.portfolio,
-  );
+  const {
+    portfolioDetailData,
+    portfolioDetailIsLoading,
+    isEdit,
+    editIsLoading,
+  } = useSelector((state) => state.portfolio);
   const [portofolio, setPortofolio] = React.useState(null);
   const [data, setData] = React.useState(portfolioDetailData.type ? 1 : 0);
+  const [dataImage, setDataImage] = React.useState(null);
 
   let radio_props = [
     {label: 'Aplikasi Mobile            ', value: 0},
@@ -77,19 +81,42 @@ export default function EditPortfolio({route}) {
         Alert.alert('Gagal pilih gambar!', 'File gambar harus kurang dari 2MB');
       } else {
         setPortofolio(response.uri);
-        // await setDataImage({
-        //   uri: response.uri,
-        //   name: response.fileName,
-        //   type: response.type,
-        // });
+        await setDataImage({
+          uri: response.uri,
+          name: response.fileName,
+          type: response.type,
+        });
       }
     });
   };
+
+  function updatePortfolio(values, img, type) {
+    const form = new FormData();
+    form.append('name', values.name);
+    form.append('type', type === 0 ? false : true);
+    form.append('description', values.description);
+    form.append('publicLink', values.publicLink);
+    form.append('repoLink', values.repoLink);
+    form.append('company', values.company);
+    if (portofolio) {
+      form.append('photo', img);
+    }
+    dispatch(portfolioAction.updatePortfolio(token, id, form));
+  }
 
   useEffect(() => {
     dispatch(portfolioAction.getPortfolioDetail(token, id));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
+
+  useEffect(() => {
+    if (isEdit) {
+      dispatch(portfolioAction.clearAlert());
+      dispatch(portfolioAction.getPortfolioList(token));
+      navigation.navigate('ProfileWorker');
+      Alert.alert('Sukses!', 'Edit portofolio berhasil.');
+    }
+  });
 
   return (
     <>
@@ -107,7 +134,7 @@ export default function EditPortfolio({route}) {
                   company: portfolioDetailData.company,
                   description: portfolioDetailData.description,
                 }}
-                onSubmit={(values) => console.log(values)}>
+                onSubmit={(values) => updatePortfolio(values, dataImage, data)}>
                 {({
                   handleChange,
                   handleBlur,
@@ -198,7 +225,7 @@ export default function EditPortfolio({route}) {
                           style={styles.portofolioImg}
                           source={
                             portofolio
-                              ? portofolio
+                              ? {uri: portofolio}
                               : {
                                   uri: `${API_URL_IMAGE}${portfolioDetailData.photo}`,
                                 }
@@ -210,7 +237,7 @@ export default function EditPortfolio({route}) {
                         style={styles.addExperience}
                         transparent
                         onPress={handleSubmit}>
-                        <Text style={styles.experience}>Edit Portofolio</Text>
+                        <Text style={styles.experience}>Simpan Portofolio</Text>
                       </Button>
                     </Form>
                   </View>
@@ -221,7 +248,7 @@ export default function EditPortfolio({route}) {
         )}
       </ScrollView>
 
-      <ModalLoading modalOpen={portfolioDetailIsLoading} />
+      <ModalLoading modalOpen={portfolioDetailIsLoading || editIsLoading} />
     </>
   );
 }
