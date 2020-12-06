@@ -26,7 +26,7 @@ export default function ForgotPassword({navigation}) {
 
   useEffect(() => {
     if (auth.isEmailError) {
-      Alert.alert(auth.alertMsg);
+      Alert.alert('Gagal!', 'Email tidak dapat ditemukan.');
       dispatch(authAction.clearAlert());
     }
 

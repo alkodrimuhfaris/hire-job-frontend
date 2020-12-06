@@ -49,10 +49,14 @@ const SignupWorker = () => {
   function doRegister(data) {
     dispatch(authAction.registerWorker(data));
     if (regiter.isError) {
-      Alert.alert(regiter.message);
+      Alert.alert('Gagal!', 'Registrasi gagal.', [
+        {text: 'OK', onPress: () => console.log('OK press')},
+      ]);
       dispatch(authAction.clearAlert());
     } else {
-      Alert.alert(regiter.message);
+      Alert.alert('Sukses!', 'Registrasi berhasil.', [
+        {text: 'OK', onPress: () => console.log('OK press')},
+      ]);
       dispatch(authAction.clearAlert());
       navigation.navigate('LoginWorker');
     }

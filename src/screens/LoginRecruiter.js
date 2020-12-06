@@ -37,7 +37,12 @@ export default function LoginRecruiter({navigation}) {
 
   useEffect(() => {
     if (auth.isError) {
-      Alert.alert(auth.alertMsg);
+      Alert.alert(
+        'Login gagal!',
+        'Email atau password salah.',
+        [{text: 'OK', onPress: () => console.log('OK press')}],
+        {cancelable: false},
+      );
       dispatch(authAction.clearAlert());
     }
   });
