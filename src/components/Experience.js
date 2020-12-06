@@ -11,7 +11,11 @@ import {
 import {Text} from 'native-base';
 import {useDispatch, useSelector} from 'react-redux';
 import {API_URL_IMAGE} from '@env';
+<<<<<<< HEAD
 import ModalLoading from '../components/ModalLoading';
+=======
+import dayjs from 'dayjs';
+>>>>>>> ef8daa38389a86695f6c64667f70a5bd32bcc1af
 
 // import actions
 import profileAction from '../redux/actions/profileWorker';
@@ -36,10 +40,15 @@ class Item extends React.Component {
           <Text style={styles.position}>{this.props.position}</Text>
           <Text style={styles.company}>{this.props.company}</Text>
           <Text style={styles.dueTime}>
-            {this.props.start}{' '}
+            {dayjs(this.props.start).format('MMM YYYY')}{' '}
             {this.props.finish
+<<<<<<< HEAD
               ? 's/d ' + this.props.finish
               : '- sampai sekarang'}
+=======
+              ? '- ' + dayjs(this.props.finish).format('MMM YYYY')
+              : '- Sekarang'}
+>>>>>>> ef8daa38389a86695f6c64667f70a5bd32bcc1af
           </Text>
           <Text style={styles.jobdesk}>{this.props.desc}</Text>
         </View>

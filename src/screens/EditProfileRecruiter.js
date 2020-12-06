@@ -144,6 +144,7 @@ export default function EditProfileRecruiter({navigation}) {
       address: city,
       instagram: `https://www.instagram.com/${instagram}/`,
       linkedin: `https://www.linkedin.com/in/${linkedin}/`,
+      github: `https://github.com/${github}`,
       bio: description,
     };
     const dataCompany = {
