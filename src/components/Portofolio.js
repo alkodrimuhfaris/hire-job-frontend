@@ -53,6 +53,7 @@ const FirstRoute = ({token}) => {
 
   async function deletePortfolio(_id) {
     await dispatch(portfolioAction.deletePortfolio(token, _id));
+    dispatch(portfolioAction.getPortfolioList(token));
     setActionVisible(false);
   }
 
