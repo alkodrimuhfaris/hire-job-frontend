@@ -221,11 +221,11 @@ const EditProfile = ({navigation}) => {
           }}
           onSubmit={async (values) => {
             const dataDiri = {
-              name: values.name.length ? values.name : null,
-              jobTitle: values.job.length ? values.job : null,
-              address: values.domisili.length ? values.domisili : null,
-              company: values.TempatKerja.length ? values.TempatKerja : null,
-              bio: values.description.length ? values.description : null,
+              name: values.name || null,
+              jobTitle: values.job || null,
+              address: values.domisili || null,
+              company: values.TempatKerja || null,
+              bio: values.description || null,
             };
             console.log(values);
             await dispatch(profileAction.updateProfile(token, dataDiri));

@@ -84,25 +84,26 @@ const ProfileRecruiter = ({navigation}) => {
 
             {/* ambil dari table company yang field */}
             <Text style={styles.field}>
-              {companyData.length && companyData[0].field !== null
-                ? companyData[0].field
-                : '-'}
+              {(companyData.length && companyData[0].field) || ''}
             </Text>
 
-            <View style={styles.location}>
-              <Icon name="map-marker" size={24} color="#8e8e8e" />
-              <Text style={styles.map}>
-                {profileData.length && profileData[0].address !== null
-                  ? profileData[0].address
-                  : '-'}
-              </Text>
-            </View>
-            <Text style={styles.desc}>
-              {profileData.length && profileData[0].bio !== null
-                ? profileData[0].bio
-                : '-'}
-            </Text>
-            {profileUncomplete ? (
+            {profileData.length && profileData[0].address !== null ? (
+              <View style={styles.location}>
+                <Icon name="map-marker" size={24} color="#8e8e8e" />
+                <Text style={styles.map}>{profileData[0].address}</Text>
+              </View>
+            ) : (
+              <Text>&nbsp;</Text>
+            )}
+            {profileData.length && profileData[0].bio !== null ? (
+              <Text style={styles.desc}>{profileData[0].bio}</Text>
+            ) : (
+              <Text>&nbsp;</Text>
+            )}
+
+            {profileData.length &&
+            profileData[0].bio === null &&
+            profileData[0].address === null ? (
               <Text style={[styles.warning, styles.buttonWarning]}>
                 Lengkapi profil perusahaan anda agar kesempatan mendapatkan
                 pekerja yang berkualitas menjadi lebih tinggi
