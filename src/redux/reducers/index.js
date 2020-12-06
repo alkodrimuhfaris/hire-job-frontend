@@ -13,6 +13,7 @@ import portfolio from './portfolio';
 import updateProfileRecruiter from './updateProfileRecruiter';
 import updateCompany from './updateCompany';
 import myCompany from './getCompany';
+import workExperience from './workExperience';
 
 import resultSearch from './resultSearch';
 export default combineReducers({
@@ -30,4 +31,5 @@ export default combineReducers({
   updateProfileRecruiter,
   updateCompany,
   resultSearch,
+  workExperience,
 });

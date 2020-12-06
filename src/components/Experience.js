@@ -1,11 +1,22 @@
 import React, {useEffect} from 'react';
-import {Image, StyleSheet, View, FlatList, ScrollView} from 'react-native';
+import {
+  Image,
+  StyleSheet,
+  View,
+  FlatList,
+  ScrollView,
+  Modal,
+  TouchableOpacity,
+} from 'react-native';
 import {Text} from 'native-base';
 import {useDispatch, useSelector} from 'react-redux';
 import {API_URL_IMAGE} from '@env';
+import ModalLoading from '../components/ModalLoading';
+import dayjs from 'dayjs';
 
 // import actions
 import profileAction from '../redux/actions/profileWorker';
+import workerExpAction from '../redux/actions/workExperience';
 
 // import assets
 import Avatar from '../assets/img/company.png';
@@ -26,7 +37,10 @@ class Item extends React.Component {
           <Text style={styles.position}>{this.props.position}</Text>
           <Text style={styles.company}>{this.props.company}</Text>
           <Text style={styles.dueTime}>
-            {this.props.start} s/d {this.props.finish}
+            {dayjs(this.props.start).format('MMM YYYY')}{' '}
+            {this.props.finish
+              ? '- ' + dayjs(this.props.finish).format('MMM YYYY')
+              : '- Sekarang'}
           </Text>
           <Text style={styles.jobdesk}>{this.props.desc}</Text>
         </View>
@@ -35,9 +49,17 @@ class Item extends React.Component {
   }
 }
 
-const SecondRoute = () => {
+const SecondRoute = ({token}) => {
   const dispatch = useDispatch();
-  const {isWorker, token} = useSelector((state) => state.auth);
+  const {isWorker} = useSelector((state) => state.auth);
+  const [actionVisible, setActionVisible] = React.useState(false);
+  const [id, setId] = React.useState(null);
+  const [profileDataRender, setProfileDataRender] = React.useState([]);
+
+  const profileIsLoading = useSelector(
+    (state) => state.profileWorker.profileIsLoading,
+  );
+
   const dataExperience = useSelector(
     (state) => state.profileWorker.dataExperienceWorker,
   );
@@ -47,6 +69,10 @@ const SecondRoute = () => {
   const profileDataForRecruiter = useSelector(
     (state) => state.home.userDetailsData.WorkExperiences,
   );
+  const {expDetail, isDelete, deleteIsLoading} = useSelector(
+    (state) => state.workExperience,
+  );
+
   useEffect(() => {
     if (isWorker) {
       dispatch(profileAction.getWorkerExp(token));
@@ -67,30 +93,79 @@ const SecondRoute = () => {
     }
   };
 
+  function setAction(_id) {
+    setActionVisible(true);
+    setId(_id);
+  }
+
+  async function deletePortfolio(_id) {
+    await dispatch(workerExpAction.deleteExp(token, _id));
+    setActionVisible(false);
+  }
+
+  React.useEffect(() => {
+    console.log(isDelete);
+    if (isDelete) {
+      dispatch(profileAction.getWorkerExp(token));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isDelete]);
+
+  React.useEffect(() => {
+    if (isWorker) {
+      setProfileDataRender(profileDataWorker);
+    } else {
+      setProfileDataRender(profileDataForRecruiter);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [profileDataWorker, profileDataForRecruiter]);
+
   return (
     <>
       <ScrollView>
         <FlatList
-          data={
-            profileDataForRecruiter
-              ? profileDataForRecruiter
-              : profileDataWorker
-          }
+          data={profileDataRender}
           keyExtractor={(item, index) => index.toString()}
           renderItem={({item}) => (
-            <Item
-              position={item.position}
-              company={item.Company.name}
-              start={item.startAt}
-              finish={item.finishAt}
-              desc={item.description}
-              photo={item.Company.photo}
-            />
+            <TouchableOpacity
+              onPress={isWorker && token ? () => setAction(item.id) : () => {}}>
+              <Item
+                position={item.position}
+                company={item.Company.name}
+                start={item.startAt}
+                finish={item.finishAt}
+                desc={item.description}
+                photo={item.Company.photo}
+              />
+            </TouchableOpacity>
           )}
           onEndReached={nextPage}
           onEndReachedThreshold={0.5}
         />
       </ScrollView>
+
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={actionVisible}
+        onRequestClose={() => setActionVisible(false)}>
+        <View style={styles.modalParent}>
+          <View style={styles.list}>
+            <View style={styles.child}>
+              <TouchableOpacity>
+                <Text>Edit Portofolio</Text>
+              </TouchableOpacity>
+            </View>
+            <View style={styles.child}>
+              <TouchableOpacity onPress={() => deletePortfolio(id)}>
+                <Text>Hapus Portofolio</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
+
+      <ModalLoading modalOpen={deleteIsLoading || profileIsLoading} />
     </>
   );
 };
@@ -141,5 +216,22 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '400',
     lineHeight: 24,
+  },
+  modalParent: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0,0,0,0.5)',
+  },
+  list: {
+    width: '65%',
+    backgroundColor: '#ffff',
+  },
+  child: {
+    borderBottomColor: 'gray',
+    width: '100%',
+    paddingLeft: 25,
+    paddingTop: 20,
+    paddingBottom: 20,
   },
 });

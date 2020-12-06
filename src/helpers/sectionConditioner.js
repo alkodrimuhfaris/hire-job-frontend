@@ -8,9 +8,6 @@ module.exports = {
 
     searchResult = [...new Set(searchResult)];
 
-    cityArr = cityArr.filter((item) => item);
-    cityArr = cityArr.sort();
-    cityArr.push(null);
     const resultSearch = [];
 
     for (const city of cityArr) {
@@ -37,11 +34,6 @@ module.exports = {
 
     searchResult = [...new Set(searchResult)];
 
-    console.log(searchResult);
-
-    fieldArr = fieldArr.filter((item) => item);
-    fieldArr = fieldArr.sort();
-    fieldArr.push(null);
     const resultSearch = [];
 
     for (const field of fieldArr) {
@@ -70,8 +62,6 @@ module.exports = {
     console.log(skillArr);
 
     searchResult = [...new Set(searchResult)];
-
-    console.log(searchResult);
 
     const resultSearch = [];
 

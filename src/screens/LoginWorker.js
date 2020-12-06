@@ -27,7 +27,7 @@ export default function LoginWorker({navigation}) {
       .email('Masukkan alamat email dengan benar')
       .required('Email dibutuhkan'),
     password: Yup.string()
-      .min(8, 'Password setidaknya terdiri dari 8 karakter')
+      .min(1, 'Password setidaknya terdiri dari 8 karakter')
       .required('Password dibutuhkan'),
   });
 
