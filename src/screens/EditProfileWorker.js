@@ -739,7 +739,7 @@ const EditProfile = ({navigation}) => {
                     disabled={!isValid}
                     block
                     transparent>
-                    <Text style={styles.experience}>Tambah Sosial Media</Text>
+                    <Text style={styles.experience}>Edit Sosial Media</Text>
                   </Button>
                 </View>
               )}
