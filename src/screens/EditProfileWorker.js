@@ -221,14 +221,21 @@ const EditProfile = ({navigation}) => {
           }}
           onSubmit={async (values) => {
             const dataDiri = {
-              name: values.name || null,
-              jobTitle: values.job || null,
-              address: values.domisili || null,
-              company: values.TempatKerja || null,
-              bio: values.description || null,
+              name: values.name || undefined,
+              jobTitle: values.job || undefined,
+              address: values.domisili || undefined,
+              company: values.TempatKerja || undefined,
+              bio: values.description || undefined,
             };
-            console.log(values);
-            await dispatch(profileAction.updateProfile(token, dataDiri));
+            const filteredObject = Object.keys(dataDiri).reduce(
+              (results, key) => {
+                if (dataDiri[key] !== undefined) results[key] = dataDiri[key];
+                return results;
+              },
+              {},
+            );
+            console.log(filteredObject);
+            await dispatch(profileAction.updateProfile(token, filteredObject));
             await dispatch(profileAction.getProfile(token));
             navigation.goBack();
           }}>
