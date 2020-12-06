@@ -19,6 +19,9 @@ import * as yup from 'yup';
 import profile from '../assets/img/profile.png';
 import {API_URL_IMAGE} from '@env';
 
+// import component
+import ModalLoading from '../components/ModalLoading';
+
 // import actions
 import portfolioAction from '../redux/actions/portfolio';
 import skillAction from '../redux/actions/skill';
@@ -143,10 +146,6 @@ const EditProfile = ({navigation}) => {
 
   async function addExperienceWorker(dataExperience) {
     await dispatch(profileAction.addExperience(token, dataExperience));
-    if (profileWorker.experienceIsAdded) {
-      Alert.alert(profileWorker.profileAlertMsg);
-    }
-    navigation.navigate('MainAppWorker');
   }
 
   async function addPortofolioWorker(values, img, type) {
@@ -166,7 +165,16 @@ const EditProfile = ({navigation}) => {
       dispatch(profileAction.clearAlert());
       dispatch(portfolioAction.getPortfolioList(token));
       navigation.navigate('ProfileWorker');
-      Alert.alert('Success add new portfolio.');
+      Alert.alert('Sukses!', 'Tambah portofolio berhasil.');
+    }
+  });
+
+  useEffect(() => {
+    if (profileWorker.experienceIsAdded) {
+      dispatch(profileAction.clearAlert());
+      dispatch(profileAction.getWorkerExp(token));
+      navigation.navigate('ProfileWorker');
+      Alert.alert('Sukses!', 'Tambah pengalaman kerja berhasil.');
     }
   });
 
@@ -239,7 +247,11 @@ const EditProfile = ({navigation}) => {
                 disabled={!isValid}
                 block
                 transparent>
-                <Text style={styles.save}>Simpan</Text>
+                {profileWorker.updateProfileIsLoading === false ? (
+                  <Text style={styles.save}>Simpan</Text>
+                ) : (
+                  <ModalLoading />
+                )}
               </Button>
               <Button
                 block
@@ -494,9 +506,13 @@ const EditProfile = ({navigation}) => {
                       disabled={!isValid}
                       block
                       transparent>
-                      <Text style={styles.experience}>
-                        Tambah Pengalaman Kerja
-                      </Text>
+                      {profileWorker.addExperienceIsLoading === false ? (
+                        <Text style={styles.experience}>
+                          Tambah Pengalaman Kerja
+                        </Text>
+                      ) : (
+                        <ModalLoading />
+                      )}
                     </Button>
                   </Form>
                 </View>
@@ -621,7 +637,11 @@ const EditProfile = ({navigation}) => {
                       style={styles.addExperience}
                       transparent
                       onPress={handleSubmit}>
-                      <Text style={styles.experience}>Tambah Portofolio</Text>
+                      {profileWorker.addPortofolioIsLoading === false ? (
+                        <Text style={styles.experience}>Tambah Portofolio</Text>
+                      ) : (
+                        <ModalLoading />
+                      )}
                     </Button>
                   </Form>
                 </View>
@@ -665,7 +685,7 @@ const EditProfile = ({navigation}) => {
                 await dispatch(profileAction.getProfile(token));
                 navigation.navigate('ProfileWorker');
                 Alert.alert(
-                  'Berhasil',
+                  'Sukses!',
                   'Akun sosial media berhasil di edit!',
                   [{text: 'OK', onPress: () => console.log('OK Pressed')}],
                   {cancelable: false},
@@ -737,7 +757,7 @@ const EditProfile = ({navigation}) => {
                     disabled={!isValid}
                     block
                     transparent>
-                    <Text style={styles.experience}>Tambah Sosial Media</Text>
+                    <Text style={styles.experience}>Edit Sosial Media</Text>
                   </Button>
                 </View>
               )}

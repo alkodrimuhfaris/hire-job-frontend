@@ -38,8 +38,11 @@ export default {
   },
   updatePhotoCompany: (token, data) => {
     return {
-      type: 'UPDATE_COMPANY',
+      type: 'UPDATE_PHOTO_COMPANY',
       payload: http(token).patch('recruiter/company', data),
     };
   },
+  clearAlert: () => ({
+    type: 'CLEAR_ALERT',
+  }),
 };

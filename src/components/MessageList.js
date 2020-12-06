@@ -61,12 +61,14 @@ export default function RenderItem({item, navigation}) {
             <Text style={styles.listTime}>{time}</Text>
           </View>
           <View style={styles.chatWrapper}>
-            <Text
-              numberOfLines={1}
-              ellipsizeMode="tail"
-              style={[styles.message, unreadChat ? styles.unread : null]}>
-              {data.message}
-            </Text>
+            <View style={styles.messageWrapper}>
+              <Text
+                numberOfLines={1}
+                ellipsizeMode="tail"
+                style={[styles.message, unreadChat ? styles.unread : null]}>
+                {item.message}
+              </Text>
+            </View>
             <View style={styles.indicator}>
               {selfId !== sender ? (
                 unread ? (
@@ -127,11 +129,15 @@ const styles = StyleSheet.create({
     color: '#9EA0A5',
     marginRight: 10,
   },
+  messageWrapper: {
+    width: '80%',
+    flexDirection: 'row',
+  },
   message: {
     fontSize: 14,
     color: '#9EA0A5',
-    width: '80%',
-    textAlign: 'right',
+    width: '100%',
+    textAlign: 'left',
   },
   unread: {
     fontWeight: 'bold',
@@ -149,6 +155,7 @@ const styles = StyleSheet.create({
   chatWrapper: {
     width: '100%',
     flexDirection: 'row',
+    justifyContent: 'space-between',
   },
   indicator: {
     flexDirection: 'row',

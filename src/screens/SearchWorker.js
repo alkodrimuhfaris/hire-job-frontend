@@ -28,9 +28,16 @@ const Search = ({navigation}) => {
   const [modalError, setModalError] = useState(false);
   const [load, setLoad] = useState(false);
 
+  const sortByArr = [null, 'name', 'address', 'skill', 'jobTitle'];
+
   const submitSearch = () => {
-    dispatch(searchWorkerAction.addSearch(search));
-    dispatch(searchWorkerAction.search(token, search));
+    const searchQuery = {
+      search: {name: search},
+      sortBy: sortByArr[sortBy],
+      sortType: 'ASC',
+    };
+    dispatch(searchWorkerAction.addSearch(searchQuery));
+    dispatch(searchWorkerAction.search(token, searchQuery));
   };
 
   React.useEffect(() => {
@@ -95,17 +102,29 @@ const Search = ({navigation}) => {
                 </Text>
               </TouchableOpacity>
             </View>
+            <View style={styles.child}>
+              <TouchableOpacity
+                onPress={() => {
+                  changeSort(4);
+                }}>
+                <Text style={sortBy === 4 ? styles.choosen : null}>
+                  Sortir berdasarkan titel pekerjaan
+                </Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
       </Modal>
 
       {/* modal loading */}
-      <ModalLoading
-        modalOpen={load}
-        modalContent={
-          <ActivityIndicator visible={load} size="large" color="#5E50A1" />
-        }
-      />
+      {navigation.isFocused() ? (
+        <ModalLoading
+          modalOpen={load}
+          modalContent={
+            <ActivityIndicator visible={load} size="large" color="#5E50A1" />
+          }
+        />
+      ) : null}
 
       {/* modal center */}
       <ModalCenter

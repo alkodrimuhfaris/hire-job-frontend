@@ -2,17 +2,13 @@ import http from '../../helpers/http';
 import qs from 'qs';
 
 export default {
-  search: (token, search) => ({
+  search: (token, data) => ({
     type: 'SEARCH_COMPANY',
-    payload: http(token).get(
-      'home?' + qs.stringify({search: {company: search}}),
-    ),
+    payload: http(token).get('home?' + qs.stringify(data)),
   }),
-  scrollSearch: (token, search, page) => ({
+  scrollSearch: (token, query) => ({
     type: 'SCROLL_COMPANY',
-    payload: http(token).get(
-      'home?' + qs.stringify({search: {company: search}, page}),
-    ),
+    payload: http(token).get('home?' + query),
   }),
   sortBy: (sortBy) => ({
     type: 'SORT_BY',

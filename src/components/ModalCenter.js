@@ -11,6 +11,7 @@ export default function ModalCenter({
   modalOpen,
   setModalOpen,
   modalContent = <Text>This is your modal</Text>,
+  noTouchToBack = false,
 }) {
   return (
     <Modal
@@ -19,7 +20,7 @@ export default function ModalCenter({
       transparent={true}
       visible={modalOpen}>
       <TouchableOpacity
-        onPress={() => setModalOpen(false)}
+        onPress={noTouchToBack ? () => {} : () => setModalOpen(false)}
         style={modalStyle.parent}>
         <TouchableWithoutFeedback style={modalStyle.content}>
           {modalContent}

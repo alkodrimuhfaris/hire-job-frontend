@@ -6,6 +6,8 @@ const initialState = {
   profileIsError: false,
   profileAlertMsg: '',
   updateProfileIsLoading: false,
+  addExperienceIsLoading: false,
+  addPortofolioIsLoading: false,
   updateProfileIsError: false,
   updateProfileAlertMsg: '',
   experienceIsAdded: false,
@@ -61,14 +63,14 @@ export default (state = initialState, action) => {
     case 'ADD_EXPERIENCE_PENDING': {
       return {
         ...state,
-        profileIsLoading: true,
+        addExperienceIsLoading: true,
       };
     }
     case 'ADD_EXPERIENCE_REJECTED': {
       return {
         ...state,
         profileIsError: true,
-        profileIsLoading: false,
+        addExperienceIsLoading: false,
         profileAlertMsg: 'add experience worker denied',
       };
     }
@@ -77,7 +79,7 @@ export default (state = initialState, action) => {
         ...state,
         experienceIsAdded: true,
         profileIsError: false,
-        profileIsLoading: false,
+        addExperienceIsLoading: false,
         profileAlertMsg: 'add experience worker succcess',
       };
     }
@@ -85,14 +87,14 @@ export default (state = initialState, action) => {
     case 'ADD_PORTOFOLIO_PENDING': {
       return {
         ...state,
-        profileIsLoading: true,
+        addPortofolioIsLoading: true,
       };
     }
     case 'ADD_PORTOFOLIO_REJECTED': {
       return {
         ...state,
         profileIsError: true,
-        profileIsLoading: false,
+        addPortofolioIsLoading: false,
         profileAlertMsg: 'add portofolio denied',
       };
     }
@@ -101,7 +103,7 @@ export default (state = initialState, action) => {
         ...state,
         portfolioIsAdded: true,
         profileIsError: false,
-        profileIsLoading: false,
+        addPortofolioIsLoading: false,
         profileAlertMsg: 'portofolio added',
       };
     }

@@ -18,7 +18,7 @@ export default (state = initialState, action) => {
         ...state,
         isError: true,
         isLoading: false,
-        message: 'register as worker denied',
+        message: 'Register as worker denied',
       };
     }
     case 'REGISTER_WORKER_FULFILLED': {
@@ -27,7 +27,7 @@ export default (state = initialState, action) => {
         isRegistry: true,
         isError: false,
         isLoading: false,
-        message: 'register as worker succcess',
+        message: 'Register as worker succcess',
       };
     }
     case 'REGISTER_RECRUITER_PENDING': {
@@ -57,6 +57,7 @@ export default (state = initialState, action) => {
       return {
         ...state,
         isError: false,
+        isRegistry: false,
         alertMsg: '',
       };
     }

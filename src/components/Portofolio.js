@@ -16,11 +16,17 @@ import {API_URL_IMAGE} from '@env';
 // import actions
 import portfolioAction from '../redux/actions/portfolio';
 
+import ModalLoading from '../components/ModalLoading';
+
 const FirstRoute = ({token}) => {
   const dispatch = useDispatch();
-  const {portfolioData} = useSelector((state) => state.portfolio);
+  const {portfolioData, isDelete, deleteIsLoading} = useSelector(
+    (state) => state.portfolio,
+  );
   const {userDetailsData} = useSelector((state) => state.home);
   const [modalVisible, setModalVisible] = useState(false);
+  const [actionVisible, setActionVisible] = useState(false);
+  const [id, setId] = useState('');
   const [img, setImg] = useState('');
   const [name, setName] = useState('');
   const [type, setType] = useState('');
@@ -40,12 +46,29 @@ const FirstRoute = ({token}) => {
     setGithub(_github);
   }
 
+  function setAction(_id) {
+    setActionVisible(true);
+    setId(_id);
+  }
+
+  async function deletePortfolio(_id) {
+    await dispatch(portfolioAction.deletePortfolio(token, _id));
+    setActionVisible(false);
+  }
+
   useEffect(() => {
     if (token) {
       dispatch(portfolioAction.getPortfolioList(token));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
+
+  useEffect(() => {
+    if (isDelete) {
+      dispatch(portfolioAction.clearAlert());
+      dispatch(portfolioAction.getPortfolioList(token));
+    }
+  });
 
   return (
     <>
@@ -66,7 +89,8 @@ const FirstRoute = ({token}) => {
                   item.publicLink,
                   item.repoLink,
                 )
-              }>
+              }
+              onLongPress={token && (() => setAction(item.id))}>
               <Image
                 source={{uri: `${API_URL_IMAGE}${item.photo}`}}
                 style={styles.portofolio}
@@ -111,6 +135,29 @@ const FirstRoute = ({token}) => {
           </View>
         </ScrollView>
       </Modal>
+
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={actionVisible}
+        onRequestClose={() => setActionVisible(false)}>
+        <View style={styles.modalParent}>
+          <View style={styles.list}>
+            <View style={styles.child}>
+              <TouchableOpacity>
+                <Text>Edit Portofolio</Text>
+              </TouchableOpacity>
+            </View>
+            <View style={styles.child}>
+              <TouchableOpacity onPress={() => deletePortfolio(id)}>
+                <Text>Hapus Portofolio</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
+
+      <ModalLoading modalOpen={deleteIsLoading} />
     </>
   );
 };
@@ -191,5 +238,21 @@ const styles = StyleSheet.create({
     fontWeight: '400',
     lineHeight: 24,
     textAlign: 'center',
+  },
+  modalParent: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  list: {
+    width: '65%',
+    backgroundColor: '#ffff',
+  },
+  child: {
+    borderBottomColor: 'gray',
+    width: '100%',
+    paddingLeft: 25,
+    paddingTop: 20,
+    paddingBottom: 20,
   },
 });
