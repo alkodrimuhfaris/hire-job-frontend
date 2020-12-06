@@ -11,6 +11,7 @@ import {Button, Text, Container, Content, Item, Input} from 'native-base';
 import {Formik} from 'formik';
 import * as Yup from 'yup';
 import {useDispatch, useSelector} from 'react-redux';
+import {pushNotifications} from '../services';
 
 import Logo from '../assets/img/logo-purple.png';
 
@@ -33,6 +34,10 @@ export default function LoginWorker({navigation}) {
 
   function doLogin(data) {
     dispatch(authAction.login(data));
+    pushNotifications.localNotifications(
+      'Login Success',
+      'Welcome Peworld User',
+    );
   }
 
   useEffect(() => {
