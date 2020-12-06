@@ -6,6 +6,11 @@ import dayjs from 'dayjs';
 import {useDispatch, useSelector} from 'react-redux';
 import sectionConditioner from '../helpers/sectionConditioner';
 
+// realtime chat
+import io from 'socket.io-client';
+import {API_URL} from '@env';
+import messageAction from '../redux/actions/message';
+
 // import actions
 import profileWorkerAction from '../redux/actions/profileWorker';
 import skillAction from '../redux/actions/skill';
@@ -18,7 +23,28 @@ export default function HomeWorker({navigation}) {
   const auth = useSelector((state) => state.auth);
   const profileWorker = useSelector((state) => state.profileWorker);
   const {homeData} = useSelector((state) => state.home);
+  const {id: selfId, token} = useSelector((state) => state.auth);
   const data = sectionConditioner.byCompanyField(homeData);
+
+  React.useEffect(() => {
+    const socket = io(API_URL);
+    const readEvent = 'read ' + selfId;
+    const sendEvent = 'send ' + selfId;
+    dispatch(messageAction.getAllList(token));
+    socket.on(sendEvent, ({sender, message}) => {
+      console.log('theres an event');
+      dispatch(messageAction.getAllList(token));
+      dispatch(messageAction.getPrivate(token, sender));
+    });
+    socket.on(readEvent, ({reciever, read}) => {
+      dispatch(messageAction.getAllList(token));
+      dispatch(messageAction.getPrivate(token, reciever));
+    });
+    return () => {
+      socket.close();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     dispatch(profileWorkerAction.getProfile(auth.token));

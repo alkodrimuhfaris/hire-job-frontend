@@ -23,6 +23,13 @@ export default {
     };
   },
 
+  deleteWorkerSkill: (token, id) => {
+    return {
+      type: 'DELETE_SKILL',
+      payload: http(token).delete('/worker/delete/skill/' + id),
+    };
+  },
+
   destroy: () => ({
     type: 'CLEAR_SKILL',
   }),
