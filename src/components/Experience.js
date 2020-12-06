@@ -3,6 +3,7 @@ import {Image, StyleSheet, View, FlatList, ScrollView} from 'react-native';
 import {Text} from 'native-base';
 import {useDispatch, useSelector} from 'react-redux';
 import {API_URL_IMAGE} from '@env';
+import dayjs from 'dayjs';
 
 // import actions
 import profileAction from '../redux/actions/profileWorker';
@@ -26,10 +27,10 @@ class Item extends React.Component {
           <Text style={styles.position}>{this.props.position}</Text>
           <Text style={styles.company}>{this.props.company}</Text>
           <Text style={styles.dueTime}>
-            {this.props.start}{' '}
+            {dayjs(this.props.start).format('MMM YYYY')}{' '}
             {this.props.finish
-              ? 's/d' + this.props.finish
-              : ' - sampai sekarang'}
+              ? '- ' + dayjs(this.props.finish).format('MMM YYYY')
+              : '- Sekarang'}
           </Text>
           <Text style={styles.jobdesk}>{this.props.desc}</Text>
         </View>
