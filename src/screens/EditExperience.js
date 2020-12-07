@@ -110,7 +110,7 @@ export default function EditExperience({route, navigation}) {
     if (updateIsSuccess) {
       dispatch(experienceAction.getWorkerExpById(token, id));
       dispatch(profileAction.getWorkerExp(token));
-      Alert.alert('Berhasil', 'update experience success');
+      Alert.alert('Sukses!', 'Edit pengalaman kerja berhasil.');
       navigation.navigate('ProfileWorker');
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
