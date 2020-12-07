@@ -86,8 +86,7 @@ export default function EditExperience({route, navigation}) {
     if (stillWorking) {
       if (start) {
         const startAt = moment(start).format('YYYY-MM-DD');
-        const finishAt = '0000-00-00 00:00:00';
-        Object.assign(dataExperience, {startAt, finishAt});
+        Object.assign(dataExperience, {startAt});
         dispatch(experienceAction.updateExperience(token, id, dataExperience));
       } else {
         setTextAlert('Masukkan tanggal anda mulai bekerja!');
