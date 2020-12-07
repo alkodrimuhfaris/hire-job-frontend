@@ -152,6 +152,14 @@ const EditProfile = ({navigation}) => {
   const [deleteId, setDeleteId] = React.useState(null);
   const [deletedSkill, setDeletedSkill] = React.useState('');
   const [modalDelete, setModalDelete] = React.useState(false);
+  const [deleteError, setDeleteError] = React.useState(false);
+
+  // handling delete skill error
+  React.useEffect(() => {
+    if (deleteSkillError) {
+      setDeleteError(true);
+    }
+  }, [deleteSkillError]);
 
   // deleting skill
   const deleteSkill = () => {
@@ -306,6 +314,16 @@ const EditProfile = ({navigation}) => {
           setModalOpen={setModalError}
           modalOpen={modalError}
           content={textAlert}
+          useOneBtn={true}
+        />
+      ) : null}
+
+      {/* modal alert gagal */}
+      {navigation.isFocused() ? (
+        <ModalAlert
+          setModalOpen={setDeleteError}
+          modalOpen={deleteError}
+          content="Penghapusan skill dari skillset gagal!"
           useOneBtn={true}
         />
       ) : null}
@@ -651,8 +669,8 @@ const EditProfile = ({navigation}) => {
                       formatChosenDate={(date) => {
                         return moment(date).format('YYYY-MM-DD');
                       }}
-                      minimumDate={new Date('2000-1-1')}
-                      maximumDate={finish ? finish : new Date()}
+                      minimumDate={finish ? finish : new Date('2000-01-01')}
+                      maximumDate={new Date()}
                       modalTransparent={false}
                       animationType={'fade'}
                       androidMode="default"
@@ -681,7 +699,7 @@ const EditProfile = ({navigation}) => {
                           formatChosenDate={(date) => {
                             return moment(date).format('YYYY-MM-DD');
                           }}
-                          minimumDate={start ? start : new Date('2020-10-10')}
+                          minimumDate={start ? start : new Date('2000-10-10')}
                           maximumDate={new Date()}
                           modalTransparent={false}
                           animationType={'fade'}

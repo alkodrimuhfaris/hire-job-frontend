@@ -31,7 +31,7 @@ import ResultSearchRecruiter from './ResultSearchCompany';
 import ProfileWorker from './ProfileWorker';
 import EditProfileWorker from './EditProfileWorker';
 import EditPortfolio from './EditPortfolio';
-
+import EditExperience from './EditExperience';
 // chat screen
 import ChatRoom from './ChatRoom';
 import ListChat from './ListChat';
@@ -133,6 +133,11 @@ export default function Main() {
           <Stack.Screen
             name="EditPortfolio"
             component={EditPortfolio}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="EditExperience"
+            component={EditExperience}
             options={{headerShown: false}}
           />
           <Stack.Screen

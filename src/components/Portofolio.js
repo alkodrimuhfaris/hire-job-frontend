@@ -24,6 +24,7 @@ const FirstRoute = ({token, navigation}) => {
     (state) => state.portfolio,
   );
   const {userDetailsData} = useSelector((state) => state.home);
+  console.log(userDetailsData.Portofolios);
   const [modalVisible, setModalVisible] = useState(false);
   const [actionVisible, setActionVisible] = useState(false);
   const [id, setId] = useState('');

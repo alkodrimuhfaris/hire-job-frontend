@@ -35,6 +35,7 @@ export default function HomeRecruiter({navigation}) {
     dispatch(messageAction.getAllList(token));
     socket.on(sendEvent, ({sender, message, senderData}) => {
       console.log('theres an event');
+      console.log(message);
       dispatch(messageAction.getAllList(token));
       dispatch(messageAction.getPrivate(token, sender));
       pushNotifications.localNotifications(

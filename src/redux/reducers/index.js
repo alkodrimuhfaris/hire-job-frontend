@@ -5,6 +5,7 @@ import register from './register';
 import message from './message';
 import profileRecruiter from './profileRecruiter';
 import profileWorker from './profileWorker';
+import resultSearch from './resultSearch';
 import searchCompany from './searchCompany';
 import searchWorker from './searchWorker';
 import skill from './skill';
@@ -13,9 +14,9 @@ import portfolio from './portfolio';
 import updateProfileRecruiter from './updateProfileRecruiter';
 import updateCompany from './updateCompany';
 import myCompany from './getCompany';
+import experience from './experience';
 import workExperience from './workExperience';
 
-import resultSearch from './resultSearch';
 export default combineReducers({
   auth,
   register,
@@ -31,5 +32,6 @@ export default combineReducers({
   updateProfileRecruiter,
   updateCompany,
   resultSearch,
+  experience,
   workExperience,
 });
