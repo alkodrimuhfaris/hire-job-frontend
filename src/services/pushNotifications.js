@@ -25,4 +25,13 @@ const cancelLocalNotifications = (id) => {
   PushNotification.cancelLocalNotifications({id: id});
 };
 
-export {configure, localNotifications, cancelLocalNotifications};
+const cancelAllLocalNotifications = () => {
+  PushNotification.cancelAllLocalNotifications();
+};
+
+export {
+  configure,
+  localNotifications,
+  cancelLocalNotifications,
+  cancelAllLocalNotifications,
+};

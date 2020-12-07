@@ -11,6 +11,9 @@ import io from 'socket.io-client';
 import {API_URL} from '@env';
 import messageAction from '../redux/actions/message';
 
+// notifications
+import {pushNotifications} from '../services';
+
 // import actions
 import profileWorkerAction from '../redux/actions/profileWorker';
 import skillAction from '../redux/actions/skill';
@@ -31,10 +34,15 @@ export default function HomeWorker({navigation}) {
     const readEvent = 'read ' + selfId;
     const sendEvent = 'send ' + selfId;
     dispatch(messageAction.getAllList(token));
-    socket.on(sendEvent, ({sender, message}) => {
+    socket.on(sendEvent, ({sender, message, senderData}) => {
       console.log('theres an event');
       dispatch(messageAction.getAllList(token));
       dispatch(messageAction.getPrivate(token, sender));
+      pushNotifications.localNotifications(
+        sender,
+        senderData.company || senderData.name,
+        message.message,
+      );
     });
     socket.on(readEvent, ({reciever, read}) => {
       dispatch(messageAction.getAllList(token));

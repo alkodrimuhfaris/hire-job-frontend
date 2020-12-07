@@ -8,6 +8,9 @@ import worker from '../assets/img/profile.png';
 import recruiter from '../assets/img/company.png';
 import {API_URL_IMAGE} from '@env';
 
+// notifications
+import {pushNotifications} from '../services';
+
 // import action
 import messageAction from '../redux/actions/message';
 
@@ -27,6 +30,8 @@ export default function RenderItem({item, navigation}) {
   const displayName = !isWorker ? name : company;
 
   const goToRoomChat = () => {
+    pushNotifications.cancelAllLocalNotifications();
+    // pushNotifications.cancelLocalNotifications(SenderDetails.id);
     dispatch(messageAction.clearMsg());
     navigation.navigate('ChatRoom', {id});
   };

@@ -11,7 +11,6 @@ import {Button, Text, Container, Content, Item, Input} from 'native-base';
 import {Formik} from 'formik';
 import * as Yup from 'yup';
 import {useDispatch, useSelector} from 'react-redux';
-import {pushNotifications} from '../services';
 
 import Logo from '../assets/img/logo-purple.png';
 

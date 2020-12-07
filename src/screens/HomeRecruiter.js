@@ -33,14 +33,14 @@ export default function HomeRecruiter({navigation}) {
     const readEvent = 'read ' + selfId;
     const sendEvent = 'send ' + selfId;
     dispatch(messageAction.getAllList(token));
-    socket.on(sendEvent, async ({sender, message}) => {
+    socket.on(sendEvent, ({sender, message, senderData}) => {
       console.log('theres an event');
-      await dispatch(messageAction.getAllList(token));
-      await dispatch(messageAction.getPrivate(token, sender));
-      await pushNotifications.localNotifications(
+      dispatch(messageAction.getAllList(token));
+      dispatch(messageAction.getPrivate(token, sender));
+      pushNotifications.localNotifications(
         sender,
-        privateChat[0].SenderDetails.name,
-        privateChat[0].message,
+        senderData.name,
+        message.message,
       );
     });
     socket.on(readEvent, ({reciever, read}) => {
