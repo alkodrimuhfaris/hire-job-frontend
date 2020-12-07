@@ -283,6 +283,15 @@ const EditProfile = ({navigation}) => {
   }
 
   useEffect(() => {
+    if (profileWorker.updateProfileIsSuccess) {
+      dispatch(profileAction.clearAlert());
+      dispatch(profileAction.getProfile(token));
+      navigation.navigate('ProfileWorker');
+      Alert.alert('Sukses!', 'Sunting profile berhasil.');
+    }
+  });
+
+  useEffect(() => {
     if (profileWorker.portfolioIsAdded) {
       dispatch(profileAction.clearAlert());
       dispatch(portfolioAction.getPortfolioList(token));
