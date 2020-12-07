@@ -4,8 +4,11 @@ import {Provider} from 'react-redux';
 import {SafeAreaView, StyleSheet} from 'react-native';
 import {PersistGate} from 'redux-persist/integration/react';
 import SplashScreen from 'react-native-splash-screen';
+import {pushNotifications} from './src/services';
 
 import store from './src/redux/store';
+
+pushNotifications.configure();
 
 const App = () => {
   useEffect(() => {
