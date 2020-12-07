@@ -8,6 +8,7 @@ const initialState = {
   listSkillIsError: false,
   listSkillAlertMsg: '',
   postSkillIsLoading: false,
+  postSkillIsSuccess: false,
   postSkillIsError: false,
   postSkillAlertMsg: '',
   deleteSkillLoading: false,
@@ -21,6 +22,7 @@ export default (state = initialState, action) => {
       return {
         ...state,
         skillIsLoading: true,
+        postSkillIsSuccess: false,
       };
     }
     case 'GET_SKILL_REJECTED': {
@@ -28,6 +30,7 @@ export default (state = initialState, action) => {
         ...state,
         skillIsLoading: false,
         skillIsError: true,
+        postSkillIsSuccess: false,
         skillAlertMsg: action.payload.response.data.message,
       };
     }
@@ -36,6 +39,7 @@ export default (state = initialState, action) => {
         ...state,
         skillIsLoading: false,
         skillIsError: false,
+        postSkillIsSuccess: false,
         skillData: action.payload.data.results,
       };
     }
@@ -43,6 +47,7 @@ export default (state = initialState, action) => {
       return {
         ...state,
         listSkillIsLoading: true,
+        postSkillIsSuccess: false,
       };
     }
     case 'LIST_SKILL_REJECTED': {
@@ -50,6 +55,7 @@ export default (state = initialState, action) => {
         ...state,
         listSkillIsLoading: false,
         listSkillIsError: true,
+        postSkillIsSuccess: false,
         listSkillAlertMsg: action.payload.response.data.message,
       };
     }
@@ -58,6 +64,7 @@ export default (state = initialState, action) => {
         ...state,
         listSkillIsLoading: false,
         listSkillIsError: false,
+        postSkillIsSuccess: false,
         listSkillData: action.payload.data.results,
       };
     }
@@ -65,6 +72,8 @@ export default (state = initialState, action) => {
       return {
         ...state,
         postSkillIsLoading: true,
+        postSkillIsSuccess: false,
+        postSkillIsError: false,
       };
     }
     case 'POST_SKILL_REJECTED': {
@@ -72,6 +81,7 @@ export default (state = initialState, action) => {
         ...state,
         postSkillIsLoading: false,
         postSkillIsError: true,
+        postSkillIsSuccess: false,
         postSkillAlertMsg: action.payload.response.data.message,
       };
     }
@@ -80,6 +90,7 @@ export default (state = initialState, action) => {
         ...state,
         postSkillIsLoading: false,
         postSkillIsError: false,
+        postSkillIsSuccess: true,
       };
     }
     case 'DELETE_SKILL_PENDING': {

@@ -148,6 +148,19 @@ const EditProfile = ({navigation}) => {
     (state) => state.skill.deleteSkillSuccess,
   );
 
+  const postSkillIsSuccess = useSelector(
+    (state) => state.skill.postSkillIsSuccess,
+  );
+
+  // handle post skill
+  React.useEffect(() => {
+    if (postSkillIsSuccess) {
+      Alert.alert('Sukses!', 'Sukses menambahkan skill.');
+      dispatch(skillAction.listSkill(token));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [postSkillIsSuccess]);
+
   // state for store skill id that going to be deleted
   const [deleteId, setDeleteId] = React.useState(null);
   const [deletedSkill, setDeletedSkill] = React.useState('');
@@ -562,6 +575,7 @@ const EditProfile = ({navigation}) => {
                 };
                 await dispatch(skillAction.postSkill(token, dataSkill));
                 resetForm('');
+                navigation.goBack();
               }}>
               {({
                 handleChange,
@@ -616,6 +630,7 @@ const EditProfile = ({navigation}) => {
                       );
                       dispatch(skillAction.listSkill(token));
                       dispatch(skillAction.destroy());
+                      navigation.goBack();
                     }}>
                     <View style={styles.skill}>
                       <Text style={styles.skillText}>{item.name || ''}</Text>

@@ -167,6 +167,7 @@ export default function EditProfileRecruiter({navigation}) {
       dispatch(profileAction.clearAlert());
       dispatch(profileAction.getProfile(auth.token));
       dispatch(profileAction.getMyCompany(auth.token));
+      Alert.alert('Sukses!', 'Sukses mengubah profil perusahaan.');
       navigation.navigate('ProfileRecruiter');
     }
   });
